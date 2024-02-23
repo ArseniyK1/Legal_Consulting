@@ -1,28 +1,37 @@
 {
-  "name": "client",
+  "name": "package",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "productName": "Quasar App",
+  "author": "ArseniyK1 <qwertototo2332@gmail.com>",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint": "eslint --ext .js,.vue ./",
+    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "axios": "^1.2.1",
+    "pinia": "^2.0.11",
+    "@quasar/extras": "^1.16.4",
+    "quasar": "^2.6.0",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.0.3",
-    "eslint": "^8.45.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "eslint": "^8.10.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "eslint-config-prettier": "^8.1.0",
+    "prettier": "^2.5.1",
+    "@quasar/app-vite": "^1.3.0",
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.14"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
   }
 }
