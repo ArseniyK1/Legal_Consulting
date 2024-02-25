@@ -1,6 +1,7 @@
 import { User } from '../user/entities/user.entity';
 import { UserRoles } from '../user/entities/UserRoles.entity';
 import { Roles } from '../roles/entities/roles.entity';
+import { Portfolio } from '../portfolio/entities/portfolio.entity';
 
 export const providers = [
   {
@@ -14,5 +15,9 @@ export const providers = [
   {
     provide: 'USER_ROLES_REPOSITORY',
     useValue: UserRoles,
+  },
+  {
+    provide: 'PORTFOLIO_REPOSITORY',
+    useValue: Portfolio,
   },
 ];

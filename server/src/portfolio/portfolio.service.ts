@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 
 @Injectable()
 export class PortfolioService {
-  create(createPortfolioDto: CreatePortfolioDto) {
-    return 'This action adds a new portfolio';
+  constructor(
+    @Inject('PORTFOLIO_REPOSITORY')
+    private portfolioRepository,
+  ) {}
+  async create(createPortfolioDto: CreatePortfolioDto, userId: any) {
+    // return await this.portfolioRepository.create({
+    //   education: createPortfolioDto.education,
+    //   length_of_service: createPortfolioDto.length_of_service,
+    //   retraining: createPortfolioDto.retraining,
+    //   userId,
+    // });
+    console.log(userId.user);
+    return userId;
   }
 
-  findAll() {
-    return `This action returns all portfolio`;
+  async findAll() {
+    return await this.portfolioRepository.findAll();
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return `This action returns a #${id} portfolio`;
   }
 
-  update(id: number, updatePortfolioDto: UpdatePortfolioDto) {
+  async update(id: number, updatePortfolioDto: UpdatePortfolioDto) {
     return `This action updates a #${id} portfolio`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} portfolio`;
   }
 }
