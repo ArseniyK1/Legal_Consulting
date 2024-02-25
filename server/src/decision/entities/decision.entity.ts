@@ -1,9 +1,8 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { Feedback } from '../../feedback/entities/feedback.entity';
-import { Trouble } from '../../trouble/entities/trouble.entity';
 
-@Table({ tableName: 'request', createdAt: false, updatedAt: false })
-export class Request extends Model<Request> {
+@Table({ tableName: 'decision', createdAt: false, updatedAt: false })
+export class Decision extends Model<Decision> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -13,8 +12,11 @@ export class Request extends Model<Request> {
   id: number;
 
   @Column({ type: DataType.STRING })
-  status: string;
+  cost: string;
 
-  @HasMany(() => Trouble, 'requestId')
-  trouble: Trouble[];
+  @Column({ type: DataType.BOOLEAN })
+  selected: boolean;
+
+  @HasMany(() => Feedback, 'decisionId')
+  feedback: Feedback[];
 }

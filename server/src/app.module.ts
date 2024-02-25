@@ -8,6 +8,10 @@ import { RequestModule } from './request/request.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { CaseModule } from './case/case.module';
 import { databaseProviders } from './db/database.providers';
+import { DiscountModule } from './discount/discount.module';
+import { FeedbackModule } from './feedback/feedback.module';
+import { TroubleModule } from './trouble/trouble.module';
+import { DecisionModule } from './decision/decision.module';
 
 @Module({
   imports: [
@@ -17,6 +21,10 @@ import { databaseProviders } from './db/database.providers';
     RequestModule,
     PortfolioModule,
     CaseModule,
+    DiscountModule,
+    FeedbackModule,
+    TroubleModule,
+    DecisionModule,
   ],
   controllers: [AppController],
   providers: [AppService, ...databaseProviders],

@@ -2,14 +2,17 @@ import {
   BelongsToMany,
   Column,
   DataType,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
-import { ApiProperty } from '@nestjs/swagger';
 import { Roles } from '../../roles/entities/roles.entity';
 import { UserRoles } from './UserRoles.entity';
-// import { Role } from '../../roles/entities/roles.entity';
-// import { UserRoles } from '../../intermediateModels/UserRoles.entity';
+import { Portfolio } from '../../portfolio/entities/portfolio.entity';
+import { Discount } from '../../discount/entities/discount.entity';
+import { Feedback } from '../../feedback/entities/feedback.entity';
+import { UserRequest } from './UserRequest.entity';
+import { Request } from '../../request/entities/request.entity';
 
 interface UserCreationAttrs {
   first_name: string;
@@ -72,6 +75,18 @@ export class User extends Model<User, UserCreationAttrs> {
   })
   banned: boolean;
 
+  @HasMany(() => Portfolio, 'userId')
+  portfolio: Portfolio[];
+
+  @HasMany(() => Discount, 'userId')
+  discount: Discount[];
+
+  @HasMany(() => Feedback, 'userId')
+  feedback: Feedback[];
+
   @BelongsToMany(() => Roles, () => UserRoles)
   roles: Roles[];
+
+  @BelongsToMany(() => Request, () => UserRequest)
+  request: Request[];
 }

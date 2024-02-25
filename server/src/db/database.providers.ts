@@ -5,6 +5,12 @@ import { Roles } from '../roles/entities/roles.entity';
 import { UserRoles } from '../user/entities/UserRoles.entity';
 import { Portfolio } from '../portfolio/entities/portfolio.entity';
 import { Case } from '../case/entities/case.entity';
+import { Trouble } from '../trouble/entities/trouble.entity';
+import { Decision } from '../decision/entities/decision.entity';
+import { Request } from '../request/entities/request.entity';
+import { UserRequest } from '../user/entities/UserRequest.entity';
+import { Discount } from '../discount/entities/discount.entity';
+import { Feedback } from '../feedback/entities/feedback.entity';
 // import { Role } from '../roles/entities/roles.entity';
 // import { UserRoles } from '../intermediateModels/UserRoles.entity';
 
@@ -20,9 +26,22 @@ export const databaseProviders = [
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DB,
       });
-      sequelize.addModels([User, Roles, UserRoles, Portfolio, Case]);
+      sequelize.addModels([
+        User,
+        Roles,
+        UserRoles,
+        Portfolio,
+        Case,
+        Trouble,
+        Decision,
+        Request,
+        UserRequest,
+        Discount,
+        Feedback,
+      ]);
       await sequelize.sync();
       return sequelize;
     },
   },
 ];
+//

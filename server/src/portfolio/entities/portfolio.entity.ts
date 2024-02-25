@@ -20,6 +20,6 @@ export class Portfolio extends Model<Portfolio> {
   @Column({ type: DataType.STRING })
   retraining: string;
 
-  @HasMany(() => Case, 'caseId')
-  case?: Case[];
+  @HasMany(() => Case, 'portfolioId')
+  case: Case[];
 }
