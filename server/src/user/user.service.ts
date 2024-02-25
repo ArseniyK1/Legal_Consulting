@@ -58,10 +58,28 @@ export class UserService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+  async update(_id: number, updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto);
+    const user = await this.userRepository.update(
+      {
+        first_name: updateUserDto.first_name,
+        second_name: updateUserDto.second_name,
+        middle_name: updateUserDto.middle_name,
+        phonenumber: updateUserDto.phonenumber,
+        photo: updateUserDto.photo,
+        date_of_birth: updateUserDto.date_of_birth,
+        contact_email: updateUserDto.contact_email,
+      },
+      {
+        where: {
+          id: _id,
+        },
+      },
+    );
 
+    return user;
+  }
+  //
   async remove(_id: number) {
     const existsUser = await this.userRepository.findOne({
       where: { id: _id },
