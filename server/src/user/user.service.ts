@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { faker } from '@faker-js/faker';
 import { RolesService } from '../roles/roles.service';
 
 @Injectable()
@@ -22,12 +21,12 @@ export class UserService {
     private rolesRepository,
   ) {}
   async create(createUserDto: CreateUserDto) {
-    const existsUser = await this.userRepository.findOne({
-      where: { login: createUserDto?.login },
-    });
-    if (existsUser?.id)
-      throw new ConflictException('Такой пользователь уже существует');
     if (!!createUserDto.password && !!createUserDto.login) {
+      const existsUser = await this.userRepository.findOne({
+        where: { login: createUserDto?.login },
+      });
+      if (existsUser?.id)
+        throw new ConflictException('Такой пользователь уже существует');
       const user = await this.userRepository.create(createUserDto);
       if (!!createUserDto.isLawyer) {
         const role = await this.roleService.getRoleByValue('LAWYER');
@@ -37,14 +36,9 @@ export class UserService {
         await user.$set('roles', [role.id]);
       }
 
-      const rolesUser = await this.userRolesRepository.findOne({
-        where: { userId: user.id },
-      });
-      const returnUserObject = await this.rolesRepository.findOne({
-        where: { id: rolesUser.roleId },
-      });
+      const role = await this.getRoleByUser(user.id);
 
-      return { user, role: returnUserObject };
+      return { user, role };
     } else {
       throw new BadRequestException('Укажите логин и(или) пароль');
     }
@@ -56,7 +50,12 @@ export class UserService {
 
   async findOne(id: number) {
     const user = await this.userRepository.findOne({ where: { id: id } });
-    return user ? user : new NotFoundException('Пользователь не найден');
+    if (!!user) {
+      const role = await this.getRoleByUser(user.id);
+      return { user, role };
+    } else {
+      throw new NotFoundException('Пользователь не найден');
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -73,5 +72,16 @@ export class UserService {
     } else {
       throw new ConflictException('Такого пользователя не существует');
     }
+  }
+
+  async getRoleByUser(userId: number) {
+    const rolesUser = await this.userRolesRepository.findOne({
+      where: { userId: userId },
+    });
+    const returnUserObject = await this.rolesRepository.findOne({
+      where: { id: rolesUser.roleId },
+    });
+
+    return returnUserObject;
   }
 }
