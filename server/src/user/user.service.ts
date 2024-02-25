@@ -18,6 +18,8 @@ export class UserService {
     private roleService: RolesService,
     @Inject('USER_ROLES_REPOSITORY')
     private userRolesRepository,
+    @Inject('ROLES_REPOSITORY')
+    private rolesRepository,
   ) {}
   async create(createUserDto: CreateUserDto) {
     const existsUser = await this.userRepository.findOne({
@@ -38,8 +40,11 @@ export class UserService {
       const rolesUser = await this.userRolesRepository.findOne({
         where: { userId: user.id },
       });
+      const returnUserObject = await this.rolesRepository.findOne({
+        where: { id: rolesUser.roleId },
+      });
 
-      return { user, rolesUser };
+      return { user, role: returnUserObject };
     } else {
       throw new BadRequestException('Укажите логин и(или) пароль');
     }
