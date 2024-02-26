@@ -12,6 +12,7 @@ import { DiscountModule } from './discount/discount.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { TroubleModule } from './trouble/trouble.module';
 import { DecisionModule } from './decision/decision.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { DecisionModule } from './decision/decision.module';
     FeedbackModule,
     TroubleModule,
     DecisionModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, ...databaseProviders],

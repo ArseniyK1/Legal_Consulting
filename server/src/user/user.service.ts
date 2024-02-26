@@ -88,7 +88,7 @@ export class UserService {
       await this.userRepository.destroy({ where: { id: _id } });
       return `Пользователь с id ${_id} успешно удален`;
     } else {
-      throw new ConflictException('Такого пользователя не существует');
+      throw new NotFoundException('Такого пользователя не существует');
     }
   }
 
