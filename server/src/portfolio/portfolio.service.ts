@@ -8,15 +8,14 @@ export class PortfolioService {
     @Inject('PORTFOLIO_REPOSITORY')
     private portfolioRepository,
   ) {}
-  async create(createPortfolioDto: CreatePortfolioDto, userId: any) {
+  async create(req: any) {
     // return await this.portfolioRepository.create({
     //   education: createPortfolioDto.education,
     //   length_of_service: createPortfolioDto.length_of_service,
     //   retraining: createPortfolioDto.retraining,
     //   userId,
     // });
-    console.log(userId.user);
-    return userId;
+    return req.user;
   }
 
   async findAll() {

@@ -13,6 +13,8 @@ import { FeedbackModule } from './feedback/feedback.module';
 import { TroubleModule } from './trouble/trouble.module';
 import { DecisionModule } from './decision/decision.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './roles/guards/roles.guard';
 
 @Module({
   imports: [
@@ -33,4 +35,3 @@ import { AuthModule } from './auth/auth.module';
   exports: [...databaseProviders],
 })
 export class AppModule {}
-//

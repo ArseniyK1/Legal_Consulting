@@ -7,18 +7,22 @@ import {
   Param,
   Delete,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('portfolio')
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createPortfolioDto: CreatePortfolioDto, @Request() req: any) {
-    return this.portfolioService.create(createPortfolioDto, req);
+  create(@Request() req) {
+    return this.portfolioService.create(req);
   }
 
   @Get()

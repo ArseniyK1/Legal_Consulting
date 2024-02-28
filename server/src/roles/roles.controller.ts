@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { ApiOperation } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
+import { Public } from '../auth/public.decorator';
+import { Role, Roles } from './decorators/roles.decorator';
 
 @Controller('roles')
 export class RolesController {
