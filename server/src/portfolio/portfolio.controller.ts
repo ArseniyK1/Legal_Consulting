@@ -7,32 +7,41 @@ import {
   Param,
   Delete,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Portfolio')
 @Controller('portfolio')
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
-  @UseGuards(AuthGuard)
   @Post()
-  create(@Request() req) {
-    return this.portfolioService.create(req);
+  @ApiOperation({ summary: 'Создание портфолио' })
+  async create(@Request() req: any, @Body() dto: CreatePortfolioDto) {
+    return await this.portfolioService.create(req, dto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Получение всех портфолио' })
   findAll() {
     return this.portfolioService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.portfolioService.findOne(+id);
+  @Get('byId/:id')
+  @ApiOperation({ summary: 'Получение портфолио по id' })
+  findOne(@Param('id') id: string, @Request() req: any) {
+    console.log('НЕ ТУДА');
+    return this.portfolioService.findOne(+id, req);
+  }
+
+  @Get('/byUserId')
+  @ApiOperation({ summary: 'Получение портфолио для конкретного пользователя' })
+  findPortfolioByUserId(@Request() req) {
+    return this.portfolioService.findPortfolioByUserId(req);
   }
 
   @Patch(':id')
@@ -44,6 +53,7 @@ export class PortfolioController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Удаление портфолио по id' })
   remove(@Param('id') id: string) {
     return this.portfolioService.remove(+id);
   }

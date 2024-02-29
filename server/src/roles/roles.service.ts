@@ -18,7 +18,7 @@ export class RolesService {
 
   async getRoleByValue(nameRole: string) {
     if (!!nameRole) {
-      return await this.rolesRepository.findOne({ where: { nameRole } });
+      return await this.rolesRepository.findOne({ where: { value: nameRole } });
     } else {
       throw new BadRequestException('Укажите значение роли!');
     }

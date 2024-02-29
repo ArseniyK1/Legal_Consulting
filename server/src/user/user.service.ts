@@ -1,13 +1,16 @@
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesService } from '../roles/roles.service';
+import { compare, genSalt, hash } from 'bcrypt';
+import { ByLoginDto } from './dto/by-login.dto';
 
 @Injectable()
 export class UserService {
@@ -27,7 +30,14 @@ export class UserService {
       });
       if (existsUser?.id)
         throw new ConflictException('Такой пользователь уже существует');
-      const user = await this.userRepository.create(createUserDto);
+      const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
+      const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
+
+      const user = await this.userRepository.create({
+        ...createUserDto,
+        password: hashPassword,
+      });
+
       if (!!createUserDto.isLawyer) {
         const role = await this.roleService.getRoleByValue('LAWYER');
         await user.$set('roles', [role.id]);
@@ -58,28 +68,26 @@ export class UserService {
     }
   }
 
-  async update(_id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    const user = await this.userRepository.update(
-      {
-        first_name: updateUserDto.first_name,
-        second_name: updateUserDto.second_name,
-        middle_name: updateUserDto.middle_name,
-        phonenumber: updateUserDto.phonenumber,
-        photo: updateUserDto.photo,
-        date_of_birth: updateUserDto.date_of_birth,
-        contact_email: updateUserDto.contact_email,
-      },
-      {
-        where: {
-          id: _id,
-        },
-      },
-    );
+  async findByLogin(dto: ByLoginDto) {
+    // Метод проверки пользователя по имени и паролю
+    const user = await this.userRepository.findOne({
+      where: { login: dto.username },
+    });
+
+    if (!user.id) {
+      // Если пользователя нет, выводим ошибку 'User not found'
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const areEqual = await compare(dto.password, user.password); // С помощью библиотеки bcrypt вставляем оригинальный пароль и хеш; если они равны, то вернётся true
+    if (!areEqual) {
+      // Если пароли не равны, то выводим ошибку 'Invalid credentials'
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
 
     return user;
   }
-  //
+
   async remove(_id: number) {
     const existsUser = await this.userRepository.findOne({
       where: { id: _id },
@@ -96,10 +104,8 @@ export class UserService {
     const rolesUser = await this.userRolesRepository.findOne({
       where: { userId: userId },
     });
-    const returnUserObject = await this.rolesRepository.findOne({
+    return await this.rolesRepository.findOne({
       where: { id: rolesUser.roleId },
     });
-
-    return returnUserObject;
   }
 }

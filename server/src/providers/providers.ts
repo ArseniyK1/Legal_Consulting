@@ -2,6 +2,7 @@ import { User } from '../user/entities/user.entity';
 import { UserRoles } from '../user/entities/UserRoles.entity';
 import { Roles } from '../roles/entities/roles.entity';
 import { Portfolio } from '../portfolio/entities/portfolio.entity';
+import { Case } from '../case/entities/case.entity';
 
 export const providers = [
   {
@@ -19,5 +20,9 @@ export const providers = [
   {
     provide: 'PORTFOLIO_REPOSITORY',
     useValue: Portfolio,
+  },
+  {
+    provide: 'CASE_REPOSITORY',
+    useValue: Case,
   },
 ];

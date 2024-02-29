@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateCaseDto } from './dto/create-case.dto';
 import { UpdateCaseDto } from './dto/update-case.dto';
+import { PortfolioService } from '../portfolio/portfolio.service';
 
 @Injectable()
 export class CaseService {
-  create(createCaseDto: CreateCaseDto) {
-    return 'This action adds a new case';
+  constructor(
+    @Inject('CASE_REPOSITORY') private caseRepository,
+    private portfolioService: PortfolioService,
+  ) {}
+
+  async create(req: any, createCaseDto: CreateCaseDto) {
+    const { id } = await this.portfolioService.findPortfolioByUserId(req);
+    if (id) {
+      return await this.caseRepository.create({
+        ...createCaseDto,
+        portfolioId: id,
+      });
+    } else {
+      throw new HttpException('Портфолио не найдено!', HttpStatus.NOT_FOUND);
+    }
   }
 
-  findAll() {
-    return `This action returns all case`;
+  async findAll(req: any) {
+    const { id } = await this.portfolioService.findPortfolioByUserId(req);
+
+    if (id) {
+      const cases = await this.caseRepository.findAll({
+        where: { portfolioId: id },
+      });
+      return cases.length ? cases : [];
+    } else {
+      throw new HttpException('Дел не найдено!', HttpStatus.NOT_FOUND);
+    }
   }
 
-  findOne(id: number) {
+  async findOne(req: any, id: number) {
     return `This action returns a #${id} case`;
   }
 
-  update(id: number, updateCaseDto: UpdateCaseDto) {
+  async update(req: any, id: number, updateCaseDto: UpdateCaseDto) {
     return `This action updates a #${id} case`;
   }
 
-  remove(id: number) {
+  async remove(req: any, id: number) {
     return `This action removes a #${id} case`;
   }
 }

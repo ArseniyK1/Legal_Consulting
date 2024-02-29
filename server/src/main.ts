@@ -11,6 +11,17 @@ async function bootstrap() {
   const PORT = process.env.PORT || 4400;
 
   const config = new DocumentBuilder()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth', // This name here is important for matching up with @ApiBearerAuth() in your controller!
+    )
     .setTitle('Юридическая помощь онлайн')
     .setDescription('Веб-приложение для онлайн связи клиентов с юристами')
     .setVersion('0.0.1')

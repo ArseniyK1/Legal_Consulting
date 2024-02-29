@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { PortfolioController } from './portfolio.controller';
 import { providers } from '../providers/providers';
-import { CaseModule } from '../case/case.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [CaseModule],
+  imports: [UserModule],
   controllers: [PortfolioController],
   providers: [PortfolioService, ...providers],
   exports: [PortfolioService],
