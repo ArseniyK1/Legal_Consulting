@@ -1,14 +1,18 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class PortfolioService {
   constructor(
     @Inject('PORTFOLIO_REPOSITORY')
     private portfolioRepository,
-    private userService: UserService,
+    @Inject('USER_REPOSITORY')
+    private userRepository,
+    @Inject('USER_ROLES_REPOSITORY')
+    private userRolesRepository,
+    @Inject('ROLES_REPOSITORY')
+    private rolesRepository,
   ) {}
   async create(req: any, dto: CreatePortfolioDto) {
     const existsPortfolio = await this.portfolioRepository.findOne({
@@ -31,28 +35,45 @@ export class PortfolioService {
     return await this.portfolioRepository.findAll();
   }
 
-  async findOne(_id: number, req?: any) {
-    const portfolio = await this.portfolioRepository.findOne({
-      where: { id: _id },
-    });
-    if (portfolio?.id && req.user.userId) {
-      const user = await this.userService.findOne(req.user.userId);
-      return { portfolio, user };
-    } else {
-      throw new HttpException('Портфолио не найдено!', HttpStatus.NOT_FOUND);
-    }
-  }
-
-  async findPortfolioByUserId(req: any) {
+  async findOne(req: any) {
     const portfolio = await this.portfolioRepository.findOne({
       where: { userId: req.user.userId },
     });
-
-    if (!!portfolio) {
-      return portfolio;
-    } else {
-      throw new HttpException('Портфолио не найдено!', HttpStatus.NOT_FOUND);
+    if (!!req.user.userId) {
+      if (req.user.userId === portfolio?.userId) {
+        return { user: req.user, portfolio };
+      } else {
+        throw new HttpException('Портфолио не найдено!', HttpStatus.NOT_FOUND);
+      }
     }
+  }
+
+  async findPortfolioByUserId(query: Record<string, object>) {
+    const lawyer = await this.userRepository.findOne({
+      where: { id: +query.lawyerId },
+    });
+    if (!lawyer?.id)
+      throw new HttpException(
+        'Данный пользователь не найден!',
+        HttpStatus.NOT_FOUND,
+      );
+    const userRoles = await this.userRolesRepository.findOne({
+      where: { userId: lawyer.id },
+    });
+    if (userRoles.roleId !== 3)
+      throw new HttpException(
+        'Данный пользователь не является юристом!',
+        HttpStatus.BAD_REQUEST,
+      );
+    const portfolio = await this.portfolioRepository.findOne({
+      where: { userId: lawyer.id },
+    });
+    if (!portfolio?.id)
+      throw new HttpException(
+        'У этого юриста пока нет портфолио!',
+        HttpStatus.NO_CONTENT,
+      );
+    return { lawyer, portfolio };
   }
 
   async update(id: number, updatePortfolioDto: UpdatePortfolioDto) {

@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   Request,
+  Query,
 } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('Portfolio')
 @Controller('portfolio')
@@ -31,17 +33,17 @@ export class PortfolioController {
     return this.portfolioService.findAll();
   }
 
-  @Get('byId/:id')
-  @ApiOperation({ summary: 'Получение портфолио по id' })
-  findOne(@Param('id') id: string, @Request() req: any) {
-    console.log('НЕ ТУДА');
-    return this.portfolioService.findOne(+id, req);
+  @Get('getMyPortfolio')
+  @ApiOperation({ summary: 'Получение портфолио по id ДЛЯ ЮРИСТОВ' })
+  findOne(@Request() req: any) {
+    return this.portfolioService.findOne(req);
   }
 
-  @Get('/byUserId')
+  @Get('portfolioLawyer')
+  @Public()
   @ApiOperation({ summary: 'Получение портфолио для конкретного пользователя' })
-  findPortfolioByUserId(@Request() req) {
-    return this.portfolioService.findPortfolioByUserId(req);
+  findPortfolioByUserId(@Query() query: Record<string, object>) {
+    return this.portfolioService.findPortfolioByUserId(query);
   }
 
   @Patch(':id')

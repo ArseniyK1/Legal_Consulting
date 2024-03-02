@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  forwardRef,
   HttpException,
   HttpStatus,
   Inject,
@@ -11,6 +12,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from '../roles/roles.service';
 import { compare, genSalt, hash } from 'bcrypt';
 import { ByLoginDto } from './dto/by-login.dto';
+import { PortfolioService } from '../portfolio/portfolio.service';
+import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
 
 @Injectable()
 export class UserService {
@@ -22,6 +25,7 @@ export class UserService {
     private userRolesRepository,
     @Inject('ROLES_REPOSITORY')
     private rolesRepository,
+    private portfolioService: PortfolioService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     if (!!createUserDto.password && !!createUserDto.login) {
@@ -68,6 +72,25 @@ export class UserService {
     }
   }
 
+  async getInfoAboutLawyer(query: InfoAboutLawyerDto) {
+    if (!!query?.lawyerId) {
+      const { user, role } = await this.findOne(+query.lawyerId);
+      console.log(user);
+      if (role.value === 'LAWYER') {
+        return user;
+      } else {
+        throw new HttpException(
+          'Этот пользователь не является юристом!',
+          HttpStatus.CONFLICT,
+        );
+      }
+      // const portfolio = await
+      // const returnUser = {};
+    } else {
+      throw new HttpException('Укажите id юриста', HttpStatus.BAD_REQUEST);
+    }
+  }
+
   async findByLogin(dto: ByLoginDto) {
     // Метод проверки пользователя по имени и паролю
     const user = await this.userRepository.findOne({
@@ -77,12 +100,6 @@ export class UserService {
     if (!user.id) {
       // Если пользователя нет, выводим ошибку 'User not found'
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    const areEqual = await compare(dto.password, user.password); // С помощью библиотеки bcrypt вставляем оригинальный пароль и хеш; если они равны, то вернётся true
-    if (!areEqual) {
-      // Если пароли не равны, то выводим ошибку 'Invalid credentials'
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
 
     return user;

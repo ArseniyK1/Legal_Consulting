@@ -11,23 +11,29 @@ export class CaseService {
   ) {}
 
   async create(req: any, createCaseDto: CreateCaseDto) {
-    const { id } = await this.portfolioService.findPortfolioByUserId(req);
-    if (id) {
-      return await this.caseRepository.create({
-        ...createCaseDto,
-        portfolioId: id,
-      });
+    if (req.user.role === 'LAWYER') {
+      const { portfolio } = await this.portfolioService.findOne(req);
+
+      if (portfolio.id) {
+        return await this.caseRepository.create({
+          ...createCaseDto,
+          portfolioId: portfolio.id,
+        });
+      } else {
+        throw new HttpException('Портфолио не найдено!', HttpStatus.NOT_FOUND);
+      }
     } else {
-      throw new HttpException('Портфолио не найдено!', HttpStatus.NOT_FOUND);
+      throw new HttpException('Вы не юрист!', HttpStatus.CONFLICT);
     }
   }
 
   async findAll(req: any) {
-    const { id } = await this.portfolioService.findPortfolioByUserId(req);
+    const { portfolio } =
+      await this.portfolioService.findPortfolioByUserId(req);
 
-    if (id) {
+    if (portfolio.id) {
       const cases = await this.caseRepository.findAll({
-        where: { portfolioId: id },
+        where: { portfolioId: portfolio.id },
       });
       return cases.length ? cases : [];
     } else {
