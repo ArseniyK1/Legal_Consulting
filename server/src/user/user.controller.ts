@@ -15,8 +15,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from '../auth/public.decorator';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
 import { ByLoginDto } from './dto/by-login.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
+import { GetInfoAboutLawyerDto } from './dto/getInfoAboutLawyer.dto';
+import { FindOneUserDto } from './dto/FindOneUser.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -34,29 +36,30 @@ export class UserController {
   // @Roles(Role.user)
   @Get()
   @ApiOperation({ summary: 'Показать всех пользователей (для админа)' })
-  @Roles(Role.admin)
+  @ApiResponse({ type: [CreateUserDto] })
   findAll() {
     return this.userService.findAll();
   }
 
   @Get('byLogin')
   @ApiOperation({ summary: 'Получение пользователя по логину' })
-  @ApiResponse({ type: ByLoginDto })
-  findByLogin(@Body() dto: ByLoginDto) {
-    return this.userService.findByLogin(dto);
+  @ApiResponse({ type: CreateUserDto })
+  findByLogin(@Query() query: ByLoginDto) {
+    return this.userService.findByLogin(query);
   }
 
   @Public()
   @ApiOperation({ summary: 'Получение данных о юристе' })
+  @ApiResponse({ type: GetInfoAboutLawyerDto })
   @Get('getInfoAboutLawyer')
   getInfoAboutLawyer(@Query() query: InfoAboutLawyerDto) {
     return this.userService.getInfoAboutLawyer(query);
   }
 
-  @Get(':id')
+  @Get('byId')
   @ApiOperation({ summary: 'Получение данных о конкретном пользователе' })
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  findOne(@Query() query: FindOneUserDto) {
+    return this.userService.findOne(+query.id);
   }
 
   @Delete(':id')

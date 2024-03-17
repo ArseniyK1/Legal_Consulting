@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { RolesModule } from './roles/roles.module';
@@ -28,8 +26,7 @@ import { AuthModule } from './auth/auth.module';
     DecisionModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ...databaseProviders],
+  providers: [...databaseProviders],
   exports: [...databaseProviders],
 })
 export class AppModule {}

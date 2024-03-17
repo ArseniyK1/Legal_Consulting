@@ -6,6 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { RoleReturnObject } from '../../return-object/role.return-object';
 
 export class CreateUserDto {
   @IsString()
@@ -73,4 +74,7 @@ export class CreateUserDto {
     description: 'Хочет ли пользователь зарегистрироваться как юрист',
   })
   isLawyer?: boolean;
+
+  @ApiProperty({ example: RoleReturnObject })
+  role: RoleReturnObject;
 }

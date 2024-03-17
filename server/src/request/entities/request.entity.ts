@@ -15,6 +15,9 @@ export class Request extends Model<Request> {
   @Column({ type: DataType.STRING })
   status: string;
 
+  @Column({ type: DataType.STRING })
+  description: string;
+
   @HasMany(() => Trouble, 'requestId')
   trouble: Trouble[];
 }

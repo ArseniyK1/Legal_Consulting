@@ -13,7 +13,7 @@ import { CreateCaseDto } from './dto/create-case.dto';
 import { UpdateCaseDto } from './dto/update-case.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('case')
+@ApiTags('Case')
 @Controller('case')
 export class CaseController {
   constructor(private readonly caseService: CaseService) {}

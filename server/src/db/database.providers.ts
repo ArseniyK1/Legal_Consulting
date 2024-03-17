@@ -8,7 +8,6 @@ import { Case } from '../case/entities/case.entity';
 import { Trouble } from '../trouble/entities/trouble.entity';
 import { Decision } from '../decision/entities/decision.entity';
 import { Request } from '../request/entities/request.entity';
-import { UserRequest } from '../user/entities/UserRequest.entity';
 import { Discount } from '../discount/entities/discount.entity';
 import { Feedback } from '../feedback/entities/feedback.entity';
 // import { Role } from '../roles/entities/roles.entity';
@@ -35,7 +34,6 @@ export const databaseProviders = [
         Trouble,
         Decision,
         Request,
-        UserRequest,
         Discount,
         Feedback,
       ]);

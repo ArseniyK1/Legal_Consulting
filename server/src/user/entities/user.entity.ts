@@ -11,7 +11,6 @@ import { UserRoles } from './UserRoles.entity';
 import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 import { Discount } from '../../discount/entities/discount.entity';
 import { Feedback } from '../../feedback/entities/feedback.entity';
-import { UserRequest } from './UserRequest.entity';
 import { Request } from '../../request/entities/request.entity';
 
 interface UserCreationAttrs {
@@ -87,6 +86,6 @@ export class User extends Model<User, UserCreationAttrs> {
   @BelongsToMany(() => Roles, () => UserRoles)
   roles: Roles[];
 
-  @BelongsToMany(() => Request, () => UserRequest)
+  @HasMany(() => Request, 'userId')
   request: Request[];
 }

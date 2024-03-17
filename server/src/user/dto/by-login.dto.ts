@@ -5,5 +5,5 @@ export class ByLoginDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ example: 'test', description: 'Логин пользователя' })
-  username: string;
+  login: string;
 }

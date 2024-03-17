@@ -14,6 +14,7 @@ import { compare, genSalt, hash } from 'bcrypt';
 import { ByLoginDto } from './dto/by-login.dto';
 import { PortfolioService } from '../portfolio/portfolio.service';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
+import { FindOneUserDto } from './dto/FindOneUser.dto';
 
 @Injectable()
 export class UserService {
@@ -63,7 +64,9 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    const user = await this.userRepository.findOne({ where: { id: id } });
+    const user = await this.userRepository.findOne({
+      where: { id: id },
+    });
     if (!!user) {
       const role = await this.getRoleByUser(user.id);
       return { user, role };
@@ -75,7 +78,6 @@ export class UserService {
   async getInfoAboutLawyer(query: InfoAboutLawyerDto) {
     if (!!query?.lawyerId) {
       const { user, role } = await this.findOne(+query.lawyerId);
-      console.log(user);
       if (role.value === 'LAWYER') {
         return user;
       } else {
@@ -91,10 +93,10 @@ export class UserService {
     }
   }
 
-  async findByLogin(dto: ByLoginDto) {
+  async findByLogin(query: ByLoginDto) {
     // Метод проверки пользователя по имени и паролю
     const user = await this.userRepository.findOne({
-      where: { login: dto.username },
+      where: { login: query.login },
     });
 
     if (!user.id) {
