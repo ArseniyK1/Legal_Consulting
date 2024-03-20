@@ -2,7 +2,6 @@ import { Sequelize } from 'sequelize-typescript';
 import * as process from 'process';
 import { User } from '../user/entities/user.entity';
 import { Roles } from '../roles/entities/roles.entity';
-import { UserRoles } from '../user/entities/UserRoles.entity';
 import { Portfolio } from '../portfolio/entities/portfolio.entity';
 import { Case } from '../case/entities/case.entity';
 import { Trouble } from '../trouble/entities/trouble.entity';
@@ -10,8 +9,6 @@ import { Decision } from '../decision/entities/decision.entity';
 import { Request } from '../request/entities/request.entity';
 import { Discount } from '../discount/entities/discount.entity';
 import { Feedback } from '../feedback/entities/feedback.entity';
-// import { Role } from '../roles/entities/roles.entity';
-// import { UserRoles } from '../intermediateModels/UserRoles.entity';
 
 export const databaseProviders = [
   {
@@ -28,7 +25,6 @@ export const databaseProviders = [
       sequelize.addModels([
         User,
         Roles,
-        UserRoles,
         Portfolio,
         Case,
         Trouble,
@@ -42,4 +38,3 @@ export const databaseProviders = [
     },
   },
 ];
-//

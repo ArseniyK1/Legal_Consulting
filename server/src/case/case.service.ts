@@ -28,17 +28,17 @@ export class CaseService {
   }
 
   async findAll(req: any) {
-    const { portfolio } =
-      await this.portfolioService.findPortfolioByUserId(req);
-
-    if (portfolio.id) {
-      const cases = await this.caseRepository.findAll({
-        where: { portfolioId: portfolio.id },
-      });
-      return cases.length ? cases : [];
-    } else {
-      throw new HttpException('Дел не найдено!', HttpStatus.NOT_FOUND);
-    }
+    // const { portfolio } =
+    //   await this.portfolioService.findPortfolioByUserId(req);
+    //
+    // if (portfolio.id) {
+    //   const cases = await this.caseRepository.findAll({
+    //     where: { portfolioId: portfolio.id },
+    //   });
+    //   return cases.length ? cases : [];
+    // } else {
+    //   throw new HttpException('Дел не найдено!', HttpStatus.NOT_FOUND);
+    // }
   }
 
   async findOne(req: any, id: number) {

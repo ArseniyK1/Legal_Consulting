@@ -23,4 +23,12 @@ export class RolesService {
       throw new BadRequestException('Укажите значение роли!');
     }
   }
+
+  async getRoleByid(idRole: number) {
+    if (!!idRole) {
+      return await this.rolesRepository.findOne({ where: { id: idRole } });
+    } else {
+      throw new BadRequestException('Укажите значение роли!');
+    }
+  }
 }

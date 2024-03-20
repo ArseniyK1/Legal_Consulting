@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   ConflictException,
-  forwardRef,
   HttpException,
   HttpStatus,
   Inject,
@@ -14,7 +13,6 @@ import { compare, genSalt, hash } from 'bcrypt';
 import { ByLoginDto } from './dto/by-login.dto';
 import { PortfolioService } from '../portfolio/portfolio.service';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
-import { FindOneUserDto } from './dto/FindOneUser.dto';
 
 @Injectable()
 export class UserService {
@@ -22,8 +20,6 @@ export class UserService {
     @Inject('USER_REPOSITORY')
     private userRepository,
     private roleService: RolesService,
-    @Inject('USER_ROLES_REPOSITORY')
-    private userRolesRepository,
     @Inject('ROLES_REPOSITORY')
     private rolesRepository,
     private portfolioService: PortfolioService,
@@ -38,22 +34,21 @@ export class UserService {
       const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
       const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
 
-      const user = await this.userRepository.create({
-        ...createUserDto,
-        password: hashPassword,
-      });
-
       if (!!createUserDto.isLawyer) {
         const role = await this.roleService.getRoleByValue('LAWYER');
-        await user.$set('roles', [role.id]);
+        return await this.userRepository.create({
+          ...createUserDto,
+          roleId: role.id,
+          password: hashPassword,
+        });
       } else {
         const role = await this.roleService.getRoleByValue('USER');
-        await user.$set('roles', [role.id]);
+        return await this.userRepository.create({
+          ...createUserDto,
+          roleId: role.id,
+          password: hashPassword,
+        });
       }
-
-      const role = await this.getRoleByUser(user.id);
-
-      return { user, role };
     } else {
       throw new BadRequestException('Укажите логин и(или) пароль');
     }
@@ -68,8 +63,7 @@ export class UserService {
       where: { id: id },
     });
     if (!!user) {
-      const role = await this.getRoleByUser(user.id);
-      return { user, role };
+      return user;
     } else {
       throw new NotFoundException('Пользователь не найден');
     }
@@ -77,8 +71,8 @@ export class UserService {
 
   async getInfoAboutLawyer(query: InfoAboutLawyerDto) {
     if (!!query?.lawyerId) {
-      const { user, role } = await this.findOne(+query.lawyerId);
-      if (role.value === 'LAWYER') {
+      const user = await this.findOne(+query.lawyerId);
+      if (user.roleId === 3) {
         return user;
       } else {
         throw new HttpException(
@@ -86,8 +80,6 @@ export class UserService {
           HttpStatus.CONFLICT,
         );
       }
-      // const portfolio = await
-      // const returnUser = {};
     } else {
       throw new HttpException('Укажите id юриста', HttpStatus.BAD_REQUEST);
     }
@@ -117,14 +109,5 @@ export class UserService {
     } else {
       throw new NotFoundException('Такого пользователя не существует');
     }
-  }
-
-  async getRoleByUser(userId: number) {
-    const rolesUser = await this.userRolesRepository.findOne({
-      where: { userId: userId },
-    });
-    return await this.rolesRepository.findOne({
-      where: { id: rolesUser.roleId },
-    });
   }
 }

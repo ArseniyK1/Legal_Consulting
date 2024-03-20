@@ -2,6 +2,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { compare } from 'bcrypt';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class AuthService {
@@ -9,7 +10,7 @@ export class AuthService {
     @Inject('USER_REPOSITORY')
     private userRepository,
     private jwtService: JwtService,
-    private userService: UserService,
+    private rolesService: RolesService,
   ) {}
 
   async signIn(
@@ -23,7 +24,7 @@ export class AuthService {
     if (!areEqual) {
       throw new UnauthorizedException();
     }
-    const { role } = await this.userService.findOne(user.id);
+    const role = await this.rolesService.getRoleByid(+user.roleId);
     const payload = {
       userId: user.id,
       username: user.login,

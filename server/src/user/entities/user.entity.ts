@@ -1,13 +1,4 @@
-import {
-  BelongsToMany,
-  Column,
-  DataType,
-  HasMany,
-  Model,
-  Table,
-} from 'sequelize-typescript';
-import { Roles } from '../../roles/entities/roles.entity';
-import { UserRoles } from './UserRoles.entity';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 import { Discount } from '../../discount/entities/discount.entity';
 import { Feedback } from '../../feedback/entities/feedback.entity';
@@ -82,9 +73,6 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => Feedback, 'userId')
   feedback: Feedback[];
-
-  @BelongsToMany(() => Roles, () => UserRoles)
-  roles: Roles[];
 
   @HasMany(() => Request, 'userId')
   request: Request[];
