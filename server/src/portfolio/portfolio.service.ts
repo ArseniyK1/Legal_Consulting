@@ -47,31 +47,28 @@ export class PortfolioService {
   }
 
   async findPortfolioByUserId(query: Record<string, object>) {
-    // const lawyer = await this.userRepository.findOne({
-    //   where: { id: +query.lawyerId },
-    // });
-    // if (!lawyer?.id)
-    //   throw new HttpException(
-    //     'Данный пользователь не найден!',
-    //     HttpStatus.NOT_FOUND,
-    //   );
-    // const userRoles = await this.userRolesRepository.findOne({
-    //   where: { userId: lawyer.id },
-    // });
-    // if (userRoles.roleId !== 3)
-    //   throw new HttpException(
-    //     'Данный пользователь не является юристом!',
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // const portfolio = await this.portfolioRepository.findOne({
-    //   where: { userId: lawyer.id },
-    // });
-    // if (!portfolio?.id)
-    //   throw new HttpException(
-    //     'У этого юриста пока нет портфолио!',
-    //     HttpStatus.NO_CONTENT,
-    //   );
-    // return { lawyer, portfolio };
+    const lawyer = await this.userRepository.findOne({
+      where: { id: +query.lawyerId },
+    });
+    if (!lawyer?.id)
+      throw new HttpException(
+        'Данный пользователь не найден!',
+        HttpStatus.NOT_FOUND,
+      );
+    if (lawyer.roleId !== 3)
+      throw new HttpException(
+        'Данный пользователь не является юристом!',
+        HttpStatus.BAD_REQUEST,
+      );
+    const portfolio = await this.portfolioRepository.findOne({
+      where: { userId: lawyer.id },
+    });
+    if (!portfolio?.id)
+      throw new HttpException(
+        'У этого юриста пока нет портфолио!',
+        HttpStatus.NOT_FOUND,
+      );
+    return portfolio;
   }
 
   async update(id: number, updatePortfolioDto: UpdatePortfolioDto) {

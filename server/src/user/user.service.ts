@@ -54,8 +54,18 @@ export class UserService {
     }
   }
 
-  async findAll() {
-    return await this.userRepository.findAll();
+  async findAll(roleId: number = 1) {
+    if (roleId !== 1) {
+      return await this.userRepository.findAll({
+        where: { roleId },
+      });
+    } else {
+      return await this.userRepository.findAll();
+    }
+  }
+
+  async getAllLawyer() {
+    return await this.findAll(3);
   }
 
   async findOne(id: number) {
@@ -73,7 +83,26 @@ export class UserService {
     if (!!query?.lawyerId) {
       const user = await this.findOne(+query.lawyerId);
       if (user.roleId === 3) {
-        return user;
+        const {
+          first_name,
+          second_name,
+          middle_name,
+          phonenumber,
+          date_of_birth,
+          contact_email,
+        } = user;
+        const portfolio = await this.portfolioService.findPortfolioByUserId({
+          lawyerId: user.id,
+        });
+        return {
+          first_name,
+          second_name,
+          middle_name,
+          phonenumber,
+          date_of_birth,
+          contact_email,
+          portfolio,
+        };
       } else {
         throw new HttpException(
           'Этот пользователь не является юристом!',

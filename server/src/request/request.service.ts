@@ -10,6 +10,7 @@ export class RequestService {
     if (dto) {
       const request = await this.requestRepository.create({
         ...dto,
+        status: 'Открытая',
         userId: req.user.userId,
       });
 
@@ -28,14 +29,23 @@ export class RequestService {
     });
   }
 
+  async getOpenRequestByLawyer() {
+    return await this.requestRepository.findAll({
+      where: { status: 'Открытая' },
+    });
+  }
+
   async findOne(id: number) {
     return await this.requestRepository.findOne({
       where: { id: id },
     });
   }
 
-  async update(id: number, updateRequestDto: UpdateRequestDto) {
-    return `This action updates a #${id} request`;
+  async update(requestId: number, dto: UpdateRequestDto) {
+    const portfolio = await this.findOne(requestId);
+    if (!portfolio?.id)
+      throw new HttpException('Заявка не найдена', HttpStatus.NOT_FOUND);
+    return await portfolio.update(dto);
   }
 
   async remove(id: number) {

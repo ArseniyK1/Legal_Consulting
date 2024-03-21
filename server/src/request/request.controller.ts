@@ -39,6 +39,14 @@ export class RequestController {
     return this.requestService.findAllRequestByUser(req);
   }
 
+  @Get('/openRequest')
+  @ApiOperation({
+    summary: 'Получение всех открытых заявок пользователей для юриста',
+  })
+  getOpenRequestByLawyer() {
+    return this.requestService.getOpenRequestByLawyer();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.requestService.findOne(+id);

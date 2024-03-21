@@ -3,10 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRequestDto {
   @IsString()
-  @ApiProperty({ example: 'Выолняется', description: 'Тип заявки' })
-  status: string;
-
-  @IsString()
   @ApiProperty({ example: 'описание заявки', description: 'Описание заявки' })
   description: string;
 }

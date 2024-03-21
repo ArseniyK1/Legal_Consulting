@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CaseService } from './case.service';
 import { CaseController } from './case.controller';
 import { PortfolioModule } from '../portfolio/portfolio.module';
 import { providers } from '../providers/providers';
 
 @Module({
-  imports: [PortfolioModule],
+  imports: [forwardRef(() => PortfolioModule)],
   controllers: [CaseController],
   providers: [CaseService, ...providers],
   exports: [CaseService],

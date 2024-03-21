@@ -41,6 +41,14 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('allLawyer')
+  @ApiOperation({ summary: 'Показать всех юристов' })
+  @Public()
+  @ApiResponse({ type: [CreateUserDto] })
+  getAllLawyer() {
+    return this.userService.getAllLawyer();
+  }
+
   @Get('byLogin')
   @ApiOperation({ summary: 'Получение пользователя по логину' })
   @ApiResponse({ type: CreateUserDto })
