@@ -10,11 +10,11 @@ POSTGRES_PASSWORD=db_password
 POSTGRES_PORT=db_port
 ```
 ## **Установка**
-> `cd ./server` <br/>
-> `npm i` <br/>
-> `npm run migrations` <br/> 
-> `npm run seed` // Генерирует данные для тестирования (пользователей и 3 роли)
+* **`cd ./server` <br/>**
+* **`npm i` <br/>**
+* **`npm run migrations` <br/>** 
+* **`npm run seed` // Генерирует данные для тестирования (пользователей и 3 роли)**
 ## **Фичи**
-> **1. Миграции - синхронизация таблиц**<br/>
-> **2. Сидеры - генерация моковых данных для тестирования**<br/>
-> **3. AllExceptionsFilter - в случае ошибки можно увидеть `url, payload, error, message, timestamp`**<br/>
+* **1. Миграции - синхронизация таблиц**<br/>
+* **2. Сидеры - генерация моковых данных для тестирования**<br/>
+* **3. AllExceptionsFilter - в случае ошибки можно увидеть `url, payload, error, message, timestamp`**<br/>
