@@ -13,7 +13,7 @@
               class="q-mr-xs"
               color="secondary"
               label="Фамилия *"
-              v-model="profile.second_name"
+              v-model="profile.last_name"
               readonly
             ></q-input>
             <q-input
@@ -99,7 +99,7 @@ const props = defineProps({
 });
 
 const profile = ref({
-  second_name: "",
+  last_name: "",
   middle_name: "",
   first_name: "",
   role: "",
@@ -160,7 +160,7 @@ onMounted(async () => {
   profile.value.login = res.username;
   profile.value.first_name = res.user.first_name;
   profile.value.middle_name = res.user.middle_name;
-  profile.value.second_name = res.user.second_name;
+  profile.value.last_name = res.user.last_name;
   profile.value.group = res.user.group;
 
   // if (!!router.currentRoute.value.params.id)

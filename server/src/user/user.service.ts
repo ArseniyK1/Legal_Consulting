@@ -85,7 +85,7 @@ export class UserService {
       if (user.roleId === 3) {
         const {
           first_name,
-          second_name,
+          last_name,
           middle_name,
           phonenumber,
           date_of_birth,
@@ -96,7 +96,7 @@ export class UserService {
         });
         return {
           first_name,
-          second_name,
+          last_name: last_name,
           middle_name,
           phonenumber,
           date_of_birth,

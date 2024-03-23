@@ -6,7 +6,7 @@ import { Request } from '../../request/entities/request.entity';
 
 interface UserCreationAttrs {
   first_name: string;
-  second_name: string;
+  last_name: string;
   middle_name: string;
   login: string;
   phonenumber: string;
@@ -30,7 +30,7 @@ export class User extends Model<User, UserCreationAttrs> {
   first_name: string;
 
   @Column({ type: DataType.STRING })
-  second_name: string;
+  last_name: string;
 
   @Column({ type: DataType.STRING })
   middle_name: string;

@@ -13,7 +13,7 @@ module.exports = {
       first_name: {
         type: Sequelize.STRING,
       },
-      second_name: {
+      last_name: {
         type: Sequelize.STRING,
       },
       middle_name: {

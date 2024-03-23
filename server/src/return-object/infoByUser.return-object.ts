@@ -6,7 +6,7 @@ export class InfoByUserReturnObject {
   @ApiProperty({ example: 'Арсений' })
   first_name: string;
   @ApiProperty({ example: 'Киселев' })
-  second_name: string;
+  last_name: string;
   @ApiProperty({ example: 'Александрович' })
   middle_name: string;
   @ApiProperty({ example: 'test' })

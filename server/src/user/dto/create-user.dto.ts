@@ -19,7 +19,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsOptional()
   @ApiProperty({ example: 'Киселев', description: 'Фамилия пользователя' })
-  second_name?: string;
+  last_name?: string;
 
   @IsString()
   @IsNotEmpty()
