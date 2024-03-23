@@ -8,6 +8,7 @@
             outlined
             lazy-rules="lazy-rules"
             type="login"
+            :rules="[(val) => !!val || 'Заполните логин!']"
             v-model="login"
             color="black"
           >
@@ -19,6 +20,7 @@
             :type="showPassword ? 'text' : 'password'"
             @keydown.enter.prevent="submitForm"
             label="Пароль"
+            :rules="[(val) => !!val || 'Заполните пароль!']"
             v-model="password"
             outlined
             label-color="black"

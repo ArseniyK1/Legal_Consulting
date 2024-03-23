@@ -1,12 +1,12 @@
 <template>
   <q-page
-    class="login-page window-height window-width row items-center justify-center"
+    class="login-page window-height window-width row items-center justify-center bg-info"
   >
     <div class="column z-top">
       <div class="row">
         <div class="col">
           <div class="text-h4 text-white q-ml-md montserrat-medium">
-            <span class="text-accent">Юридические</span> консультации онлайн
+            <span class="text-accent">Юридический</span> консалтинг
           </div>
         </div>
       </div>
@@ -16,9 +16,8 @@
           <q-tabs
             v-model="tab"
             dense
-            class="text-black"
-            active-color="info"
-            indicator-color="secondary"
+            active-color="accent"
+            indicator-color="accent"
             align="justify"
           >
             <q-tab name="registr" label="Регистрация" />
@@ -46,7 +45,7 @@
 </template>
 <script setup>
 import { Notify, useQuasar } from "quasar";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import { useRouter } from "vue-router";
 import LoginForm from "components/auth/LoginForm.vue";
