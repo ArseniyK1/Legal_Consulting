@@ -62,13 +62,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
         this.logger.error(e.message);
       }
       stack.push({
-        message: item.message,
+        // message: item.message,
         moduleName: matched?.[1] || 'unknown',
-        type: item.name,
-        statusCode:
-          item instanceof HttpException
-            ? item.getStatus()
-            : HttpStatus.INTERNAL_SERVER_ERROR,
+        // type: item.name,
+        // statusCode:
+        //   item instanceof HttpException
+        //     ? item.getStatus()
+        //     : HttpStatus.INTERNAL_SERVER_ERROR,
       });
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
