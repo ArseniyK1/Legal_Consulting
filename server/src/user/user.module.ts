@@ -4,7 +4,6 @@ import { UserController } from './user.controller';
 import { providers } from '../providers/providers';
 import { RolesModule } from '../roles/roles.module';
 import { PortfolioModule } from '../portfolio/portfolio.module';
-import { PortfolioService } from '../portfolio/portfolio.service';
 
 @Module({
   imports: [RolesModule, forwardRef(() => PortfolioModule)],
