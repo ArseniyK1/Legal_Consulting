@@ -8,7 +8,7 @@ export default () => ({
     database: process.env.POSTGRES_DB || 'diplom_v1',
     user: process.env.POSTGRES_USER || 'postgres',
     username: process.env.POSTGRES_USER || 'postgres', // для Sequelize
-    password: process.env.POSTGRES_PASSWORD || '1234',
+    password: process.env.POSTGRES_PASSWORD || 'root',
   },
   LOGGER: {
     print_req_body: true, // писать в логи тело запроса
