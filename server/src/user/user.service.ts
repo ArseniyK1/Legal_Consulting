@@ -13,17 +13,19 @@ import { compare, genSalt, hash } from 'bcrypt';
 import { ByLoginDto } from './dto/by-login.dto';
 import { PortfolioService } from '../portfolio/portfolio.service';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject('USER_REPOSITORY')
-    private userRepository,
+    private userRepository: Repository<User>,
     private roleService: RolesService,
-    @Inject('ROLES_REPOSITORY')
-    private rolesRepository,
-    private portfolioService: PortfolioService,
   ) {}
+  // private rolesRepository,
+  // @Inject('ROLES_REPOSITORY')
+  // private portfolioService: PortfolioService,
   async create(createUserDto: CreateUserDto) {
     if (!!createUserDto.password && !!createUserDto.login) {
       const existsUser = await this.userRepository.findOne({
@@ -36,14 +38,15 @@ export class UserService {
 
       if (!!createUserDto.isLawyer) {
         const role = await this.roleService.getRoleByValue('LAWYER');
-        return await this.userRepository.create({
+        console.log(role);
+        return await this.userRepository.save({
           ...createUserDto,
           roleId: role.id,
           password: hashPassword,
         });
       } else {
         const role = await this.roleService.getRoleByValue('USER');
-        return await this.userRepository.create({
+        return await this.userRepository.save({
           ...createUserDto,
           roleId: role.id,
           password: hashPassword,
@@ -55,13 +58,15 @@ export class UserService {
   }
 
   async findAll(roleId: number = 1) {
-    if (roleId !== 1) {
-      return await this.userRepository.findAll({
-        where: { roleId },
-      });
-    } else {
-      return await this.userRepository.findAll();
-    }
+    // if (roleId !== 1) {
+    //   return await this.userRepository.findAll({
+    //     where: { roleId },
+    //   });
+    // } else {
+    //   return await this.userRepository.findAll();
+    // }
+
+    return await this.userRepository.find({ relations: { roleId: true } });
   }
 
   async getAllLawyer() {
@@ -81,34 +86,34 @@ export class UserService {
 
   async getInfoAboutLawyer(query: InfoAboutLawyerDto) {
     if (!!query?.lawyerId) {
-      const user = await this.findOne(+query.lawyerId);
-      if (user.roleId === 3) {
-        const {
-          first_name,
-          last_name,
-          middle_name,
-          phonenumber,
-          date_of_birth,
-          contact_email,
-        } = user;
-        const portfolio = await this.portfolioService.findPortfolioByUserId({
-          lawyerId: user.id,
-        });
-        return {
-          first_name,
-          last_name: last_name,
-          middle_name,
-          phonenumber,
-          date_of_birth,
-          contact_email,
-          portfolio,
-        };
-      } else {
-        throw new HttpException(
-          'Этот пользователь не является юристом!',
-          HttpStatus.CONFLICT,
-        );
-      }
+      // const user = await this.findOne(+query.lawyerId);
+      // if (user.roleId === 3) {
+      //   const {
+      //     first_name,
+      //     last_name,
+      //     middle_name,
+      //     phonenumber,
+      //     date_of_birth,
+      //     contact_email,
+      //   } = user;
+      //   const portfolio = await this.portfolioService.findPortfolioByUserId({
+      //     lawyerId: user.id,
+      //   });
+      //   return {
+      //     first_name,
+      //     last_name: last_name,
+      //     middle_name,
+      //     phonenumber,
+      //     date_of_birth,
+      //     contact_email,
+      //     portfolio,
+      //   };
+      // } else {
+      //   throw new HttpException(
+      //     'Этот пользователь не является юристом!',
+      //     HttpStatus.CONFLICT,
+      //   );
+      // }
     } else {
       throw new HttpException('Укажите id юриста', HttpStatus.BAD_REQUEST);
     }
@@ -132,11 +137,11 @@ export class UserService {
     const existsUser = await this.userRepository.findOne({
       where: { id: _id },
     });
-    if (existsUser?.id) {
-      await this.userRepository.destroy({ where: { id: _id } });
-      return `Пользователь с id ${_id} успешно удален`;
-    } else {
-      throw new NotFoundException('Такого пользователя не существует');
-    }
+    // if (existsUser?.id) {
+    //   await this.userRepository.destroy({ where: { id: _id } });
+    //   return `Пользователь с id ${_id} успешно удален`;
+    // } else {
+    //   throw new NotFoundException('Такого пользователя не существует');
+    // }
   }
 }

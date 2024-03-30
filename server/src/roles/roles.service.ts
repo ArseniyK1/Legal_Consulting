@@ -10,7 +10,7 @@ export class RolesService {
 
   async createRole(dto: CreateRoleDto) {
     if (!!dto.value && !!dto.description) {
-      return await this.rolesRepository.create(dto);
+      return await this.rolesRepository.save(dto);
     } else {
       throw new BadRequestException('Укажите значение и(или) описание роли');
     }

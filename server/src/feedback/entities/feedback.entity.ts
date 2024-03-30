@@ -1,18 +1,24 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
 
-@Table({ tableName: 'feedback', createdAt: false, updatedAt: false })
-export class Feedback extends Model<Feedback> {
-  @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
-    primaryKey: true,
-  })
+@Entity()
+export class Feedback {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: DataType.INTEGER })
+  @Column()
   rating: number;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   description: string;
+
+  @ManyToOne(() => User, (user) => user.feedback)
+  @JoinColumn()
+  user: User;
 }

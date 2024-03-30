@@ -10,12 +10,15 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { compare } from 'bcrypt';
 import { RolesService } from '../roles/roles.service';
+import { Repository } from 'typeorm';
+import { User } from '../user/entities/user.entity';
+import { Roles } from '../roles/entities/roles.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject('USER_REPOSITORY')
-    private userRepository,
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
     private rolesService: RolesService,
   ) {}
