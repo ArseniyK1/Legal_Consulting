@@ -18,11 +18,12 @@ export const databaseProviders = [
       });
       await dataSource.initialize();
       // await dataSource.synchronize();
-
+      //
       // for (const entity of dataSource.entityMetadatas) {
-      //   await dataSource
-      //     .createQueryRunner()
-      //     .query(`TRUNCATE TABLE "${entity.tableName}" CASCADE;`);
+      //   if (entity.tableName !== 'roles')
+      //     await dataSource
+      //       .createQueryRunner()
+      //       .query(`TRUNCATE TABLE "${entity.tableName}" CASCADE;`);
       // }
 
       return dataSource;

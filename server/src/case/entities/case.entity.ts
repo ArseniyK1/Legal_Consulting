@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
+import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 
 @Entity()
 export class Case {
@@ -16,4 +24,8 @@ export class Case {
 
   @Column()
   article: string;
+
+  @ManyToOne(() => Portfolio, (portfolio) => portfolio.case)
+  @JoinColumn()
+  portfolio: Portfolio;
 }

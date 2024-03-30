@@ -14,7 +14,6 @@ async function bootstrap() {
   // const adapterHost = app.get(HttpAdapterHost);
   // app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
 
-  // const PORT = process.env.PORT || 4400;
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
 
@@ -43,6 +42,4 @@ async function bootstrap() {
     console.log(`Сервер запустился на ${port} порту`),
   );
 }
-bootstrap()
-  .then(() => console.log('Успешно'))
-  .catch((e) => console.log(e));
+bootstrap();

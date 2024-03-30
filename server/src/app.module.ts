@@ -37,11 +37,7 @@ import { EntityManager } from 'typeorm';
   providers: [...databaseProviders],
   exports: [...databaseProviders],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
 // export class AppModule implements OnApplicationBootstrap {
 //   constructor(private readonly seedingService: SeedingService) {}
 //

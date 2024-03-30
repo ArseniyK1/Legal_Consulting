@@ -32,10 +32,8 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
   }
-  //
-  // @Roles(Role.user)
+
   @Get()
-  @Public()
   @ApiOperation({ summary: 'Показать всех пользователей (для админа)' })
   @ApiResponse({ type: [CreateUserDto] })
   async findAll() {
@@ -68,7 +66,7 @@ export class UserController {
   @Get('byId')
   @ApiOperation({ summary: 'Получение данных о конкретном пользователе' })
   findOne(@Query() query: FindOneUserDto) {
-    return this.userService.findOne(+query.id);
+    return this.userService.findOne(+query._id);
   }
 
   @Delete(':id')

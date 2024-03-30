@@ -12,10 +12,10 @@ export class CaseService {
 
   async create(req: any, createCaseDto: CreateCaseDto) {
     if (req.user.role === 'LAWYER') {
-      const { portfolio } = await this.portfolioService.findOne(req);
+      const portfolio = await this.portfolioService.getMyPortfolio(req);
 
       if (portfolio.id) {
-        return await this.caseRepository.create({
+        return await this.caseRepository.save({
           ...createCaseDto,
           portfolioId: portfolio.id,
         });
@@ -28,18 +28,18 @@ export class CaseService {
   }
 
   async findAll(req: any) {
-    const lawyerId = req.user.userId;
-    const portfolio = await this.portfolioService.findPortfolioByUserId({
-      lawyerId,
-    });
-    if (portfolio.id) {
-      const cases = await this.caseRepository.findAll({
-        where: { portfolioId: portfolio.id },
-      });
-      return cases.length ? cases : [];
-    } else {
-      throw new HttpException('Дел не найдено!', HttpStatus.NOT_FOUND);
-    }
+    // const lawyerId = req.user.userId;
+    // const portfolio = await this.portfolioService.findPortfolioByUserId({
+    //   lawyerId,
+    // });
+    // if (portfolio.id) {
+    //   const cases = await this.caseRepository.findAll({
+    //     where: { portfolioId: portfolio.id },
+    //   });
+    //   return cases.length ? cases : [];
+    // } else {
+    //   throw new HttpException('Дел не найдено!', HttpStatus.NOT_FOUND);
+    // }
   }
 
   async findOne(req: any, id: number) {

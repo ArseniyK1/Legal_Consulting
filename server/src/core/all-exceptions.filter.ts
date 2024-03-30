@@ -110,7 +110,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       causes[causes.length - 1]?.statusCode ||
       exception.response?.statusCode ||
       exception.statusCode ||
-      'unknown status code';
+      HttpStatus.INTERNAL_SERVER_ERROR;
     responseBody['stackTrace'] = causes;
 
     httpAdapter.reply(ctx.getResponse(), responseBody, responseBody.statusCode);

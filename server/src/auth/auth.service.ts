@@ -29,6 +29,7 @@ export class AuthService {
   ): Promise<{ access_token: string }> {
     const user = await this.userRepository.findOne({
       where: { login: username },
+      relations: { roleId: true },
     });
     if (!user?.id)
       throw new NotFoundException('Такого пользователя не существует!');
@@ -36,7 +37,7 @@ export class AuthService {
     if (!areEqual) {
       throw new UnauthorizedException();
     }
-    const role = await this.rolesService.getRoleByid(+user.roleId);
+    const role = await this.rolesService.getRoleByid(+user.roleId.id);
     const payload = {
       userId: user.id,
       username: user.login,
@@ -49,4 +50,3 @@ export class AuthService {
     };
   }
 }
-//
