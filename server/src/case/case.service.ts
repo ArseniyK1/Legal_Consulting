@@ -17,7 +17,7 @@ export class CaseService {
       if (portfolio.id) {
         return await this.caseRepository.save({
           ...createCaseDto,
-          portfolioId: portfolio.id,
+          portfolio: portfolio.id,
         });
       } else {
         throw new HttpException('Портфолио не найдено!', HttpStatus.NOT_FOUND);
@@ -40,6 +40,13 @@ export class CaseService {
     // } else {
     //   throw new HttpException('Дел не найдено!', HttpStatus.NOT_FOUND);
     // }
+    const lawyerId = req.user.userId;
+    const portfolio =
+      await this.portfolioService.findPortfolioByUserId(lawyerId);
+    return await this.caseRepository.find({
+      where: { portfolio: portfolio.id },
+      relations: { portfolio: { user: { roleId: true } } },
+    });
   }
 
   async findOne(req: any, id: number) {
