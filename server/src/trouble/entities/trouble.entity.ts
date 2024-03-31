@@ -1,28 +1,23 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Decision } from '../../decision/entities/decision.entity';
 
-@Table({ tableName: 'trouble', createdAt: false, updatedAt: false })
-export class Trouble extends Model<Trouble> {
-  @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
-    primaryKey: true,
-  })
+@Entity()
+export class Trouble {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   title: string;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   description: string;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   suggested_price: string;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   type: string;
 
-  @HasMany(() => Decision, 'troubleId')
+  @OneToMany(() => Decision, 'troubleId')
   decision: Decision[];
 }

@@ -1,40 +1,32 @@
-import { Sequelize } from 'sequelize-typescript';
+import { DataSource } from 'typeorm';
 import * as process from 'process';
-import { User } from '../user/entities/user.entity';
-import { Roles } from '../roles/entities/roles.entity';
-import { Portfolio } from '../portfolio/entities/portfolio.entity';
-import { Case } from '../case/entities/case.entity';
-import { Trouble } from '../trouble/entities/trouble.entity';
-import { Decision } from '../decision/entities/decision.entity';
-import { Request } from '../request/entities/request.entity';
-import { Discount } from '../discount/entities/discount.entity';
-import { Feedback } from '../feedback/entities/feedback.entity';
 
 export const databaseProviders = [
   {
-    provide: 'SEQUELIZE',
+    provide: 'DATA_SOURCE',
     useFactory: async () => {
-      const sequelize = new Sequelize({
-        dialect: 'postgres',
+      const dataSource = new DataSource({
+        type: 'postgres',
         host: String(process.env.POSTGRES_HOST),
         port: +process.env.POSTGRES_PORT,
         username: String(process.env.POSTGRES_USER),
         password: String(process.env.POSTGRES_PASSWORD),
         database: String(process.env.POSTGRES_DB),
+        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        logging: true,
+        // synchronize: true,
       });
-      sequelize.addModels([
-        User,
-        Roles,
-        Portfolio,
-        Case,
-        Trouble,
-        Decision,
-        Request,
-        Discount,
-        Feedback,
-      ]);
-      await sequelize.sync();
-      return sequelize;
+      await dataSource.initialize();
+      // await dataSource.synchronize();
+      //
+      // for (const entity of dataSource.entityMetadatas) {
+      //   if (entity.tableName !== 'roles')
+      //     await dataSource
+      //       .createQueryRunner()
+      //       .query(`TRUNCATE TABLE "${entity.tableName}" CASCADE;`);
+      // }
+
+      return dataSource;
     },
   },
 ];

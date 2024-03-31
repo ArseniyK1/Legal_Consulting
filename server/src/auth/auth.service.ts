@@ -10,12 +10,15 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { compare } from 'bcrypt';
 import { RolesService } from '../roles/roles.service';
+import { Repository } from 'typeorm';
+import { User } from '../user/entities/user.entity';
+import { Roles } from '../roles/entities/roles.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject('USER_REPOSITORY')
-    private userRepository,
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
     private rolesService: RolesService,
   ) {}
@@ -26,6 +29,7 @@ export class AuthService {
   ): Promise<{ access_token: string }> {
     const user = await this.userRepository.findOne({
       where: { login: username },
+      relations: { roleId: true },
     });
     if (!user?.id)
       throw new NotFoundException('Такого пользователя не существует!');
@@ -33,7 +37,7 @@ export class AuthService {
     if (!areEqual) {
       throw new UnauthorizedException();
     }
-    const role = await this.rolesService.getRoleByid(+user.roleId);
+    const role = await this.rolesService.getRoleByid(+user.roleId.id);
     const payload = {
       userId: user.id,
       username: user.login,
@@ -46,4 +50,3 @@ export class AuthService {
     };
   }
 }
-//

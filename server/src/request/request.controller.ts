@@ -16,6 +16,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ReqGuardsReturnObject } from '../return-object/reqGuards.return-object';
 import { AllRequestReturnObject } from '../return-object/allRequestReturn.return-object';
 import { CreateRequestReturnObject } from '../return-object/createRequest.return-object';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('Request')
 @Controller('request')

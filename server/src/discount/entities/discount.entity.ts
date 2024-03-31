@@ -1,21 +1,28 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
 
-@Table({ tableName: 'discount', createdAt: false, updatedAt: false })
-export class Discount extends Model<Discount> {
-  @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
-    primaryKey: true,
-  })
+@Entity()
+export class Discount {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   type: string;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   description: string;
 
-  @Column({ type: DataType.INTEGER })
+  @Column()
   discount_percentage: number;
+
+  @ManyToOne(() => User, (user) => user.discount)
+  @JoinColumn()
+  user: User;
 }
+//

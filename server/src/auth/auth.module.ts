@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { providers } from '../providers/providers';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
@@ -9,6 +8,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
 import { RolesGuard } from '../roles/guards/roles.guard';
 import { RolesModule } from '../roles/roles.module';
+import { providers } from '../constants';
+import { DatabaseModule } from '../db/database.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { RolesModule } from '../roles/roles.module';
       signOptions: { expiresIn: '14400s' },
     }),
     RolesModule,
+    DatabaseModule,
   ],
   controllers: [AuthController],
   providers: [

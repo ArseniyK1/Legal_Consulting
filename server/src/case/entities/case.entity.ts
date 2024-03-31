@@ -1,24 +1,31 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
+import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 
-@Table({ tableName: 'case', createdAt: false, updatedAt: false })
-export class Case extends Model<Case> {
-  @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
-    primaryKey: true,
-  })
+@Entity()
+export class Case {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   type: string;
 
-  @Column({ type: DataType.BOOLEAN })
+  @Column()
   success: boolean;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   description: string;
 
-  @Column({ type: DataType.STRING })
+  @Column()
   article: string;
+
+  @ManyToOne(() => Portfolio, (portfolio) => portfolio.case)
+  @JoinColumn()
+  portfolio: Portfolio;
 }

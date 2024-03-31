@@ -1,14 +1,19 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { Repository } from 'typeorm';
+import { Request } from './entities/request.entity';
 
 @Injectable()
 export class RequestService {
-  constructor(@Inject('REQUEST_REPOSITORY') private requestRepository) {}
+  constructor(
+    @Inject('REQUEST_REPOSITORY')
+    private requestRepository: Repository<Request>,
+  ) {}
 
   async createRequest(req: any, dto: CreateRequestDto) {
     if (dto) {
-      const request = await this.requestRepository.create({
+      const request = await this.requestRepository.save({
         ...dto,
         status: 'Открытая',
         userId: req.user.userId,
@@ -24,15 +29,17 @@ export class RequestService {
   }
 
   async findAllRequestByUser(req: any) {
-    return await this.requestRepository.findAll({
-      where: { userId: req.user.userId },
-    });
+    // return await this.requestRepository.find({
+    //   where: { userId: req.user.userId },
+    // });
+    return await this.requestRepository.find();
   }
 
   async getOpenRequestByLawyer() {
-    return await this.requestRepository.findAll({
-      where: { status: 'Открытая' },
-    });
+    // return await this.requestRepository.findAll({
+    //   where: { status: 'Открытая' },
+    // });
+    return 'asd';
   }
 
   async findOne(id: number) {
@@ -45,10 +52,12 @@ export class RequestService {
     const portfolio = await this.findOne(requestId);
     if (!portfolio?.id)
       throw new HttpException('Заявка не найдена', HttpStatus.NOT_FOUND);
-    return await portfolio.update(dto);
+    // return await portfolio.update(dto);
+    return 'sadasd';
   }
 
   async remove(id: number) {
-    return await this.requestRepository.destroy({ where: { id: id } });
+    // return await this.requestRepository.destroy({ where: { id: id } });
+    return 'dsadasd';
   }
 }

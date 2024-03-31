@@ -1,79 +1,68 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 import { Discount } from '../../discount/entities/discount.entity';
 import { Feedback } from '../../feedback/entities/feedback.entity';
 import { Request } from '../../request/entities/request.entity';
+import { Roles } from '../../roles/entities/roles.entity';
 
-interface UserCreationAttrs {
-  first_name: string;
-  last_name: string;
-  middle_name: string;
-  login: string;
-  phonenumber: string;
-  photo: string;
-  date_of_birth: Date;
-  contact_email: string;
-  password: string;
-}
-
-@Table({ tableName: 'user', createdAt: false, updatedAt: false })
-export class User extends Model<User, UserCreationAttrs> {
-  @Column({
-    type: DataType.INTEGER,
-    unique: true,
-    autoIncrement: true,
-    primaryKey: true,
-  })
+@Entity({ name: 'user' })
+export class User {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: DataType.STRING })
+  @Column({ nullable: true })
   first_name: string;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: 'varchar', nullable: true })
   last_name: string;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: 'varchar', nullable: true })
   middle_name: string;
 
-  @Column({ type: DataType.STRING, unique: true, allowNull: false })
+  @Column({ type: 'varchar', nullable: true, default: 'asd' })
   login: string;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: 'varchar', nullable: true, default: 'asd' })
   password: string;
 
-  @Column({ type: DataType.STRING, unique: true })
+  @Column({ type: 'varchar', nullable: true })
   phonenumber: string;
 
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
+  @Column({ default: false })
   verified: boolean;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: 'varchar', nullable: true })
   photo: string;
 
-  @Column({ type: DataType.DATE })
+  @Column({ type: 'date', nullable: true })
   date_of_birth: Date;
 
-  @Column({ type: DataType.STRING, unique: true })
+  @Column({ type: 'varchar', nullable: true })
   contact_email: string;
 
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
+  @Column({ type: 'boolean', default: false })
   banned: boolean;
 
-  @HasMany(() => Portfolio, 'userId')
+  @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
   portfolio: Portfolio[];
 
-  @HasMany(() => Discount, 'userId')
+  @OneToMany(() => Discount, (discount) => discount.user)
   discount: Discount[];
 
-  @HasMany(() => Feedback, 'userId')
+  @OneToMany(() => Feedback, (feedback) => feedback.user)
   feedback: Feedback[];
 
-  @HasMany(() => Request, 'userId')
+  @OneToMany(() => Request, (request) => request.user)
   request: Request[];
+
+  @ManyToOne(() => Roles, (roles) => roles.user)
+  @JoinColumn({ name: 'roleId' })
+  public roleId: Roles;
 }

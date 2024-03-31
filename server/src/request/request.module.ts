@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { RequestService } from './request.service';
 import { RequestController } from './request.controller';
-import { providers } from '../providers/providers';
+import { providers } from '../constants';
+import { DatabaseModule } from '../db/database.module';
 
 @Module({
-  imports: [],
+  imports: [DatabaseModule],
   controllers: [RequestController],
   providers: [RequestService, ...providers],
   exports: [RequestService],

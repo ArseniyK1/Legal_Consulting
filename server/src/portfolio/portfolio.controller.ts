@@ -29,34 +29,34 @@ export class PortfolioController {
 
   @Get()
   @ApiOperation({ summary: 'Получение всех портфолио' })
-  findAll() {
-    return this.portfolioService.findAll();
+  async findAll() {
+    return await this.portfolioService.findAll();
   }
 
   @Get('getMyPortfolio')
   @ApiOperation({ summary: 'Получение портфолио по id ДЛЯ ЮРИСТОВ' })
-  findOne(@Request() req: any) {
-    return this.portfolioService.findOne(req);
+  async getMyPortfolio(@Request() req: any) {
+    return await this.portfolioService.getMyPortfolio(req);
   }
 
-  @Get('portfolioLawyer')
+  @Get('portfolioLawyer/:id')
   @Public()
   @ApiOperation({ summary: 'Получение портфолио для конкретного пользователя' })
-  findPortfolioByUserId(@Query() query: Record<string, object>) {
-    return this.portfolioService.findPortfolioByUserId(query);
+  async findPortfolioByUserId(@Param('id') id: string) {
+    return await this.portfolioService.findPortfolioByUserId(+id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updatePortfolioDto: UpdatePortfolioDto,
   ) {
-    return this.portfolioService.update(+id, updatePortfolioDto);
+    return await this.portfolioService.update(+id, updatePortfolioDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Удаление портфолио по id' })
-  remove(@Param('id') id: string) {
-    return this.portfolioService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.portfolioService.remove(+id);
   }
 }
