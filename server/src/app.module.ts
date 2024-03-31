@@ -22,7 +22,7 @@ import { EntityManager } from 'typeorm';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env` }),
+    ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
     RolesModule,
     RequestModule,
