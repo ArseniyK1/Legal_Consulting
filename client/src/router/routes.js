@@ -21,9 +21,9 @@ const routes = [
         component: () => import("../pages/NotifyPage.vue"),
       },
       {
-        path: "/lectures",
-        name: "LecturesPage",
-        component: () => import("../pages/LecturesPage.vue"),
+        path: "/lawyers",
+        name: "LawyersPage",
+        component: () => import("../pages/LawyersPage.vue"),
       },
       {
         path: "/objects",

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Request } from './entities/request.entity';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class RequestService {
       const request = await this.requestRepository.save({
         ...dto,
         status: 'Открытая',
-        userId: req.user.userId,
+        user: req.user.userId,
       });
 
       return request;
@@ -36,10 +36,9 @@ export class RequestService {
   }
 
   async getOpenRequestByLawyer() {
-    // return await this.requestRepository.findAll({
-    //   where: { status: 'Открытая' },
-    // });
-    return 'asd';
+    return await this.requestRepository.find({
+      where: { lawyerId: IsNull() },
+    });
   }
 
   async findOne(id: number) {
@@ -54,6 +53,17 @@ export class RequestService {
       throw new HttpException('Заявка не найдена', HttpStatus.NOT_FOUND);
     // return await portfolio.update(dto);
     return 'sadasd';
+  }
+
+  async respondRequest(lawyerId: number, requestId: number) {
+    const request = await this.requestRepository.findOne({
+      where: { id: requestId },
+    });
+    return await this.requestRepository.save({
+      ...request,
+      lawyerId,
+      status: 'Выполняется',
+    });
   }
 
   async remove(id: number) {

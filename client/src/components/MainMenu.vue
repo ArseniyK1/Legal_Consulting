@@ -70,10 +70,10 @@ const menu = [
     route: "/main/",
   },
   {
-    title: "Лекции",
-    caption: "Страница с курсами",
+    title: "Юристы",
+    caption: "Страница с юристами",
     icon: "school",
-    route: "/lectures/",
+    route: "/lawyers/",
   },
   {
     title: "Обьявления",

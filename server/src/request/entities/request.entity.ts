@@ -22,7 +22,7 @@ export class Request {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   lawyerId: number;
 
   @OneToMany(() => Trouble, 'requestId')

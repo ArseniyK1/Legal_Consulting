@@ -17,6 +17,7 @@ import { ReqGuardsReturnObject } from '../return-object/reqGuards.return-object'
 import { AllRequestReturnObject } from '../return-object/allRequestReturn.return-object';
 import { CreateRequestReturnObject } from '../return-object/createRequest.return-object';
 import { Public } from '../auth/public.decorator';
+import { RespondRequestDto } from './dto/Respond-request.dto';
 
 @ApiTags('Request')
 @Controller('request')
@@ -51,6 +52,15 @@ export class RequestController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.requestService.findOne(+id);
+  }
+
+  @ApiOperation({ summary: 'Откликнуться на заявку (для юристов)' })
+  @Patch('/respondRequest')
+  async respondRequest(@Request() req: any, @Query() query: RespondRequestDto) {
+    return await this.requestService.respondRequest(
+      req.user.userId,
+      +query.requestId,
+    );
   }
 
   @Patch(':id')

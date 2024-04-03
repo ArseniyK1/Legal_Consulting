@@ -28,33 +28,21 @@ export class CaseService {
   }
 
   async findAll(req: any) {
-    // const lawyerId = req.user.userId;
-    // const portfolio = await this.portfolioService.findPortfolioByUserId({
-    //   lawyerId,
-    // });
-    // if (portfolio.id) {
-    //   const cases = await this.caseRepository.findAll({
-    //     where: { portfolioId: portfolio.id },
-    //   });
-    //   return cases.length ? cases : [];
-    // } else {
-    //   throw new HttpException('Дел не найдено!', HttpStatus.NOT_FOUND);
-    // }
     const lawyerId = req.user.userId;
     const portfolio =
       await this.portfolioService.findPortfolioByUserId(lawyerId);
     return await this.caseRepository.find({
       where: { portfolio: portfolio.id },
-      relations: { portfolio: { user: { roleId: true } } },
     });
   }
 
   async findOne(req: any, id: number) {
-    return `This action returns a #${id} case`;
+    const allCases = await this.findAll(req);
+    return allCases.filter((el) => el.id === id)[0];
   }
 
   async update(req: any, id: number, updateCaseDto: UpdateCaseDto) {
-    return `This action updates a #${id} case`;
+    return await this.caseRepository.save();
   }
 
   async remove(req: any, id: number) {

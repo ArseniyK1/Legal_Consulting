@@ -20,7 +20,7 @@ export const databaseProviders = [
       // await dataSource.synchronize();
       //
       // for (const entity of dataSource.entityMetadatas) {
-      //   if (entity.tableName !== 'roles')
+      //   if (entity.tableName !== 'roles' && entity.tableName !== 'user')
       //     await dataSource
       //       .createQueryRunner()
       //       .query(`TRUNCATE TABLE "${entity.tableName}" CASCADE;`);

@@ -7,7 +7,7 @@ const token = localStorage.getItem("user-token");
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: "https://api.example.com" });
+const api = axios.create({ baseURL: "http://localhost:7000/" });
 api.defaults.headers.common["Accept"] = "application/json";
 if (!!token) {
   api.defaults.headers.common["Authorization"] = `Bearer ${token}`;

@@ -24,15 +24,12 @@ export const useAuthStore = defineStore({
     async login(login, password) {
       try {
         Loading.show();
-        const { data } = await api({
-          url: "http://localhost:7000/api/auth/login",
-          method: "post",
-          data: { username: login, password },
+        const { data } = await api.post("api/auth/login", {
+          username: login,
+          password,
         });
         if (!data?.access_token) throw new Error("Ошибка авторизации");
-        // console.log(data);
         const { access_token } = data;
-
         localStorage.setItem("user-token", access_token);
 
         api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
@@ -43,7 +40,7 @@ export const useAuthStore = defineStore({
           message: "Вы авторизованы",
           type: "positive",
         });
-        return true;
+        return data;
       } catch (e) {
         Notify.create({
           message: "Ошибка авторизации",
@@ -58,10 +55,7 @@ export const useAuthStore = defineStore({
     },
     async loadProfile() {
       try {
-        const { data } = await api({
-          url: `http://localhost:7000/api/auth/profile`,
-          method: "get",
-        });
+        const { data } = await api.get("api/auth/profile");
         const _data = { ...data };
         localStorage.setItem("user-role", _data.role);
         localStorage.setItem("user-profile", JSON.stringify(_data));
@@ -86,22 +80,17 @@ export const useAuthStore = defineStore({
       this.router.push("/login");
     },
     async registration(name, login, password, isTeacher) {
-      const response = await api({
-        url: "http://localhost:7000/api/user",
-        method: "post",
-        data: {
-          login: login,
-          first_name: name || null,
-          password,
-          isTeacher,
-        },
+      const { data } = await api.post("api/user", {
+        login: login,
+        first_name: name || null,
+        password,
+        isTeacher,
       });
-      const { data } = response;
-
-      localStorage.setItem("user-token", data?.user?.password);
-      localStorage.setItem("user-login", data?.user?.login);
-      localStorage.setItem("user-name", data?.user?.first_name);
-      this.token = data?.user?.password;
+      const access_token = await this.login(login, password);
+      localStorage.setItem("user-token", access_token?.access_token);
+      localStorage.setItem("user-login", data?.login);
+      localStorage.setItem("user-name", data?.first_name);
+      this.token = access_token?.access_token;
       this.router.push("/main");
     },
   },

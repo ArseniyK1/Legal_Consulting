@@ -88,8 +88,6 @@ const passRules = [
 
 const profile = computed(() => authStore.getProfile);
 
-console.log(false && false);
-
 const submitForm = async () => {
   form.value.validate(true).then(async () => {
     try {
