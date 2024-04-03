@@ -19,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './core/logger.middleware';
 import { DatabaseModule } from './db/database.module';
 import { EntityManager } from 'typeorm';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { EntityManager } from 'typeorm';
   ],
   providers: [...databaseProviders],
   exports: [...databaseProviders],
+  controllers: [AppController],
 })
 export class AppModule {}
 // export class AppModule implements OnApplicationBootstrap {
