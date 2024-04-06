@@ -77,6 +77,7 @@ export const useAuthStore = defineStore({
       localStorage.removeItem("user-profile");
       delete api.defaults.headers.common["Authorization"];
       this.token = "";
+      this.roles = "";
       this.router.push("/login");
     },
     async registration(name, login, password, isTeacher) {

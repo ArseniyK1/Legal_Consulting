@@ -13,7 +13,7 @@ const routes = [
       {
         path: "/main",
         name: "MainPage",
-        component: () => import("../components/MainPage.vue"),
+        component: () => import("pages/MainPage.vue"),
       },
       {
         path: "/notify",
@@ -26,9 +26,9 @@ const routes = [
         component: () => import("../pages/LawyersPage.vue"),
       },
       {
-        path: "/objects",
+        path: "/requests",
         name: "ObjectsPage",
-        component: () => import("../pages/ObjectsPage.vue"),
+        component: () => import("pages/RequestsPage.vue"),
       },
     ],
   },

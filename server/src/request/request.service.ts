@@ -35,6 +35,12 @@ export class RequestService {
     return await this.requestRepository.find();
   }
 
+  async getMyRequest(req: any) {
+    return await this.requestRepository.find({
+      where: { user: { id: req.user.userId } },
+    });
+  }
+
   async getOpenRequestByLawyer() {
     return await this.requestRepository.find({
       where: { lawyerId: IsNull() },

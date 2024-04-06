@@ -13,19 +13,12 @@
       ></q-btn>
       <div class="col q-ml-sm">
         <q-toolbar-title
-          class="q-pt-xs text-h6 montserrat-medium gradient-logo"
+          class="q-pt-sm q-ml-sm text-h6 montserrat-medium gradient-logo text-bold"
           @click="$router.push('/')"
           style="cursor: pointer; max-width: 165px"
           v-if="$q.screen.gt.xs"
-          >UniLecta</q-toolbar-title
+          >Консалтинг</q-toolbar-title
         >
-        <div
-          class="text-caption text-secondary montserrat-medium"
-          style="margin-top: -10px; background: fff"
-          v-if="$q.screen.gt.xs"
-        >
-          {{ version }}
-        </div>
       </div>
     </div>
     <div class="q-mx-md" style="flex: 1 1 200px; max-width: 600px">

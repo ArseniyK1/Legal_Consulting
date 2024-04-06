@@ -1,9 +1,6 @@
 <template>
-  <div
-    class="flex justify-between main-menu bg-info"
-    style="flex-direction: column"
-  >
-    <q-list class="q-mt-md" style="color: white">
+  <div class="column justify-between main-menu bg-info full-height">
+    <q-list class="q-mt-md text-white">
       <q-item
         class="z-max"
         :key="index"
@@ -72,14 +69,14 @@ const menu = [
   {
     title: "Юристы",
     caption: "Страница с юристами",
-    icon: "school",
+    icon: "groups",
     route: "/lawyers/",
   },
   {
-    title: "Обьявления",
-    caption: "Страница с обьявлениями",
-    icon: "notifications",
-    route: "/notify/",
+    title: "Заявки",
+    caption: "Страница с заявками",
+    icon: "article",
+    route: "/requests/",
   },
   {
     title: "Предметы",

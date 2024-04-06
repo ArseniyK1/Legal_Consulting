@@ -1,12 +1,6 @@
 <template>
   <q-layout view="hHh lpR lFf">
     <q-header class="bg-info text-white">
-      <!--      <q-toolbar>-->
-      <!--        <q-btn dense flat round icon="menu" @click="showMenu = !showMenu" />-->
-      <!--        <div class="text-h6 montserrat-medium q-ml-md">UniLecta</div>-->
-
-      <!--        <q-toolbar-title> </q-toolbar-title>-->
-      <!--      </q-toolbar>-->
       <main-header
         v-model:fullWidthMenu="fullWidthMenu"
         v-model:showMenu="showMenu"
@@ -27,19 +21,17 @@
       <main-menu :full="fullWidthMenu" :is-mobile="isMobile" />
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="as">
       <div :style="isMobile ? '' : 'padding-left: 57px'">
-        <q-page-container>
-          <router-view v-slot="{ Component }">
-            <component :is="Component"></component>
-          </router-view>
-        </q-page-container>
+        <router-view v-slot="{ Component }">
+          <component
+            style="height: calc(100vh - 50px)"
+            class="bgDarkPage"
+            :is="Component"
+          ></component>
+        </router-view>
       </div>
     </q-page-container>
-
-    <!--    <q-footer elevated class="bg-grey-8 text-white">-->
-    <!--      <q-toolbar> </q-toolbar>-->
-    <!--    </q-footer>-->
   </q-layout>
 </template>
 
@@ -65,3 +57,9 @@ onMounted(async () => {
   await authStore.loadProfile();
 });
 </script>
+
+<style lang="scss" scoped>
+.bgDarkPage {
+  background: #6096ba;
+}
+</style>

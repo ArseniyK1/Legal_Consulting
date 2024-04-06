@@ -41,6 +41,12 @@ export class RequestController {
     return this.requestService.findAllRequestByUser(req);
   }
 
+  @Get('/getMyRequest')
+  @ApiOperation({ summary: 'Получение всех активных заявок пользователя' })
+  getMyRequest(@Request() req: any) {
+    return this.requestService.getMyRequest(req);
+  }
+
   @Get('/openRequest')
   @ApiOperation({
     summary: 'Получение всех открытых заявок пользователей для юриста',
