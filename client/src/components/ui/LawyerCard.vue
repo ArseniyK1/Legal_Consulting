@@ -30,13 +30,24 @@
     <q-separator />
 
     <q-card-actions>
-      <q-btn flat round icon="event" class="bg-white" color="gray" />
-      <q-btn flat color="primary">Подробнее</q-btn>
+      <q-btn flat round icon="bookmark_add" class="bg-white" color="accent" />
+      <q-btn flat color="primary" @click="infolawyer = true"
+        >Подробнее
+        <main-dialog
+          v-model="infolawyer"
+          caption="ASDASD"
+          title="ASDADASD"
+          width="1200px"
+          >MAIN SLOT
+          <slot name="action">ACTION</slot>
+        </main-dialog>
+      </q-btn>
     </q-card-actions>
   </q-card>
 </template>
 <script setup>
 import { ref } from "vue";
+import MainDialog from "components/ui/MainDialog.vue";
 
 const props = defineProps({
   title: {
@@ -62,6 +73,9 @@ const props = defineProps({
 });
 
 // REFS
-
+const infolawyer = ref(false);
+const inception = ref(false);
 // REFS
+
+// FUNCTION
 </script>

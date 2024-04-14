@@ -15,6 +15,7 @@ import { PortfolioService } from '../portfolio/portfolio.service';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { roleEnum } from '../constants';
 
 @Injectable()
 export class UserService {
@@ -35,7 +36,7 @@ export class UserService {
       const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
 
       if (!!createUserDto.isLawyer) {
-        const role = await this.roleService.getRoleByValue('LAWYER');
+        const role = await this.roleService.getRoleByValue(roleEnum.LAWYER);
         console.log(role);
         return await this.userRepository.save({
           ...createUserDto,
@@ -43,13 +44,35 @@ export class UserService {
           password: hashPassword,
         });
       } else {
-        const role = await this.roleService.getRoleByValue('USER');
+        const role = await this.roleService.getRoleByValue(roleEnum.USER);
         return await this.userRepository.save({
           ...createUserDto,
           roleId: role.id,
           password: hashPassword,
         });
       }
+    } else {
+      throw new BadRequestException('Укажите логин и(или) пароль');
+    }
+  }
+
+  async createOperator(createUserDto: CreateUserDto) {
+    if (!!createUserDto.password && !!createUserDto.login) {
+      const existsUser = await this.userRepository.findOne({
+        where: { login: createUserDto?.login },
+      });
+      if (existsUser?.id)
+        throw new ConflictException('Такой пользователь уже существует');
+      const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
+      const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
+
+      const role = await this.roleService.getRoleByValue(roleEnum.OPERATOR);
+
+      return await this.userRepository.save({
+        ...createUserDto,
+        roleId: role.id,
+        password: hashPassword,
+      });
     } else {
       throw new BadRequestException('Укажите логин и(или) пароль');
     }

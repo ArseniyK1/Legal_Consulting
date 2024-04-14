@@ -13,13 +13,13 @@ import { CaseModule } from './case/case.module';
 import { databaseProviders } from './db/database.providers';
 import { DiscountModule } from './discount/discount.module';
 import { FeedbackModule } from './feedback/feedback.module';
-import { TroubleModule } from './trouble/trouble.module';
-import { DecisionModule } from './decision/decision.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './core/logger.middleware';
 import { DatabaseModule } from './db/database.module';
 import { EntityManager } from 'typeorm';
 import { AppController } from './app.controller';
+import { OrganizationModule } from './organization/organization.module';
+import { TypeRightModule } from './type_right/type_right.module';
 
 @Module({
   imports: [
@@ -31,9 +31,9 @@ import { AppController } from './app.controller';
     CaseModule,
     DiscountModule,
     FeedbackModule,
-    TroubleModule,
-    DecisionModule,
     AuthModule,
+    OrganizationModule,
+    TypeRightModule,
   ],
   providers: [...databaseProviders],
   exports: [...databaseProviders],

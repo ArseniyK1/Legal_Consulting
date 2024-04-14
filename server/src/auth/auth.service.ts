@@ -42,7 +42,6 @@ export class AuthService {
       userId: user.id,
       username: user.login,
       verified: user.verified,
-      banned: user.banned,
       role: role.value,
     };
     return {

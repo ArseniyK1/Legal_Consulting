@@ -26,7 +26,7 @@
         class="q-mx-md"
         @blur="search = $route.query ? $route.query.search : ''"
         dense="dense"
-        bg-color="secondary"
+        bg-color="white"
         outlined="outlined"
         placeholder="Поиск"
         rounded="rounded"
@@ -50,46 +50,51 @@
         ></template>
       </q-input>
     </div>
-    <q-btn class="q-mr-sm" flat="flat" round="round">
-      <q-avatar class="avatar-button" style="background: #f06543">
-        <q-icon name="person"></q-icon>
-        <q-menu
-          :offset="[22, 6]"
-          square="square"
-          style="
-            border-radius: 0 0 0px 10px;
-            border: 1.5px solid #e0e0e0;
-            box-shadow: none;
-            z-index: 999;
-          "
-          transition-duration="100"
-          transition-hide="slide-up"
-          transition-show="slide-down"
-        >
-          <q-list bordered separator style="max-width: 318px">
-            <q-item @click="goToProfile" clickable="clickable" v-ripple>
-              <q-item-section avatar="avatar">
-                <q-icon color="secondary" name="user"></q-icon>
-              </q-item-section>
-              <q-item-section>Открыть профиль</q-item-section>
-            </q-item>
-            <q-separator></q-separator>
-            <q-separator></q-separator>
-            <q-item @click="logout" clickable="clickable" v-ripple>
-              <q-item-section avatar="avatar">
-                <q-icon
-                  color="secondary"
-                  name="fal fa-right-from-bracket"
-                ></q-icon>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Выйти</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-menu>
-      </q-avatar>
-    </q-btn>
+    <div class="row items-center">
+      <q-icon name="bookmarks" class="q-mr-md cursor-pointer" size="2rem">
+        <q-tooltip>Избранное</q-tooltip>
+      </q-icon>
+      <q-btn class="q-mr-sm" flat="flat" round="round">
+        <q-avatar class="avatar-button" style="background: #f06543">
+          <q-icon name="person"></q-icon>
+          <q-menu
+            :offset="[22, 6]"
+            square="square"
+            style="
+              border-radius: 0 0 0px 10px;
+              border: 1.5px solid #e0e0e0;
+              box-shadow: none;
+              z-index: 999;
+            "
+            transition-duration="100"
+            transition-hide="slide-up"
+            transition-show="slide-down"
+          >
+            <q-list bordered separator style="max-width: 318px">
+              <q-item @click="goToProfile" clickable="clickable" v-ripple>
+                <q-item-section avatar="avatar">
+                  <q-icon color="secondary" name="user"></q-icon>
+                </q-item-section>
+                <q-item-section>Открыть профиль</q-item-section>
+              </q-item>
+              <q-separator></q-separator>
+              <q-separator></q-separator>
+              <q-item @click="logout" clickable="clickable" v-ripple>
+                <q-item-section avatar="avatar">
+                  <q-icon
+                    color="secondary"
+                    name="fal fa-right-from-bracket"
+                  ></q-icon>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Выйти</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-avatar>
+      </q-btn>
+    </div>
   </q-toolbar>
 </template>
 <script setup>

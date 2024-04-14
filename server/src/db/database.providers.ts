@@ -13,11 +13,11 @@ export const databaseProviders = [
         password: String(process.env.POSTGRES_PASSWORD),
         database: String(process.env.POSTGRES_DB),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        logging: true,
         // synchronize: true,
+        logging: true,
       });
       await dataSource.initialize();
-      // await dataSource.synchronize();
+      await dataSource.synchronize();
       //
       // for (const entity of dataSource.entityMetadatas) {
       //   if (entity.tableName !== 'roles' && entity.tableName !== 'user')

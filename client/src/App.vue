@@ -2,10 +2,8 @@
   <router-view />
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { defineComponent, onMounted } from "vue";
 
-export default defineComponent({
-  name: 'App'
-})
+onMounted(() => {});
 </script>

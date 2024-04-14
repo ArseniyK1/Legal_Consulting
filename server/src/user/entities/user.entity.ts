@@ -11,6 +11,7 @@ import { Discount } from '../../discount/entities/discount.entity';
 import { Feedback } from '../../feedback/entities/feedback.entity';
 import { Request } from '../../request/entities/request.entity';
 import { Roles } from '../../roles/entities/roles.entity';
+import { Organization } from '../../organization/entities/organization.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -20,38 +21,39 @@ export class User {
   @Column({ nullable: true })
   first_name: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ nullable: true })
   last_name: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ nullable: true })
   middle_name: string;
 
-  @Column({ type: 'varchar', nullable: true, default: 'asd' })
+  @Column({ nullable: true })
   login: string;
 
-  @Column({ type: 'varchar', nullable: true, default: 'asd' })
+  @Column({ nullable: true })
   password: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ nullable: true })
   phonenumber: string;
 
   @Column({ default: false })
   verified: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ nullable: true })
   photo: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ nullable: true })
   date_of_birth: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ nullable: true })
   contact_email: string;
-
-  @Column({ type: 'boolean', default: false })
-  banned: boolean;
 
   @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
   portfolio: Portfolio[];
+
+  @ManyToOne(() => Organization, (organization) => organization.user)
+  @JoinColumn({ name: 'organizationId' })
+  organization: Organization;
 
   @OneToMany(() => Discount, (discount) => discount.user)
   discount: Discount[];

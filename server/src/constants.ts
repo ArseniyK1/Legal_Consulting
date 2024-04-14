@@ -32,3 +32,17 @@ export const providers = [
     inject: ['DATA_SOURCE'],
   },
 ];
+
+export enum roleEnum {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+  LAWYER = 'LAWYER',
+  OPERATOR = 'OPERATOR',
+}
+
+export enum requestStatusEnum {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  IN_PROGRESS = 'inProgress',
+  CANCELED = 'canceled',
+} // pending - ожидает ответа оператора, accepted - принят, inProgress - в процессе, canceled - отменен

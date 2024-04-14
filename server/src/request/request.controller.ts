@@ -18,6 +18,7 @@ import { AllRequestReturnObject } from '../return-object/allRequestReturn.return
 import { CreateRequestReturnObject } from '../return-object/createRequest.return-object';
 import { Public } from '../auth/public.decorator';
 import { RespondRequestDto } from './dto/Respond-request.dto';
+import { ChangeStatusDto } from './dto/ChangeStatus.dto';
 
 @ApiTags('Request')
 @Controller('request')
@@ -53,6 +54,14 @@ export class RequestController {
   })
   getOpenRequestByLawyer() {
     return this.requestService.getOpenRequestByLawyer();
+  }
+
+  @Patch('/changeStatus')
+  @ApiOperation({
+    summary: 'Изменение статуста заявки (для оператора)',
+  })
+  changeStatus(@Query() query: ChangeStatusDto) {
+    return this.requestService.changeStatus(query);
   }
 
   @Get(':id')

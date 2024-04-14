@@ -33,6 +33,14 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  @Post('operator')
+  @Public()
+  @ApiOperation({ summary: 'Регистрация оператора' })
+  @ApiResponse({ type: CreateUserDto })
+  async createOperator(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.createOperator(createUserDto);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Показать всех пользователей (для админа)' })
   @ApiResponse({ type: [CreateUserDto] })
