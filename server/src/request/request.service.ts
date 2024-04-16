@@ -4,7 +4,7 @@ import { UpdateRequestDto } from './dto/update-request.dto';
 import { IsNull, Repository } from 'typeorm';
 import { Request } from './entities/request.entity';
 import { requestStatusEnum } from '../constants';
-import { ChangeStatusDto } from './dto/ChangeStatus.dto';
+import { ChangeStatusDto } from './dto/change-status.dto';
 
 @Injectable()
 export class RequestService {

@@ -17,8 +17,8 @@ import { ReqGuardsReturnObject } from '../return-object/reqGuards.return-object'
 import { AllRequestReturnObject } from '../return-object/allRequestReturn.return-object';
 import { CreateRequestReturnObject } from '../return-object/createRequest.return-object';
 import { Public } from '../auth/public.decorator';
-import { RespondRequestDto } from './dto/Respond-request.dto';
-import { ChangeStatusDto } from './dto/ChangeStatus.dto';
+import { RespondRequestDto } from './dto/respond-request.dto';
+import { ChangeStatusDto } from './dto/change-status.dto';
 
 @ApiTags('Request')
 @Controller('request')

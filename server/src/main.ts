@@ -36,7 +36,7 @@ async function bootstrap() {
     .addTag('Arseniy Kiselev')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api/docs', app, document);
+  SwaggerModule.setup('/api-docs', app, document);
 
   await app.listen(port, () =>
     console.log(`Сервер запустился на ${port} порту`),
