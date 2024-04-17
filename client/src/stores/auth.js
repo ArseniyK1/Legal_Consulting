@@ -62,11 +62,12 @@ export const useAuthStore = defineStore({
         this.roles = _data.role;
         return _data;
       } catch (e) {
-        Notify.create({
-          type: "negative",
-          color: "secondary",
-          message: "Ошибка загрузки профиля",
-        });
+        // Notify.create({
+        //   type: "negative",
+        //   color: "secondary",
+        //   message: "Ошибка загрузки профиля",
+        // });
+        console.log(e);
       }
     },
     async logout() {
@@ -80,12 +81,12 @@ export const useAuthStore = defineStore({
       this.roles = "";
       this.router.push("/login");
     },
-    async registration(name, login, password, isTeacher) {
+    async registration(name, login, password, isLawyer) {
       const { data } = await api.post("api/user", {
         login: login,
         first_name: name || null,
         password,
-        isTeacher,
+        isLawyer,
       });
       const access_token = await this.login(login, password);
       localStorage.setItem("user-token", access_token?.access_token);

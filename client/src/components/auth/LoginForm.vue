@@ -1,13 +1,13 @@
 <template>
-  <q-form class="row" @submit="submitForm" ref="form" tabindex="-1">
-    <q-card class="shadow-3 login-form">
+  <q-form class="row full-height" @submit="submitForm" ref="form" tabindex="-1">
+    <q-card class="login-form full-height">
       <q-card-section>
-        <div class="q-gutter-md">
+        <div class="q-gutter-sm">
           <q-input
             label="Введите ваш логин"
-            outlined
             lazy-rules="lazy-rules"
             type="login"
+            outlined
             :rules="[(val) => !!val || 'Заполните логин!']"
             v-model="login"
             color="black"
@@ -20,14 +20,14 @@
             :type="showPassword ? 'text' : 'password'"
             @keydown.enter.prevent="submitForm"
             label="Пароль"
+            outlined
             :rules="[(val) => !!val || 'Заполните пароль!']"
             v-model="password"
-            outlined
             label-color="black"
             color="black"
           >
             <template v-slot:prepend>
-              <q-icon name="password"></q-icon>
+              <q-icon name="lock"></q-icon>
             </template>
             <template v-slot:append>
               <q-icon

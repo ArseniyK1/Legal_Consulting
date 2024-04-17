@@ -61,12 +61,12 @@ onMounted(async () => {
     showMenu.value = false;
     fullWidthMenu.value = true;
   }
-  try {
-    const testToken = await authStore.loadProfile();
-    !testToken && (await router.push("/login"));
-  } catch (e) {
-    await router.push("/login");
-  }
+  // try {
+  //   const testToken = await authStore.loadProfile();
+  //   !testToken && (await router.push("/login"));
+  // } catch (e) {
+  //   await router.push("/login");
+  // }
 });
 </script>
 

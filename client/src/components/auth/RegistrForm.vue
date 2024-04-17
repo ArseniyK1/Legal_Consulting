@@ -1,30 +1,66 @@
 <template>
-  <q-form class="row" @submit="submitForm" ref="form" tabindex="-1">
-    <q-card class="shadow-3 reg-form">
+  <q-form class="row full-height" @submit="submitForm" ref="form" tabindex="-1">
+    <q-card class="shadow-3 reg-form full-height">
       <q-card-section>
         <div class="q-gutter-md">
           <q-input
             label="Введите ваше имя"
-            outlined
             lazy-rules="lazy-rules"
             type="text"
             v-model="name"
-            color="black"
+            color="green"
+            label-color="black"
           >
             <template v-slot:prepend>
               <q-icon name="face" />
             </template>
           </q-input>
           <q-input
-            label="Введите ваш логин"
-            outlined
+            label="Придумайте логин"
             lazy-rules="lazy-rules"
             type="login"
             v-model="login"
-            color="black"
+            color="green"
+            label-color="black"
           >
             <template v-slot:prepend>
               <q-icon name="face" />
+            </template>
+          </q-input>
+          <q-input
+            label="Введите вашу почту"
+            lazy-rules="lazy-rules"
+            type="text"
+            v-model="email"
+            color="green"
+            label-color="black"
+          >
+            <template v-slot:prepend>
+              <q-icon name="mail" />
+            </template>
+          </q-input>
+          <q-input
+            label="Дата рождения"
+            v-model="date"
+            mask="date"
+            :rules="['date']"
+            color="green"
+            label-color="black"
+          >
+            <template v-slot:append>
+              <q-icon name="event">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date v-model="date" minimal>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
             </template>
           </q-input>
           <q-input
@@ -32,8 +68,8 @@
             @keydown.enter.prevent="submitForm"
             label="Пароль"
             v-model="password"
-            outlined
-            color="black"
+            color="positive "
+            label-color="black"
           >
             <template v-slot:prepend>
               <q-icon name="password"></q-icon>
@@ -80,6 +116,8 @@ const name = ref("");
 const password = ref("");
 const showPassword = ref(false);
 const isTeacher = ref(false);
+const email = ref("");
+const date = ref("");
 
 const passRules = [
   (val) => !!val || "Введите пароль",
