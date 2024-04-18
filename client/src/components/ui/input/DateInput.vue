@@ -5,14 +5,12 @@
     :label="label"
     :model-value="modelValue"
     :readonly="readonly"
-    :rules="[
-      (val) => !required || (required && !!val) || 'Заполните поле',
-      (val) => validateDate(val) || 'Введите корректную дату',
-      (val) => validateMonth(val) || ' Доступный период для выбора - 1 месяц',
-    ]"
     @update:modelValue="handleInput"
     mask="##.##.####"
+    filled
     ref="dateInput"
+    color="positive"
+    label-color="dark"
   >
     <template v-slot:prepend>
       <q-icon

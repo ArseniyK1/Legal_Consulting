@@ -1,18 +1,20 @@
 <template>
   <q-form class="row full-height" @submit="submitForm" ref="form" tabindex="-1">
-    <q-card class="shadow-3 reg-form full-height">
+    <q-card class="shadow-3 reg-form full-height bg-primary">
       <q-card-section>
         <div class="q-gutter-md">
           <q-input
             label="Введите ваше имя"
-            lazy-rules="lazy-rules"
             type="text"
             v-model="name"
-            color="green"
-            label-color="black"
+            outlined
+            standout
+            color="positive"
+            label-color="dark"
+            filled
           >
             <template v-slot:prepend>
-              <q-icon name="face" />
+              <q-icon class="q-ml-md" name="badge" />
             </template>
           </q-input>
           <q-input
@@ -20,11 +22,14 @@
             lazy-rules="lazy-rules"
             type="login"
             v-model="login"
-            color="green"
-            label-color="black"
+            outlined
+            standout
+            color="positive"
+            label-color="dark"
+            filled
           >
             <template v-slot:prepend>
-              <q-icon name="face" />
+              <q-icon class="q-ml-md" name="abc" size="lg" />
             </template>
           </q-input>
           <q-input
@@ -32,47 +37,34 @@
             lazy-rules="lazy-rules"
             type="text"
             v-model="email"
-            color="green"
-            label-color="black"
+            outlined
+            standout
+            color="positive"
+            label-color="dark"
+            filled
           >
             <template v-slot:prepend>
-              <q-icon name="mail" />
+              <q-icon class="q-ml-md" name="mail" />
             </template>
           </q-input>
-          <q-input
+          <date-input
             label="Дата рождения"
+            required="required"
             v-model="date"
-            mask="date"
-            :rules="['date']"
-            color="green"
-            label-color="black"
-          >
-            <template v-slot:append>
-              <q-icon name="event">
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                >
-                  <q-date v-model="date" minimal>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
+          />
           <q-input
             :type="showPassword ? 'text' : 'password'"
             @keydown.enter.prevent="submitForm"
             label="Пароль"
             v-model="password"
-            color="positive "
-            label-color="black"
+            outlined
+            standout
+            color="positive"
+            label-color="dark"
+            filled
           >
             <template v-slot:prepend>
-              <q-icon name="password"></q-icon>
+              <q-icon class="q-ml-md" name="pin"></q-icon>
             </template>
             <template v-slot:append>
               <q-icon
@@ -95,7 +87,8 @@
           label="Зарегистрироваться"
           size="lg"
           type="submit"
-          unelevated="unelevated"
+          unelevated
+          rounded
         ></q-btn>
       </q-card-actions>
     </q-card>
@@ -106,6 +99,7 @@ import { Notify, useQuasar } from "quasar";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useAuthStore } from "stores/auth";
 import { useRouter } from "vue-router";
+import DateInput from "components/ui/input/DateInput.vue";
 
 const authStore = useAuthStore();
 const quasar = useQuasar();
@@ -133,7 +127,8 @@ const submitForm = async () => {
         name.value,
         login.value,
         password.value,
-        isTeacher.value
+        isTeacher.value,
+        date.value
       );
     } catch (e) {
       Notify.create({ message: "Error" });
@@ -157,14 +152,17 @@ const submitForm = async () => {
 }
 .gradient-btn {
   box-sizing: content-box;
-  border: double 4px transparent;
   border-radius: 20px;
-  background-image: linear-gradient(white, white),
-    linear-gradient(130deg, #696984 10%, $info 100%);
-  /*border-image: linear-gradient( 130deg, #FDA219 10%, #E80505 100%) 1;*/
+  //border-image: linear-gradient(130deg, #fda219 10%, #e80505 100%) 1;
   padding: 10px;
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  color: $dark;
+  color: white;
+  background: $accent;
+  border: 2px solid $accent;
+  //background: $positive;
+}
+.gradient-btn:hover {
+  transition: 0.25s ease-in-out;
+  background: white;
+  color: $accent;
 }
 </style>

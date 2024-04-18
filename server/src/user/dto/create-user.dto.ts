@@ -1,12 +1,14 @@
 import {
   IsBoolean,
   IsDate,
+  IsDateString,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { RoleReturnObject } from '../../return-object/role.return-object';
+import { Type } from 'class-transformer';
 
 export class CreateUserDto {
   @IsString()
@@ -52,9 +54,10 @@ export class CreateUserDto {
   @ApiProperty({ example: 'photo.jpg', description: 'Фото пользователя' })
   photo?: string;
 
-  @IsDate()
   @IsNotEmpty()
   @IsOptional()
+  @IsDate()
+  @Type(() => Date)
   @ApiProperty({
     example: '02.02.2002',
     description: 'Дата рождения пользователя',

@@ -16,7 +16,7 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import { useRequestStore } from "stores/request";
-import RequestCard from "components/ui/RequestCard.vue";
+import RequestCard from "components/ui/cards/RequestCard.vue";
 
 // INJECTABLE
 const requestStore = useRequestStore();

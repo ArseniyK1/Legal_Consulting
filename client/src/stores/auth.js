@@ -2,6 +2,7 @@ import { api } from "boot/axios";
 import { defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
 import axios from "axios";
+import { normaliseDate } from "src/helpers/format";
 
 export const useAuthStore = defineStore({
   id: "auth",
@@ -81,12 +82,14 @@ export const useAuthStore = defineStore({
       this.roles = "";
       this.router.push("/login");
     },
-    async registration(name, login, password, isLawyer) {
+    async registration(name, login, password, isLawyer, date_of_birth) {
+      // Ensure date_of_birth is a Date instance
       const { data } = await api.post("api/user", {
         login: login,
         first_name: name || null,
         password,
         isLawyer,
+        date_of_birth: normaliseDate(date_of_birth),
       });
       const access_token = await this.login(login, password);
       localStorage.setItem("user-token", access_token?.access_token);

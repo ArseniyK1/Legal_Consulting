@@ -1,1 +1,13 @@
 // app global css in SCSS form
+@font-face {
+  font-family: myriad;
+  src: url(./Myriad/MyriadPro-Regular.woff);
+}
+@font-face {
+  font-family: stengazeta;
+  src: url(./Stengazeta/Stengazeta-Regular_5.ttf);
+}
+
+* {
+  font-family: 'myriad';
+}

@@ -18,7 +18,7 @@ import { onBeforeMount, onMounted, ref, watch } from "vue";
 import { useLawyerStore } from "stores/lawyer";
 import CommonList from "components/common/CommonList.vue";
 import { useRoute } from "vue-router";
-import LawyerCard from "components/ui/LawyerCard.vue";
+import LawyerCard from "components/ui/cards/LawyerCard.vue";
 
 const props = defineProps({
   height: {

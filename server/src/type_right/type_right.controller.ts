@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TypeRightService } from './type_right.service';
 import { CreateTypeRightDto } from './dto/create-type_right.dto';
 import { UpdateTypeRightDto } from './dto/update-type_right.dto';
@@ -7,14 +15,14 @@ import { UpdateTypeRightDto } from './dto/update-type_right.dto';
 export class TypeRightController {
   constructor(private readonly typeRightService: TypeRightService) {}
 
-  @Post()
-  create(@Body() createTypeRightDto: CreateTypeRightDto) {
-    return this.typeRightService.create(createTypeRightDto);
+  @Post('create')
+  async createTypeRight(@Body() createTypeRightDto: CreateTypeRightDto) {
+    return await this.typeRightService.createTypeRight(createTypeRightDto);
   }
 
   @Get()
-  findAll() {
-    return this.typeRightService.findAll();
+  async getAllTypeRights() {
+    return await this.typeRightService.getAllTypeRights();
   }
 
   @Get(':id')
@@ -23,7 +31,10 @@ export class TypeRightController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTypeRightDto: UpdateTypeRightDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTypeRightDto: UpdateTypeRightDto,
+  ) {
     return this.typeRightService.update(+id, updateTypeRightDto);
   }
 

@@ -7,10 +7,13 @@
             label="Введите ваш логин"
             lazy-rules="lazy-rules"
             type="login"
-            outlined
             :rules="[(val) => !!val || 'Заполните логин!']"
             v-model="login"
-            color="black"
+            outlined
+            standout
+            color="positive"
+            label-color="dark"
+            filled
           >
             <template v-slot:prepend>
               <q-icon name="face" />
@@ -23,8 +26,10 @@
             outlined
             :rules="[(val) => !!val || 'Заполните пароль!']"
             v-model="password"
-            label-color="black"
-            color="black"
+            standout
+            color="positive"
+            label-color="dark"
+            filled
           >
             <template v-slot:prepend>
               <q-icon name="lock"></q-icon>
@@ -98,14 +103,17 @@ const submitForm = async () => {
 }
 .gradient-btn {
   box-sizing: content-box;
-  border: double 4px transparent;
   border-radius: 20px;
-  background-image: linear-gradient(white, white),
-    linear-gradient(130deg, #696984 10%, $info 100%);
-  /*border-image: linear-gradient( 130deg, #FDA219 10%, #E80505 100%) 1;*/
+  //border-image: linear-gradient(130deg, #fda219 10%, #e80505 100%) 1;
   padding: 10px;
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  color: $dark;
+  color: white;
+  background: $accent;
+  border: 2px solid $accent;
+  //background: $positive;
+}
+.gradient-btn:hover {
+  transition: 0.25s ease-in-out;
+  background: white;
+  color: $accent;
 }
 </style>

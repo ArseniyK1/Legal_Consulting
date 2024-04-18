@@ -47,7 +47,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import MainDialog from "components/ui/MainDialog.vue";
+import MainDialog from "components/ui/dialog/MainDialog.vue";
 
 const props = defineProps({
   title: {

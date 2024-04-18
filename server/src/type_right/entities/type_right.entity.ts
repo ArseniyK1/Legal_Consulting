@@ -11,6 +11,12 @@ export class TypeRight {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ nullable: true })
+  icon: string;
+
+  @Column({ nullable: true, type: 'jsonb' })
+  type_trouble: JSON;
+
   @OneToOne(() => Request, (request) => request.type_right)
   request: Request;
 }
