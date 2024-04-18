@@ -1,20 +1,57 @@
 <template>
   <q-form class="row full-height" @submit="submitForm" ref="form" tabindex="-1">
-    <q-card class="shadow-3 reg-form full-height bg-primary">
+    <q-card
+      class="shadow-3 reg-form full-height bg-dark"
+      style="border-radius: 0px !important"
+    >
       <q-card-section>
         <div class="q-gutter-md">
+          <div class="row">
+            <div class="col-6 q-pr-sm">
+              <q-input
+                label="Фамилия"
+                type="text"
+                v-model="lastName"
+                rounded
+                outlined
+                bg-color="primary"
+                color="info"
+                label-color="dark"
+              >
+                <template v-slot:prepend>
+                  <q-icon color="dark" class="q-ml-md q-mr-sm" name="badge" />
+                </template>
+              </q-input>
+            </div>
+            <div class="col-6">
+              <q-input
+                label="Имя"
+                type="text"
+                v-model="name"
+                rounded
+                outlined
+                bg-color="primary"
+                color="info"
+                label-color="dark"
+              >
+                <template v-slot:prepend>
+                  <q-icon color="dark" class="q-ml-md q-mr-sm" name="badge" />
+                </template>
+              </q-input>
+            </div>
+          </div>
           <q-input
-            label="Введите ваше имя"
+            label="Отчество (при наличии)"
             type="text"
-            v-model="name"
+            v-model="middleName"
+            rounded
             outlined
-            standout
-            color="positive"
+            bg-color="primary"
+            color="info"
             label-color="dark"
-            filled
           >
             <template v-slot:prepend>
-              <q-icon class="q-ml-md" name="badge" />
+              <q-icon color="dark" class="q-ml-md q-mr-sm" name="badge" />
             </template>
           </q-input>
           <q-input
@@ -22,14 +59,14 @@
             lazy-rules="lazy-rules"
             type="login"
             v-model="login"
+            rounded
             outlined
-            standout
-            color="positive"
+            bg-color="primary"
+            color="info"
             label-color="dark"
-            filled
           >
             <template v-slot:prepend>
-              <q-icon class="q-ml-md" name="abc" size="lg" />
+              <q-icon color="dark" class="q-ml-md" name="abc" size="md" />
             </template>
           </q-input>
           <q-input
@@ -37,14 +74,14 @@
             lazy-rules="lazy-rules"
             type="text"
             v-model="email"
+            rounded
             outlined
-            standout
-            color="positive"
+            bg-color="primary"
+            color="info"
             label-color="dark"
-            filled
           >
             <template v-slot:prepend>
-              <q-icon class="q-ml-md" name="mail" />
+              <q-icon color="dark" class="q-ml-md q-mr-sm" name="mail" />
             </template>
           </q-input>
           <date-input
@@ -57,17 +94,18 @@
             @keydown.enter.prevent="submitForm"
             label="Пароль"
             v-model="password"
+            rounded
             outlined
-            standout
-            color="positive"
+            bg-color="primary"
+            color="info"
             label-color="dark"
-            filled
           >
             <template v-slot:prepend>
-              <q-icon class="q-ml-md" name="pin"></q-icon>
+              <q-icon color="dark" class="q-ml-md q-mr-sm" name="pin"></q-icon>
             </template>
             <template v-slot:append>
               <q-icon
+                color="dark"
                 class="cursor-pointer"
                 name="visibility_off"
                 @click="showPassword = !showPassword"
@@ -78,6 +116,7 @@
             v-model="isTeacher"
             label="Зарегистрироваться как юрист"
             color="accent"
+            class="text-primary"
           />
         </div>
       </q-card-section>
@@ -107,6 +146,8 @@ const router = useRouter();
 const form = ref(null);
 const login = ref("");
 const name = ref("");
+const lastName = ref("");
+const middleName = ref("");
 const password = ref("");
 const showPassword = ref(false);
 const isTeacher = ref(false);
@@ -125,6 +166,8 @@ const submitForm = async () => {
     try {
       await authStore.registration(
         name.value,
+        lastName.value,
+        middleName.value,
         login.value,
         password.value,
         isTeacher.value,

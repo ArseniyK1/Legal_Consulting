@@ -1,6 +1,9 @@
 <template>
   <q-form class="row full-height" @submit="submitForm" ref="form" tabindex="-1">
-    <q-card class="login-form full-height">
+    <q-card
+      class="login-form full-height bg-dark"
+      style="border-radius: 0px !important"
+    >
       <q-card-section>
         <div class="q-gutter-sm">
           <q-input
@@ -9,11 +12,11 @@
             type="login"
             :rules="[(val) => !!val || 'Заполните логин!']"
             v-model="login"
+            rounded
             outlined
-            standout
-            color="positive"
+            bg-color="primary"
+            color="info"
             label-color="dark"
-            filled
           >
             <template v-slot:prepend>
               <q-icon name="face" />
@@ -26,10 +29,10 @@
             outlined
             :rules="[(val) => !!val || 'Заполните пароль!']"
             v-model="password"
-            standout
-            color="positive"
+            rounded
+            bg-color="primary"
+            color="info"
             label-color="dark"
-            filled
           >
             <template v-slot:prepend>
               <q-icon name="lock"></q-icon>

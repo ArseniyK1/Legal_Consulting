@@ -1,20 +1,21 @@
 <template>
   <q-page
-    class="login-page window-height window-width row items-center justify-center bg-info"
+    class="login-page window-height window-width row items-center justify-center bg-secondary"
   >
     <div class="col-6">
-      <q-img alt="Oops!" src="/auth-photo.svg" height="100%" />
+      <q-img alt="Oops!" src="/test.svg" height="100%" />
       <q-separator vertical color="dark"></q-separator>
     </div>
     <div class="col-6" style="height: 100%">
       <div class="flex flex-center" style="height: 100%">
-        <q-card class="shadow-4 bg-primary" style="width: 50%; height: 60%">
+        <q-card class="shadow-4 bg-dark" style="width: 50%; height: 65%">
           <q-tabs
             v-model="tab"
             dense
-            active-color="accent"
+            active-color="white"
             indicator-color="accent"
             align="justify"
+            class="text-white"
           >
             <q-tab name="registr" label="Регистрация" />
             <q-tab name="auth" label="Авторизация" />
@@ -22,8 +23,6 @@
           <q-separator />
           <q-tab-panels
             v-model="tab"
-            transition-next="jump-down"
-            transition-prev="jump-down"
             animated
             class="q-pa-none shadow-3"
             bordered="bordered"

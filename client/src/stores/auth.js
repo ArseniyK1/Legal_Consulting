@@ -82,11 +82,21 @@ export const useAuthStore = defineStore({
       this.roles = "";
       this.router.push("/login");
     },
-    async registration(name, login, password, isLawyer, date_of_birth) {
+    async registration(
+      name,
+      lastName,
+      middleName,
+      login,
+      password,
+      isLawyer,
+      date_of_birth
+    ) {
       // Ensure date_of_birth is a Date instance
       const { data } = await api.post("api/user", {
         login: login,
         first_name: name || null,
+        last_name: lastName || null,
+        middle_name: middleName || null,
         password,
         isLawyer,
         date_of_birth: normaliseDate(date_of_birth),

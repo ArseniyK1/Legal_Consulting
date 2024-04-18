@@ -7,16 +7,19 @@
     :readonly="readonly"
     @update:modelValue="handleInput"
     mask="##.##.####"
-    filled
     ref="dateInput"
-    color="positive"
+    color="info"
     label-color="dark"
+    bg-color="primary"
+    outlined
+    rounded
   >
     <template v-slot:prepend>
       <q-icon
         class="q-mr-sm cursor-pointer"
         :class="iconClass"
         :disable="disable || readonly"
+        color="dark"
         name="calendar_month"
         v-if="$q.screen.gt.sm"
       >
