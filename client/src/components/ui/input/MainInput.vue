@@ -8,8 +8,11 @@
     :rules="rules"
     type="text"
     v-model="value"
+    rounded
+    outlined
+    bg-color="primary"
     color="info"
-    filled
+    label-color="dark"
   >
     <template v-slot:error>
       <slot name="error"></slot>

@@ -3,12 +3,16 @@
     class="login-page window-height window-width row items-center justify-center bg-secondary"
   >
     <div class="col-6">
-      <q-img alt="Oops!" src="/test.svg" height="100%" />
-      <q-separator vertical color="dark"></q-separator>
+      <div style="margin: 0 auto; width: 80%" class="auth-image">
+        <q-img alt="Oops!" src="/test1.svg" height="100%" />
+      </div>
     </div>
-    <div class="col-6" style="height: 100%">
+    <div class="col-6 trq" style="height: 100%">
       <div class="flex flex-center" style="height: 100%">
-        <q-card class="shadow-4 bg-dark" style="width: 50%; height: 65%">
+        <q-card
+          class="shadow-4 bg-dark relative-position"
+          style="width: 50%; height: 65%; border-radius: 1rem"
+        >
           <q-tabs
             v-model="tab"
             dense
@@ -26,7 +30,7 @@
             animated
             class="q-pa-none shadow-3"
             bordered="bordered"
-            style="height: 95%"
+            style="height: 95%; border-radius: 0 0 1rem 1rem !important"
           >
             <q-tab-panel name="registr" class="q-pa-none">
               <registr-form />
@@ -36,6 +40,12 @@
               <login-form />
             </q-tab-panel>
           </q-tab-panels>
+          <!--          <div-->
+          <!--            style="position: absolute; top: -3rem; left: 10px; max-width: 400px"-->
+          <!--            class="text-h3"-->
+          <!--          >-->
+          <!--            <strong class="text-warning text-h3">Ю</strong>КО-->
+          <!--          </div>-->
         </q-card>
       </div>
     </div>
@@ -80,5 +90,14 @@ const tab = ref("auth");
   background-origin: border-box;
   background-clip: padding-box, border-box;
   color: $dark;
+}
+
+@media (max-width: 1440px) {
+  .auth-image {
+    display: none;
+  }
+  .trq {
+    width: 100% !important;
+  }
 }
 </style>

@@ -1,5 +1,11 @@
 <template>
-  <q-form class="row full-height" @submit="submitForm" ref="form" tabindex="-1">
+  <q-form
+    class="row full-height"
+    @submit="submitForm"
+    ref="form"
+    tabindex="-1"
+    style="border-radius: 15px !important"
+  >
     <q-card
       class="login-form full-height bg-dark"
       style="border-radius: 0px !important"
@@ -19,7 +25,7 @@
             label-color="dark"
           >
             <template v-slot:prepend>
-              <q-icon name="face" />
+              <q-icon name="face" color="dark" />
             </template>
           </q-input>
           <q-input
@@ -35,13 +41,14 @@
             label-color="dark"
           >
             <template v-slot:prepend>
-              <q-icon name="lock"></q-icon>
+              <q-icon name="pin" color="dark"></q-icon>
             </template>
             <template v-slot:append>
               <q-icon
                 class="cursor-pointer"
-                name="visibility_off"
+                :name="showPassword ? 'visibility' : 'visibility_off'"
                 @click="showPassword = !showPassword"
+                color="dark"
               ></q-icon>
             </template>
           </q-input>

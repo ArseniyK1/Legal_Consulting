@@ -7,7 +7,7 @@
         <div class="row items-center">
           <div class="q-pr-md col-7">
             <div
-              class="montserrat-semi-bold text-white ellipsis"
+              class="montserrat-semi-bold text-white ellipsis text-h5"
               style="line-height: 1em"
             >
               {{ title }}

@@ -11,7 +11,7 @@ export const useAuthStore = defineStore({
     type: localStorage.getItem("user-login") || "test",
     userName: localStorage.getItem("user-name") || "",
     profile: localStorage.getItem("user-profile") || "",
-    roles: localStorage.getItem("user-role") || "",
+    roles: localStorage.getItem("user-role"),
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
@@ -29,14 +29,17 @@ export const useAuthStore = defineStore({
           username: login,
           password,
         });
+
         if (!data?.access_token) throw new Error("Ошибка авторизации");
         const { access_token } = data;
+
         localStorage.setItem("user-token", access_token);
 
         api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
         this.token = access_token;
 
         this.router.push("/main");
+        await this.loadProfile();
         Notify.create({
           message: "Вы авторизованы",
           type: "positive",
@@ -72,11 +75,12 @@ export const useAuthStore = defineStore({
       }
     },
     async logout() {
-      localStorage.removeItem("user-token");
-      localStorage.removeItem("user-name");
-      localStorage.removeItem("user-login");
-      localStorage.removeItem("user-role");
-      localStorage.removeItem("user-profile");
+      // localStorage.removeItem("user-token");
+      // localStorage.removeItem("user-name");
+      // localStorage.removeItem("user-login");
+      // localStorage.removeItem("user-role");
+      // localStorage.removeItem("user-profile");
+      localStorage.clear();
       delete api.defaults.headers.common["Authorization"];
       this.token = "";
       this.roles = "";

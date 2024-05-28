@@ -121,7 +121,11 @@ const emits = defineEmits(["update:showMenu", "update:fullWidthMenu"]);
 
 const authStore = useAuthStore();
 
-const { logout } = authStore;
+const logout = () => {
+  authStore.logout();
+  localStorage.clear();
+  router.push("/login");
+};
 
 const quasar = useQuasar();
 const router = useRouter();

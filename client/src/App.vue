@@ -3,14 +3,14 @@
 </template>
 
 <script setup>
-import { defineComponent, onMounted } from "vue";
+import { onBeforeMount } from "vue";
 import { useAuthStore } from "stores/auth";
 import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
 const router = useRouter();
 
-onMounted(async () => {
+onBeforeMount(async () => {
   try {
     const testToken = await authStore.loadProfile();
     !testToken && (await router.push("/login"));

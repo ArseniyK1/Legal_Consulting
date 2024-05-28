@@ -19,6 +19,7 @@ export const useTypeRightsStore = defineStore({
     async getAllTypeRights() {
       try {
         const { data } = await api.get("api/type-right");
+        console.log(data);
         return data;
       } catch (e) {
         console.log(e);
