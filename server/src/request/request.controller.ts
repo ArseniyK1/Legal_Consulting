@@ -1,24 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
   Request,
 } from '@nestjs/common';
 import { RequestService } from './request.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ReqGuardsReturnObject } from '../return-object/reqGuards.return-object';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllRequestReturnObject } from '../return-object/allRequestReturn.return-object';
 import { CreateRequestReturnObject } from '../return-object/createRequest.return-object';
-import { Public } from '../auth/public.decorator';
 import { RespondRequestDto } from './dto/respond-request.dto';
 import { ChangeStatusDto } from './dto/change-status.dto';
+import { Role, Roles } from '../roles/decorators/roles.decorator';
 
 @ApiTags('Request')
 @Controller('request')
@@ -40,6 +39,13 @@ export class RequestController {
   @ApiResponse({ type: [AllRequestReturnObject] })
   findAllRequestByUser(@Request() req: any) {
     return this.requestService.findAllRequestByUser(req);
+  }
+
+  @Roles(Role.operator)
+  @Get('/getAllRequests')
+  @ApiOperation({ summary: 'Получение всех заявок всех пользователей' })
+  findAllRequests() {
+    return this.requestService.findAllRequests();
   }
 
   @Get('/getMyRequest')

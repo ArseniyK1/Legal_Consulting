@@ -13,14 +13,20 @@ export const databaseProviders = [
         password: String(process.env.POSTGRES_PASSWORD),
         database: String(process.env.POSTGRES_DB),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        // synchronize: true,
+        synchronize: true,
         logging: true,
       });
       await dataSource.initialize();
       await dataSource.synchronize();
       //
       // for (const entity of dataSource.entityMetadatas) {
-      //   if (entity.tableName !== 'roles' && entity.tableName !== 'user')
+      //   if (
+      //     entity.tableName !== 'roles' &&
+      //     entity.tableName !== 'user' &&
+      //     entity.tableName !== 'users' &&
+      //     entity.tableName !== 'type_right' &&
+      //     entity.tableName !== 'typeRight'
+      //   )
       //     await dataSource
       //       .createQueryRunner()
       //       .query(`TRUNCATE TABLE "${entity.tableName}" CASCADE;`);

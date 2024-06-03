@@ -17,8 +17,13 @@
           @click="$router.push('/')"
           style="cursor: pointer; max-width: 165px"
           v-if="$q.screen.gt.xs"
-          >Консалтинг</q-toolbar-title
         >
+          <q-icon
+            :name="mdiCheckboxMarkedCircleAutoOutline"
+            class="color_icon"
+          ></q-icon>
+          Консалтинг
+        </q-toolbar-title>
       </div>
     </div>
     <div class="q-mx-md" style="flex: 1 1 200px; max-width: 600px">
@@ -51,8 +56,14 @@
       </q-input>
     </div>
     <div class="row items-center">
-      <q-icon name="bookmarks" class="q-mr-md cursor-pointer" size="2rem">
-        <q-tooltip>Избранное</q-tooltip>
+      <q-icon
+        name="business_center"
+        class="q-mr-md cursor-pointer"
+        size="2rem"
+        v-if="authStore.isLawyer"
+        @click="$router.push('/portfolio')"
+      >
+        <q-tooltip>Портфолио</q-tooltip>
       </q-icon>
       <q-btn class="q-mr-sm" flat="flat" round="round">
         <q-avatar class="avatar-button" style="background: #f06543">
@@ -103,6 +114,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "src/stores/auth";
 import { version as ver } from "../../package.json";
+import { mdiCheckboxMarkedCircleAutoOutline, mdiCheckOutline } from "@mdi/js";
 
 const props = defineProps({
   //Отображение меню на экране. В мобильной версии его можно скрыть
@@ -189,6 +201,9 @@ onMounted(async () => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: table;
+}
+.color_icon {
+  color: #fd7819;
 }
 .avatar-button {
   transition: ease-in 0.1s;

@@ -3,23 +3,28 @@ import { defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
 import axios from "axios";
 import { normaliseDate } from "src/helpers/format";
+import { rolesValue } from "src/constants";
 
 export const useAuthStore = defineStore({
   id: "auth",
   state: () => ({
     token: localStorage.getItem("user-token") || "",
-    type: localStorage.getItem("user-login") || "test",
+    type: localStorage.getItem("user-login") || "",
     userName: localStorage.getItem("user-name") || "",
     profile: localStorage.getItem("user-profile") || "",
     roles: localStorage.getItem("user-role"),
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
-    isAdmin: (state) => state.type === "admin",
+
     getToken: (state) => state.token,
     getUserId: (state) => state.userId,
     getProfile: (state) => state.profile,
     getRole: (state) => state.roles,
+    isLawyer: (state) => state.roles === rolesValue.lawyer,
+    isOperator: (state) => state.roles === rolesValue.operator,
+    isUser: (state) => state.roles === rolesValue.user,
+    isAdmin: (state) => state.type === rolesValue.admin,
   },
   actions: {
     async login(login, password) {

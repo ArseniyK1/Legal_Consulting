@@ -1,6 +1,7 @@
 <template>
   <q-dialog :persistent="persistent" v-model="computedIsVisible">
     <q-card v-bind:style="{ minWidth: width }" class="bg-secondary">
+      <slot name="bar"></slot>
       <q-card-section
         class="q-px-md q-pb-xs q-pt-sm cyan-animate-gradient-bg relative-position"
       >
@@ -19,10 +20,12 @@
           <slot name="header-right"></slot>
           <q-btn
             @click="computedIsVisible = false"
+            v-if="!noIconClose"
             color="white"
             flat="flat"
             icon="close"
-            round="round"
+            class="bg-red"
+            rounded
             v-close-popup
           ></q-btn>
         </div>
@@ -62,6 +65,10 @@ const props = defineProps({
     default: "",
   },
   showTitleTooltip: {
+    type: Boolean,
+    default: false,
+  },
+  noIconClose: {
     type: Boolean,
     default: false,
   },

@@ -1,4 +1,12 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Request } from '../../request/entities/request.entity';
 @Entity({ name: 'type_right' })
 export class TypeRight {
@@ -17,6 +25,6 @@ export class TypeRight {
   @Column({ nullable: true, type: 'jsonb' })
   type_trouble: JSON;
 
-  @OneToOne(() => Request, (request) => request.type_right)
-  request: Request;
+  @OneToMany(() => Request, (request) => request.type_right)
+  request: Request[];
 }

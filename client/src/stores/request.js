@@ -31,9 +31,22 @@ export const useRequestStore = defineStore({
       }
       // this.openRequests = data;
     },
-    async createRequest(description) {
+    async getAllRequests() {
       try {
-        const { data } = await api.post("api/request", { description });
+        const { data } = await api.get("api/request/getAllRequests");
+        return data;
+      } catch (e) {
+        Notify.create({ message: e });
+      }
+      // this.openRequests = data;
+    },
+    async createRequest(description, type_right, trouble_type) {
+      try {
+        const { data } = await api.post("api/request", {
+          description,
+          type_right,
+          trouble_type,
+        });
         return data;
       } catch (e) {
         console.log(e);

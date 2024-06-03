@@ -1,4 +1,4 @@
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRequestDto {
@@ -9,14 +9,11 @@ export class CreateRequestDto {
   })
   description: string;
 
-  @IsString()
+  @IsNumber()
   @ApiProperty({ example: 'Наследство', description: 'Тип права' })
-  type_right: string;
+  type_right: number;
 
-  @IsDate()
-  @ApiProperty({
-    example: '2022-01-01:00:00:00',
-    description: 'Предлагаемая клиентом дата консультации',
-  })
-  suggested_date_meeting: Date;
+  @IsString()
+  @ApiProperty({ example: 'Право собственности', description: 'Тип проблемы' })
+  trouble_type: string;
 }

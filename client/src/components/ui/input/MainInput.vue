@@ -6,7 +6,7 @@
     :lazy-rules="lazyRules"
     :readonly="readonly"
     :rules="rules"
-    type="text"
+    :type="type"
     v-model="value"
     rounded
     outlined
@@ -69,6 +69,10 @@ const props = defineProps({
   icon: {
     type: String,
     default: "",
+  },
+  type: {
+    type: String,
+    default: "text",
   },
 });
 

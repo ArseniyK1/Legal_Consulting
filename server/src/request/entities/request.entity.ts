@@ -38,7 +38,13 @@ export class Request {
   @Column({ nullable: true })
   lawyerId: number;
 
-  @OneToOne(() => TypeRight, (type_right) => type_right.request)
+  @Column({ nullable: true })
+  active: boolean;
+
+  @Column({ nullable: true })
+  trouble_type: string;
+
+  @ManyToOne(() => TypeRight, (type_right) => type_right.request)
   @JoinColumn()
   type_right: TypeRight;
 

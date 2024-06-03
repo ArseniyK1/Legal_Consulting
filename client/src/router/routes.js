@@ -30,6 +30,11 @@ const routes = [
         name: "ObjectsPage",
         component: () => import("pages/RequestsPage.vue"),
       },
+      {
+        path: "/portfolio",
+        name: "PortfolioPage",
+        component: () => import("pages/PortfolioPage.vue"),
+      },
     ],
   },
   {
