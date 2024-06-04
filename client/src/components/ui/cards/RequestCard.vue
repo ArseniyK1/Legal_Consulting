@@ -17,13 +17,16 @@
             round
             class="cursor-inherit"
             text-color=""
-            :icon="requestStatus.pending === request?.status ? pending : inWork"
+            :icon="icon"
           >
             <q-tooltip v-if="requestStatus.pending === request?.status"
-              >Выполняется</q-tooltip
+              >Ожидается отклик</q-tooltip
             >
             <q-tooltip v-if="requestStatus.accepted === request?.status"
               >Принята юристом в работу</q-tooltip
+            >
+            <q-tooltip v-if="requestStatus.canceled === request?.status"
+              >Отменена</q-tooltip
             >
           </q-btn>
         </div>
@@ -42,39 +45,45 @@
         "
       >
         <div>
-          <q-icon :name="path"></q-icon>
+          <q-icon></q-icon>
         </div>
         {{
           `Клиент: ${request?.user?.last_name} ${request?.user?.first_name} ${request?.user?.middle_name}`
         }}
       </a>
       <div class="text-h6" v-if="request?.lawyerId || request?.lawyer?.id">
-        <div class="text-h5" v-if="request?.lawyerId && authStore.isAdmin">
-          {{ `ID юриста:${request?.lawyerId}` }}
-        </div>
-        <div v-else>
+        <div>
           {{
-            `Юрист: ${request?.user?.last_name} ${request?.user?.first_name} ${request?.user?.middle_name}`
+            `Юрист: ${request?.lawyer?.last_name} ${request?.lawyer?.first_name} ${request?.lawyer?.middle_name}`
           }}
         </div>
       </div>
     </q-card-section>
 
+    <q-card-section
+      >{{ request?.user?.id }} {{ request?.userId }}</q-card-section
+    >
+
     <q-separator color="primary" />
 
     <q-card-actions>
-      <q-btn flat class="bg-accent" @click="actionOne">Открыть</q-btn>
+      <q-btn
+        flat
+        class="bg-accent"
+        @click="router.push(`/requestInfo/${request.id}`)"
+        >Открыть</q-btn
+      >
       <q-btn
         flat
         class="bg-accent"
         @click="actionTwo"
-        v-if="request.status === 'pending'"
+        v-if="!request.active && (authStore.isUser || authStore.isOperator)"
         >Удалить</q-btn
       >
       <q-btn
         flat
         class="bg-accent"
-        @click="actionThree"
+        @click="respondToRequest"
         v-if="authStore.isLawyer && !request.active"
         >Откликнуться</q-btn
       >
@@ -85,7 +94,11 @@
         v-if="authStore.isOperator"
         >Привязать юриста</q-btn
       >
-      <q-btn flat class="bg-accent" @click="actionThree" v-if="authStore.isUser"
+      <q-btn
+        flat
+        class="bg-accent"
+        @click="actionThree"
+        v-if="authStore.isUser && request?.status === requestStatus.done"
         >Оставить отзыв</q-btn
       >
     </q-card-actions>
@@ -95,9 +108,15 @@
 <script setup>
 import { requestStatus, rolesValue } from "src/constants";
 import { useAuthStore } from "stores/auth";
-import { mdiTimerSand, mdiCheckOutline } from "@mdi/js";
+import { mdiTimerSand, mdiCheckOutline, mdiCancel, mdiCheckAll } from "@mdi/js";
+import { useRequestStore } from "stores/request";
+import { Notify } from "quasar";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
+const requestStore = useRequestStore();
+const router = useRouter();
 const props = defineProps({
   title: {
     type: String,
@@ -124,6 +143,36 @@ const props = defineProps({
     default: () => {},
   },
 });
-const inWork = mdiCheckOutline;
-const pending = mdiTimerSand;
+const icon = ref("");
+
+const respondToRequest = async () => {
+  try {
+    await requestStore.respondRequest(props.request.id);
+
+    Notify.create({
+      message: "Вы успешно откликнулись на заявку",
+      type: "positive",
+      color: "positive",
+    });
+  } catch (e) {
+    Notify.create(e.message);
+  }
+};
+
+onMounted(() => {
+  switch (props.request.status) {
+    case requestStatus.pending:
+      icon.value = mdiTimerSand;
+      break;
+    case requestStatus.accepted:
+      icon.value = mdiCheckOutline;
+      break;
+    case requestStatus.canceled:
+      icon.value = mdiCancel;
+      break;
+    case requestStatus.done:
+      icon.value = mdiCheckAll;
+      break;
+  }
+});
 </script>

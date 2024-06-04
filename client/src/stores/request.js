@@ -31,9 +31,25 @@ export const useRequestStore = defineStore({
       }
       // this.openRequests = data;
     },
-    async getAllRequests() {
+    async getAllRequests(
+      status = null,
+      lawyer = null,
+      userName = null,
+      trouble_type = null,
+      additional_inf = null
+    ) {
       try {
-        const { data } = await api.get("api/request/getAllRequests");
+        const { data } = await api({
+          url: "api/request/getAllRequests",
+          method: "get",
+          params: {
+            status: !!status ? status : null,
+            lawyer: !!lawyer ? lawyer : null,
+            userName: !!userName ? userName : null,
+            trouble_type: !!trouble_type ? trouble_type : null,
+            additional_inf: !!additional_inf ? additional_inf : null,
+          },
+        });
         return data;
       } catch (e) {
         Notify.create({ message: e });
@@ -52,6 +68,43 @@ export const useRequestStore = defineStore({
         console.log(e);
       }
       // this.openRequests = data;
+    },
+    async respondRequest(requestId) {
+      try {
+        const { data } = await api({
+          url: "api/request/respondRequest",
+          method: "patch",
+          params: { requestId },
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+      // this.openRequests = data;
+    },
+    async offerTime(requestId, suggested_date) {
+      try {
+        const { data } = await api({
+          url: "api/request/offerTimeConsultation",
+          method: "patch",
+          data: { requestId: requestId.toString(), suggested_date },
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+      // this.openRequests = data;
+    },
+    async getInfoByReqId(id) {
+      try {
+        const { data } = await api({
+          url: `api/request/${id}`,
+          method: "get",
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 });

@@ -10,7 +10,7 @@
     ref="dateInput"
     color="info"
     label-color="dark"
-    bg-color="primary"
+    :bg-color="bgColor"
     outlined
     rounded
   >
@@ -134,6 +134,10 @@ const props = defineProps({
   useOnlyMonth: {
     type: Boolean,
     default: false,
+  },
+  bgColor: {
+    type: String,
+    default: "primary",
   },
 });
 const emits = defineEmits(["update:modelValue"]);

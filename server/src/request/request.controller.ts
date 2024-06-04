@@ -18,6 +18,8 @@ import { CreateRequestReturnObject } from '../return-object/createRequest.return
 import { RespondRequestDto } from './dto/respond-request.dto';
 import { ChangeStatusDto } from './dto/change-status.dto';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
+import { GetAllRequestDto } from './dto/getAllRequest.dto';
+import { OfferTimeConsultationDto } from './dto/offerTimeConsultation.dto';
 
 @ApiTags('Request')
 @Controller('request')
@@ -41,11 +43,11 @@ export class RequestController {
     return this.requestService.findAllRequestByUser(req);
   }
 
-  @Roles(Role.operator)
+  // @Roles(Role.operator)
   @Get('/getAllRequests')
   @ApiOperation({ summary: 'Получение всех заявок всех пользователей' })
-  findAllRequests() {
-    return this.requestService.findAllRequests();
+  findAllRequests(@Query() query: GetAllRequestDto) {
+    return this.requestService.findAllRequests(query);
   }
 
   @Get('/getMyRequest')
@@ -81,6 +83,19 @@ export class RequestController {
     return await this.requestService.respondRequest(
       req.user.userId,
       +query.requestId,
+    );
+  }
+
+  @ApiOperation({ summary: 'Предложить время консультации' })
+  @Patch('/offerTimeConsultation')
+  async offerTimeConsultation(
+    @Request() req: any,
+    @Body() dto: OfferTimeConsultationDto,
+  ) {
+    return await this.requestService.offerTimeConsultation(
+      req.user.userId,
+      +dto.requestId,
+      dto.suggested_date,
     );
   }
 

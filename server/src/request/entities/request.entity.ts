@@ -44,6 +44,9 @@ export class Request {
   @Column({ nullable: true })
   trouble_type: string;
 
+  @Column({ nullable: true })
+  additional_inf: string;
+
   @ManyToOne(() => TypeRight, (type_right) => type_right.request)
   @JoinColumn()
   type_right: TypeRight;

@@ -35,6 +35,12 @@ const routes = [
         name: "PortfolioPage",
         component: () => import("pages/PortfolioPage.vue"),
       },
+      {
+        path: "/requestInfo/:id",
+        name: "RequestInfo",
+        props: true,
+        component: () => import("pages/RequestInfoPage.vue"),
+      },
     ],
   },
   {

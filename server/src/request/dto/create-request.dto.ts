@@ -16,4 +16,11 @@ export class CreateRequestDto {
   @IsString()
   @ApiProperty({ example: 'Право собственности', description: 'Тип проблемы' })
   trouble_type: string;
+
+  @IsString()
+  @ApiProperty({
+    example: 'После 25.05.2024 буду вне зоны доступа сети',
+    description: 'Доп. информация',
+  })
+  additional_inf: string;
 }

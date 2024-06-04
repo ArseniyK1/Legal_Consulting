@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
-import { IsNull, Repository } from 'typeorm';
+import { IsNull, Like, Raw, Repository } from 'typeorm';
 import { Request } from './entities/request.entity';
 import { requestStatusEnum } from '../constants';
 import { ChangeStatusDto } from './dto/change-status.dto';
 import { tr } from '@faker-js/faker';
 import { User } from '../user/entities/user.entity';
+import { GetAllRequestDto } from './dto/getAllRequest.dto';
 
 @Injectable()
 export class RequestService {
@@ -44,18 +45,71 @@ export class RequestService {
     });
   }
 
-  async findAllRequests() {
-    const req = await this.requestRepository.find({
-      relations: { type_right: true },
+  async findAllRequests(query: GetAllRequestDto) {
+    const requests = await this.requestRepository.find({
+      relations: { type_right: true, user: true },
+      where: [
+        { status: !!query?.status ? Like(`%${query?.status}%`) : null },
+        {
+          user: [
+            {
+              last_name: !!query?.userName
+                ? Raw(
+                    (alias) =>
+                      `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
+                  )
+                : null,
+            },
+            {
+              first_name: !!query?.userName
+                ? Raw(
+                    (alias) =>
+                      `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
+                  )
+                : null,
+            },
+            {
+              middle_name: !!query?.userName
+                ? Raw(
+                    (alias) =>
+                      `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
+                  )
+                : null,
+            },
+          ],
+        },
+        {
+          trouble_type: !!query?.trouble_type
+            ? Raw(
+                (alias) =>
+                  `LOWER(${alias}) LIKE LOWER('%${query?.trouble_type}%')`,
+              )
+            : null,
+        },
+      ],
+      order: { id: 'DESC' },
     });
-    console.log(req);
-    return req;
+    const requestsWithLawyers = await Promise.all(
+      requests.map(async (request) => {
+        if (request.lawyerId) {
+          const lawyer = await this.userRepository.findOne({
+            where: { id: request.lawyerId },
+            order: { id: 'DESC' },
+          });
+          return { ...request, lawyer };
+        }
+        return request;
+      }),
+    );
+
+    return requestsWithLawyers;
   }
 
   async getMyRequest(req: any) {
     const requests = await this.requestRepository.find({
       where: { user: { id: req.user.userId } },
       relations: { type_right: true, user: true },
+      order: { id: 'DESC' },
     });
 
     const requestsWithLawyers = await Promise.all(
@@ -63,6 +117,7 @@ export class RequestService {
         if (request.lawyerId) {
           const lawyer = await this.userRepository.findOne({
             where: { id: request.lawyerId },
+            order: { id: 'DESC' },
           });
           return { ...request, lawyer };
         }
@@ -80,9 +135,19 @@ export class RequestService {
   }
 
   async findOne(id: number) {
-    return await this.requestRepository.findOne({
+    const request = await this.requestRepository.findOne({
       where: { id: id },
+      relations: { type_right: true, user: true },
     });
+
+    if (!!request?.lawyerId) {
+      const lawyer = await this.userRepository.findOne({
+        where: { id: request.lawyerId },
+      });
+      return { ...request, lawyer: lawyer };
+    }
+
+    return request;
   }
 
   async update(requestId: number, dto: UpdateRequestDto) {
@@ -91,6 +156,22 @@ export class RequestService {
       throw new HttpException('Заявка не найдена', HttpStatus.NOT_FOUND);
     // return await portfolio.update(dto);
     return 'sadasd';
+  }
+
+  async offerTimeConsultation(
+    userId: number,
+    requestId: number,
+    dateTime: Date,
+  ) {
+    const request = await this.requestRepository.findOne({
+      where: { id: requestId },
+    });
+    if (!request?.id)
+      throw new HttpException('Заявка не найдена', HttpStatus.NOT_FOUND);
+    return await this.requestRepository.save({
+      ...request,
+      suggested_price: dateTime,
+    });
   }
 
   async changeStatus(dto: ChangeStatusDto) {
@@ -115,7 +196,8 @@ export class RequestService {
     return await this.requestRepository.save({
       ...request,
       lawyerId,
-      status: 'Выполняется',
+      active: true,
+      status: requestStatusEnum.ACCEPTED,
     });
   }
 

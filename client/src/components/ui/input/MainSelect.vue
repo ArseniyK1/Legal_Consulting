@@ -23,7 +23,11 @@
     transition-duration="100"
     transition-hide="fade"
     transition-show="fade"
+    rounded
+    outlined
+    bg-color="primary"
     color="info"
+    label-color="dark"
   >
     <template v-slot:prepend>
       <q-icon

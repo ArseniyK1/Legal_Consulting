@@ -49,6 +49,6 @@ export enum roleEnum {
 export enum requestStatusEnum {
   PENDING = 'pending',
   ACCEPTED = 'accepted',
-  IN_PROGRESS = 'inProgress',
+  DONE = 'done',
   CANCELED = 'canceled',
-} // pending - ожидает ответа оператора, accepted - принят, inProgress - в процессе, canceled - отменен
+} // pending - ожидает привязки юриста (самим юристом или оператором), accepted - принята юристом, done - в процессе, canceled - отменен

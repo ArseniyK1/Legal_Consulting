@@ -41,34 +41,19 @@ export const normaliseDate = (val) => {
 export const normalizeTimeStamp = (value) =>
   !!value ? format(parseISO(value), "dd.MM.yyyy HH:mm") : "";
 
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${day}/${month}/${year}`;
+};
+
 const getQueryFromString = (val) =>
   val
     .split(/\s+/)
     .filter((e) => /[А-Яа-я\-]{2,}/.test(e))
     .join(" ");
-
-export const formatQueryPatient = (val) => {
-  return val
-    .split(/\s+/)
-    .filter((e) => !/[А-Яа-я\-]{2,}/.test(e))
-    .reduce(
-      (acc, e) => {
-        if (isDateString(e)) {
-          acc = { ...acc, birth_date: getDateFromString(e) };
-        } else if (/^\d{16}$/.test(e)) {
-          acc = { ...acc, enp: e };
-        } else if (/^\d{11}$/.test(e)) {
-          acc = { ...acc, ssn: e };
-        } else if (/^\d+$/.test(e)) {
-          acc = { ...acc, queryNumber: e };
-        }
-        return acc;
-      },
-      {
-        query: getQueryFromString(val),
-      }
-    );
-};
 
 export const floatFormat = (val, row, digits = 2) =>
   parseFloat(val) ? parseFloat(val).toFixed(digits) : 0;
