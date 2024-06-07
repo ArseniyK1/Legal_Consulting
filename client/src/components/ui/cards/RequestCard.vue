@@ -148,7 +148,7 @@ const icon = ref("");
 const respondToRequest = async () => {
   try {
     await requestStore.respondRequest(props.request.id);
-
+    await router.push(`/requestInfo/${props.request.id}`);
     Notify.create({
       message: "Вы успешно откликнулись на заявку",
       type: "positive",

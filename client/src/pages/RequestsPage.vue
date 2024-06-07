@@ -39,7 +39,8 @@
                   bg-color="primary"
                   color="info"
                   label-color="dark"
-                />
+                >
+                </q-select>
               </div>
               <div class="col-4">
                 <main-input

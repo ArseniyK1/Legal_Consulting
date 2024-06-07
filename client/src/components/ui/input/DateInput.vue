@@ -6,7 +6,7 @@
     :model-value="modelValue"
     :readonly="readonly"
     @update:modelValue="handleInput"
-    mask="##.##.####"
+    mask="####.##.##"
     ref="dateInput"
     color="info"
     label-color="dark"
@@ -31,10 +31,11 @@
         >
           <q-date
             :locale="locale"
+            event-color="info"
             :model-value="modelValue"
             :options="props.useOnlyMonth ? optionFnMonth : optionFn"
             @update:modelValue="selectDate"
-            mask="DD.MM.YYYY"
+            mask="YYYY.MM.DD"
             minimal="minimal"
           ></q-date>
         </q-popup-proxy>

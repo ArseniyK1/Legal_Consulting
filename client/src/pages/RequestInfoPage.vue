@@ -148,22 +148,63 @@
                   </q-item-section>
                 </q-item>
               </div>
-              <div class="col-4">
+              <div
+                class="col-4"
+                v-if="authStore.isOperator || !!!request.date_meeting"
+              >
                 <q-item>
                   <q-item-section>
-                    <q-item-label>Дата консультации: </q-item-label>
+                    <q-item-label>Предложить дату консультации: </q-item-label>
                     <q-item-label caption>
-                      <date-input
-                        :model-value="dateMeeting"
-                        @update:model-value="dateMeeting = $event"
-                        :readonly="!authStore.isLawyer && !authStore.isOperator"
+                      <q-input
+                        v-model="suggestedDateMeeting"
+                        mask="##.##.####"
+                        :readonly="authStore.isUser"
+                        color="info"
+                        label-color="dark"
                         bg-color="white"
-                        use-future
-                      />
+                        label="Выберите дату"
+                        outlined
+                        rounded
+                      >
+                        <template v-slot:append>
+                          <q-icon
+                            name="event"
+                            class="cursor-pointer q-ml-md q-mr-sm"
+                            color="dark"
+                            disable
+                          >
+                            <q-popup-proxy
+                              cover
+                              class="bg-info"
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date
+                                v-model="suggestedDateMeeting"
+                                :locale="locale"
+                                class="bg-primary"
+                                color="info"
+                                text-color="white"
+                                mask="DD.MM.YYYY"
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Закрыть"
+                                    color="primary"
+                                    class="bg-info"
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
                       <q-input
                         v-model="time"
                         mask="time"
-                        :rules="['time']"
+                        :readonly="authStore.isUser"
                         label="Выберите время"
                         class="q-mt-sm"
                         outlined
@@ -172,7 +213,7 @@
                         rounded
                         label-color="dark"
                       >
-                        <template v-slot:prepend>
+                        <template v-slot:append>
                           <q-icon
                             name="access_time"
                             class="cursor-pointer q-mr-sm q-ml-md"
@@ -183,7 +224,7 @@
                               transition-show="scale"
                               transition-hide="scale"
                             >
-                              <q-time v-model="time" color="info">
+                              <q-time v-model="time" color="info" format24h>
                                 <div class="row items-center justify-end">
                                   <q-btn
                                     v-close-popup
@@ -199,10 +240,115 @@
                       </q-input>
                       <q-btn
                         label="Предложить выбранное время"
+                        v-if="authStore.isLawyer || authStore.isOperator"
+                        class="q-mt-sm q-mr-sm"
+                        color="accent"
+                        @click="offerTime"
+                      />
+                      <q-btn
+                        label="Согласиться с предложенным временем"
+                        v-if="authStore.isUser && !!request.date_meeting"
                         class="q-mt-sm"
                         color="accent"
                         @click="offerTime"
                       />
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div class="col-4">
+                <q-item>
+                  <q-item-section>
+                    <q-item-label
+                      >Утвержденная дата консультации:
+                    </q-item-label>
+                    <q-item-label caption>
+                      <q-input
+                        v-model="dateMeeting"
+                        mask="##.##.####"
+                        :readonly="authStore.isUser"
+                        color="info"
+                        label-color="dark"
+                        bg-color="white"
+                        label="Выберите дату"
+                        outlined
+                        rounded
+                      >
+                        <template v-slot:append>
+                          <q-icon
+                            name="event"
+                            class="cursor-pointer q-ml-md q-mr-sm"
+                            color="dark"
+                            disable
+                          >
+                            <q-popup-proxy
+                              cover
+                              class="bg-info"
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date
+                                v-model="dateMeeting"
+                                class="bg-primary"
+                                :locale="locale"
+                                color="info"
+                                text-color="white"
+                                mask="DD.MM.YYYY"
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Закрыть"
+                                    color="primary"
+                                    class="bg-info"
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                      <q-input
+                        v-model="dateMeetingTime"
+                        mask="time"
+                        :readonly="authStore.isUser"
+                        label="Выберите время"
+                        class="q-mt-sm"
+                        outlined
+                        bg-color="white"
+                        color="info"
+                        rounded
+                        label-color="dark"
+                      >
+                        <template v-slot:append>
+                          <q-icon
+                            name="access_time"
+                            class="cursor-pointer q-mr-sm q-ml-md"
+                            color="black"
+                          >
+                            <q-popup-proxy
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-time
+                                v-model="dateMeetingTime"
+                                color="info"
+                                format24h
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Закрыть"
+                                    color="info"
+                                    flat
+                                  />
+                                </div>
+                              </q-time>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -218,7 +364,7 @@
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useRequestStore } from "stores/request";
-import { requestStatus } from "src/constants";
+import { locale, requestStatus } from "src/constants";
 import {
   mdiCancel,
   mdiCheckAll,
@@ -229,7 +375,7 @@ import {
 import ScrollArea from "components/common/ScrollArea.vue";
 import { useAuthStore } from "stores/auth";
 import DateInput from "components/ui/input/DateInput.vue";
-import { Notify } from "quasar";
+import { date, Notify } from "quasar";
 import { formatDate } from "src/helpers/format";
 
 const route = useRoute();
@@ -237,32 +383,42 @@ const requestStore = useRequestStore();
 const authStore = useAuthStore();
 const request = ref(null);
 const icon = ref("");
-const time = ref("10:56");
-const dateMeeting = ref("2024/07/04");
+const time = ref("");
+const suggestedDateMeeting = ref("");
+const dateMeeting = ref("");
+const dateMeetingTime = ref("");
 
 const offerTime = async () => {
-  if (!dateMeeting.value || !time.value) {
-    // Show an error message or take appropriate action if date or time is not entered
+  if (!suggestedDateMeeting.value || !time.value) {
     Notify.create({ message: "Введите дату и(или) время!", type: "negative" });
     return;
   }
 
-  const date = new Date(dateMeeting.value);
+  const [day, month, year] = suggestedDateMeeting.value.split(".");
+  const formattedDate = `${month}/${day}/${year}`;
+  const date = new Date(formattedDate);
+
   const [hours, minutes] = time.value.split(":").map(Number);
-  date.setHours(hours, minutes, 0, 0);
+  date.setHours(hours);
+  console.log(date);
+  date.setMinutes(minutes);
 
   const timestamp = date.toISOString();
+
+  console.log(timestamp);
+
   const res = await requestStore.offerTime(request.value.id, timestamp);
-  console.log(res);
+  const reqId = +route.params.id;
+  request.value = await requestStore.getInfoByReqId(reqId);
 };
 
 onMounted(async () => {
   const reqId = +route.params.id;
   request.value = await requestStore.getInfoByReqId(reqId);
-  const test = formatDate(request.value.date_meeting);
-  dateMeeting.value = test;
+  suggestedDateMeeting.value = formatDate(request.value?.suggested_price);
+  dateMeeting.value =
+    request.value?.date_meeting && formatDate(request.value?.date_meeting);
   console.log(dateMeeting.value);
-
   switch (request.value.status) {
     case requestStatus.pending:
       icon.value = mdiTimerSand;
