@@ -16,6 +16,7 @@ import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { roleEnum } from '../constants';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -76,6 +77,17 @@ export class UserService {
     } else {
       throw new BadRequestException('Укажите логин и(или) пароль');
     }
+  }
+
+  async updateUserContent(userId: number, dto: UpdateUserDto) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    return this.userRepository.save({
+      ...user,
+      ...dto,
+    });
   }
 
   async findAll(roleId: number = 1) {

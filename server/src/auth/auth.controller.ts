@@ -31,6 +31,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Получение профиля' })
   @ApiResponse({ status: 200, type: ReqGuardsReturnObject })
   getProfile(@Request() req) {
-    return req.user;
+    return this.authService.getProfile(req);
   }
 }

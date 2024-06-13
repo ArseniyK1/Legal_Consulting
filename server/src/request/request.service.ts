@@ -25,6 +25,7 @@ export class RequestService {
         type_right: dto.type_right,
         status: requestStatusEnum.PENDING,
         user: req.user.userId,
+        active: false,
       }); // Если из списка предлагаемых типов проблем не нашлось нужной, пользователь выбирате "прочее" и описывает свою проблему
 
       return request;
@@ -48,47 +49,44 @@ export class RequestService {
   async findAllRequests(query: GetAllRequestDto) {
     const requests = await this.requestRepository.find({
       relations: { type_right: true, user: true },
-      where: [
-        { status: !!query?.status ? Like(`%${query?.status}%`) : null },
-        {
-          user: [
-            {
-              last_name: !!query?.userName
-                ? Raw(
-                    (alias) =>
-                      `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
-                  )
-                : null,
-            },
-            {
-              first_name: !!query?.userName
-                ? Raw(
-                    (alias) =>
-                      `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
-                  )
-                : null,
-            },
-            {
-              middle_name: !!query?.userName
-                ? Raw(
-                    (alias) =>
-                      `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
-                  )
-                : null,
-            },
-          ],
-        },
-        {
-          trouble_type: !!query?.trouble_type
-            ? Raw(
-                (alias) =>
-                  `LOWER(${alias}) LIKE LOWER('%${query?.trouble_type}%')`,
-              )
-            : null,
-        },
-      ],
+      where: {
+        status: !!query?.status ? Like(`%${query?.status}%`) : null,
+        user: [
+          {
+            last_name: !!query?.userName
+              ? Raw(
+                  (alias) =>
+                    `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
+                )
+              : null,
+          },
+          {
+            first_name: !!query?.userName
+              ? Raw(
+                  (alias) =>
+                    `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
+                )
+              : null,
+          },
+          {
+            middle_name: !!query?.userName
+              ? Raw(
+                  (alias) =>
+                    `LOWER(${alias}) LIKE LOWER('%${query?.userName}%')`,
+                )
+              : null,
+          },
+        ],
+        trouble_type: !!query?.trouble_type
+          ? Raw(
+              (alias) =>
+                `LOWER(${alias}) LIKE LOWER('%${query?.trouble_type}%')`,
+            )
+          : null,
+      },
       order: { id: 'DESC' },
     });
+
     const requestsWithLawyers = await Promise.all(
       requests.map(async (request) => {
         if (request.lawyerId) {
@@ -133,6 +131,12 @@ export class RequestService {
       where: { lawyerId: IsNull() },
     });
   }
+  async fetchMyRequests(lawyerId: number) {
+    return await this.requestRepository.find({
+      where: { lawyerId: lawyerId },
+      relations: { type_right: true, user: true },
+    });
+  }
 
   async findOne(id: number) {
     const request = await this.requestRepository.findOne({
@@ -170,7 +174,7 @@ export class RequestService {
       throw new HttpException('Заявка не найдена', HttpStatus.NOT_FOUND);
     return await this.requestRepository.save({
       ...request,
-      suggested_price: dateTime,
+      suggested_date_meeting: dateTime,
     });
   }
 
@@ -202,7 +206,9 @@ export class RequestService {
   }
 
   async remove(id: number) {
-    // return await this.requestRepository.destroy({ where: { id: id } });
-    return 'dsadasd';
+    const request = await this.requestRepository.findOne({
+      where: { id: id },
+    });
+    return await this.requestRepository.remove(request);
   }
 }

@@ -64,6 +64,12 @@ export class RequestController {
     return this.requestService.getOpenRequestByLawyer();
   }
 
+  @Get('fetchMyRequests')
+  @Roles(Role.lawyer)
+  @ApiOperation({ summary: 'Получение всех активных заявок для юриста' })
+  fetchMyRequests(@Request() req: any) {
+    return this.requestService.fetchMyRequests(+req.user.userId);
+  }
   @Patch('/changeStatus')
   @ApiOperation({
     summary: 'Изменение статуста заявки (для оператора)',

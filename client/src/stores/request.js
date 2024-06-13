@@ -106,5 +106,27 @@ export const useRequestStore = defineStore({
         console.log(e);
       }
     },
+    async deleteRequest(id) {
+      try {
+        const { data } = await api({
+          url: `api/request/${id}`,
+          method: "delete",
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async fetchMyRequestsByLawyerId() {
+      try {
+        const { data } = await api({
+          url: `api/request/fetchMyRequests`,
+          method: "get",
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 });

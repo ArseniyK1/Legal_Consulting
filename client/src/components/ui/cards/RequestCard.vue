@@ -51,7 +51,10 @@
           `Клиент: ${request?.user?.last_name} ${request?.user?.first_name} ${request?.user?.middle_name}`
         }}
       </a>
-      <div class="text-h6" v-if="request?.lawyerId || request?.lawyer?.id">
+      <div
+        class="text-h6"
+        v-if="(request?.lawyerId || request?.lawyer?.id) && !lawyerVisible"
+      >
         <div>
           {{
             `Юрист: ${request?.lawyer?.last_name} ${request?.lawyer?.first_name} ${request?.lawyer?.middle_name}`
@@ -59,10 +62,6 @@
         </div>
       </div>
     </q-card-section>
-
-    <q-card-section
-      >{{ request?.user?.id }} {{ request?.userId }}</q-card-section
-    >
 
     <q-separator color="primary" />
 
@@ -76,7 +75,7 @@
       <q-btn
         flat
         class="bg-accent"
-        @click="actionTwo"
+        @click="deleteRequest"
         v-if="!request.active && (authStore.isUser || authStore.isOperator)"
         >Удалить</q-btn
       >
@@ -126,14 +125,6 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  actionOne: {
-    type: Function,
-    default: null,
-  },
-  actionTwo: {
-    type: Function,
-    default: null,
-  },
   status: {
     type: String,
     default: "Открытая",
@@ -141,6 +132,10 @@ const props = defineProps({
   request: {
     type: Object,
     default: () => {},
+  },
+  lawyerVisible: {
+    type: Boolean,
+    default: false,
   },
 });
 const icon = ref("");
@@ -157,6 +152,12 @@ const respondToRequest = async () => {
   } catch (e) {
     Notify.create(e.message);
   }
+};
+
+const deleteRequest = async () => {
+  // await requestStore.deleteRequest(+props.request.id);
+
+  Notify.create({ message: "Заявка успешно удалена!", type: "positive" });
 };
 
 onMounted(() => {

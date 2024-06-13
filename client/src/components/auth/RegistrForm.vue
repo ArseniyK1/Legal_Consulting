@@ -114,6 +114,7 @@
           </q-input>
           <q-checkbox
             v-model="isTeacher"
+            v-if="!regByOperator"
             label="Зарегистрироваться как юрист"
             color="accent"
             class="text-primary"
@@ -154,6 +155,13 @@ const isTeacher = ref(false);
 const email = ref("");
 const date = ref("");
 
+const props = defineProps({
+  regByOperator: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const passRules = [
   (val) => !!val || "Введите пароль",
   (val) => val.length >= 6 || "Пароль должен быть не менее 6 символов",
@@ -164,15 +172,28 @@ const profile = computed(() => authStore.getProfile);
 const submitForm = async () => {
   form.value.validate(true).then(async () => {
     try {
-      await authStore.registration(
-        name.value,
-        lastName.value,
-        middleName.value,
-        login.value,
-        password.value,
-        isTeacher.value,
-        date.value
-      );
+      if (!props.regByOperator) {
+        await authStore.registration(
+          name.value,
+          lastName.value,
+          middleName.value,
+          login.value,
+          password.value,
+          isTeacher.value,
+          date.value,
+          true
+        );
+      } else {
+        await authStore.registration(
+          name.value,
+          lastName.value,
+          middleName.value,
+          login.value,
+          password.value,
+          isTeacher.value,
+          date.value
+        );
+      }
     } catch (e) {
       Notify.create({ message: "Error" });
     }

@@ -42,6 +42,7 @@ export class UserController {
   }
 
   @Get()
+  @Roles(Role.operator)
   @ApiOperation({ summary: 'Показать всех пользователей (для админа)' })
   @ApiResponse({ type: [CreateUserDto] })
   async findAll() {
@@ -75,6 +76,12 @@ export class UserController {
   @ApiOperation({ summary: 'Получение данных о конкретном пользователе' })
   findOne(@Query() query: FindOneUserDto) {
     return this.userService.findOne(+query._id);
+  }
+
+  @Patch()
+  @ApiOperation({ summary: 'Изменение данных о конкретном пользователе' })
+  update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.updateUserContent(+req.user.userId, updateUserDto);
   }
 
   @Delete(':id')

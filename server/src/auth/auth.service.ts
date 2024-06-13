@@ -48,4 +48,12 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
+
+  async getProfile(req: any) {
+    const user = await this.userRepository.findOne({
+      where: { id: req.user.userId },
+      relations: { roleId: true },
+    });
+    return user;
+  }
 }

@@ -27,33 +27,33 @@
       </div>
     </div>
     <div class="q-mx-md" style="flex: 1 1 200px; max-width: 600px">
-      <q-input
-        class="q-mx-md"
-        @blur="search = $route.query ? $route.query.search : ''"
-        dense="dense"
-        bg-color="white"
-        outlined="outlined"
-        placeholder="Поиск"
-        rounded="rounded"
-        shadow-text="  Для поиска нажмите Enter"
-        v-model="search"
-        ><template v-slot:prepend
-          ><transition
-            :duration="100"
-            appear="appear"
-            enter-active-class="animated fadeIn"
-            leave-active-class="animated fadeOut"
-            mode="out-in"
-            ><q-icon key="iconSearch" name="search" v-if="!search"></q-icon
-            ><q-icon
-              class="cursor-pointer"
-              @click.stop="clearSearch"
-              key="iconClear"
-              name="times"
-              v-else
-            ></q-icon></transition
-        ></template>
-      </q-input>
+      <!--      <q-input-->
+      <!--        class="q-mx-md"-->
+      <!--        @blur="search = $route.query ? $route.query.search : ''"-->
+      <!--        dense="dense"-->
+      <!--        bg-color="white"-->
+      <!--        outlined="outlined"-->
+      <!--        placeholder="Поиск"-->
+      <!--        rounded="rounded"-->
+      <!--        shadow-text="  Для поиска нажмите Enter"-->
+      <!--        v-model="search"-->
+      <!--        ><template v-slot:prepend-->
+      <!--          ><transition-->
+      <!--            :duration="100"-->
+      <!--            appear="appear"-->
+      <!--            enter-active-class="animated fadeIn"-->
+      <!--            leave-active-class="animated fadeOut"-->
+      <!--            mode="out-in"-->
+      <!--            ><q-icon key="iconSearch" name="search" v-if="!search"></q-icon-->
+      <!--            ><q-icon-->
+      <!--              class="cursor-pointer"-->
+      <!--              @click.stop="clearSearch"-->
+      <!--              key="iconClear"-->
+      <!--              name="times"-->
+      <!--              v-else-->
+      <!--            ></q-icon></transition-->
+      <!--        ></template>-->
+      <!--      </q-input>-->
     </div>
     <div class="row items-center">
       <q-icon

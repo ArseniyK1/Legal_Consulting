@@ -1,3 +1,4 @@
+<!---->
 <template>
   <q-page padding>
     <q-card
@@ -150,7 +151,12 @@
               </div>
               <div
                 class="col-4"
-                v-if="authStore.isOperator || !!!request.date_meeting"
+                v-if="
+                  (authStore.isOperator || authStore.isLawyer) &&
+                  !!!request.date_meeting &&
+                  (request.lawyerId === JSON.parse(authStore.getId)?.id ||
+                    request.lawyer?.id === JSON.parse(authStore.getId)?.id)
+                "
               >
                 <q-item>
                   <q-item-section>
@@ -256,7 +262,7 @@
                   </q-item-section>
                 </q-item>
               </div>
-              <div class="col-4">
+              <div class="col-4" v-if="!!request.date_meeting">
                 <q-item>
                   <q-item-section>
                     <q-item-label
@@ -415,7 +421,10 @@ const offerTime = async () => {
 onMounted(async () => {
   const reqId = +route.params.id;
   request.value = await requestStore.getInfoByReqId(reqId);
-  suggestedDateMeeting.value = formatDate(request.value?.suggested_price);
+  suggestedDateMeeting.value = formatDate(
+    request.value?.suggested_date_meeting
+  );
+  console.log("ASD", suggestedDateMeeting.value);
   dateMeeting.value =
     request.value?.date_meeting && formatDate(request.value?.date_meeting);
   console.log(dateMeeting.value);

@@ -12,6 +12,37 @@
     >
       <scroll-area>
         <div class="row">
+          <div class="col-4" v-if="authStore.isOperator">
+            <q-select
+              v-model="clientName"
+              label="Выберите пользователя"
+              rounded
+              outlined
+              :options="allClients"
+              :option-label="
+                (opt) => (Object(opt) === opt && 'id' in opt ? opt.name : '')
+              "
+              class="q-ma-sm"
+              bg-color="primary"
+              color="info"
+              label-color="dark"
+              popup-content-style="border-radius: 15px"
+              popup-content-class="popup"
+            >
+            </q-select>
+          </div>
+          <div class="col-2" v-if="authStore.isOperator">
+            <q-btn
+              label="Если пользователь на зарегистрирован нажми"
+              color="accent"
+              dense
+              @click="registrUser = !registrUser"
+              rounded
+            />
+            <main-dialog v-model="registrUser" title="Регистрация" width="50%">
+              <registr-form reg-by-operator />
+            </main-dialog>
+          </div>
           <div class="col-12 q-mb-md">
             <main-input
               label="Описание проблемы"
@@ -78,9 +109,12 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useQuasar } from "quasar";
 import { useRequestStore } from "stores/request";
 import { useTypeRightsStore } from "stores/typeRight";
-import MainSelect from "components/ui/input/MainSelect.vue";
 import ScrollArea from "components/common/ScrollArea.vue";
 import { mdiSendVariant } from "@mdi/js";
+import { useAuthStore } from "stores/auth";
+import { useUserStore } from "stores/user";
+import MainDialog from "components/ui/dialog/MainDialog.vue";
+import RegistrForm from "components/auth/RegistrForm.vue";
 
 const props = defineProps({
   modelValue: {
@@ -93,6 +127,8 @@ const props = defineProps({
 const quasar = useQuasar();
 const requestStore = useRequestStore();
 const typeRightsStore = useTypeRightsStore();
+const authStore = useAuthStore();
+const userStore = useUserStore();
 // INJECTABLE
 
 // REFS
@@ -103,6 +139,9 @@ const options = ref([]);
 const rights = ref([]);
 const typeProblems = ref([]);
 const selectedCheckbox = ref(false);
+const allClients = ref([]);
+const clientName = ref("");
+const registrUser = ref(false);
 // REFS
 
 // FUNCTION
@@ -165,6 +204,13 @@ onMounted(async () => {
     typeRight.value = props.modelValue.typeRight;
   }
   rights.value = await typeRightsStore.getAllTypeRights();
+  const allClient = await userStore.getAllClients();
+  allClient.forEach((el) =>
+    allClients.value.push({
+      name: `${el.last_name} ${el.first_name} ${el.middle_name}`,
+      id: el.id,
+    })
+  );
   options.value = rights.value?.map((typeRight) => typeRight.name);
 });
 </script>
