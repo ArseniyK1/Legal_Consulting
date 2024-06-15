@@ -10,6 +10,7 @@ import {
 import { TypeRightService } from './type_right.service';
 import { CreateTypeRightDto } from './dto/create-type_right.dto';
 import { UpdateTypeRightDto } from './dto/update-type_right.dto';
+import { Public } from '../auth/public.decorator';
 
 @Controller('type-right')
 export class TypeRightController {
@@ -20,6 +21,7 @@ export class TypeRightController {
     return await this.typeRightService.createTypeRight(createTypeRightDto);
   }
 
+  @Public()
   @Get()
   async getAllTypeRights() {
     return await this.typeRightService.getAllTypeRights();

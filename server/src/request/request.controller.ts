@@ -20,6 +20,7 @@ import { ChangeStatusDto } from './dto/change-status.dto';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
 import { GetAllRequestDto } from './dto/getAllRequest.dto';
 import { OfferTimeConsultationDto } from './dto/offerTimeConsultation.dto';
+import { ProposedRequestDto } from './dto/ProposedRequest.dto';
 
 @ApiTags('Request')
 @Controller('request')
@@ -48,6 +49,19 @@ export class RequestController {
   @ApiOperation({ summary: 'Получение всех заявок всех пользователей' })
   findAllRequests(@Query() query: GetAllRequestDto) {
     return this.requestService.findAllRequests(query);
+  }
+
+  @Patch('/proposedRequest')
+  @ApiOperation({ summary: 'Откликнуться на предложенную заявку' })
+  proposedRequest(@Request() req: any, @Query() query: ProposedRequestDto) {
+    return this.requestService.proposedRequest(query);
+  }
+
+  @Roles(Role.lawyer)
+  @Get('/getProposedRequest')
+  @ApiOperation({ summary: 'Получение всех предложенных заявок юристом' })
+  getProposedRequest(@Request() req: any) {
+    return this.requestService.getProposedRequest(+req.user.userId);
   }
 
   @Get('/getMyRequest')

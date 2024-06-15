@@ -115,6 +115,7 @@ import { useAuthStore } from "stores/auth";
 import { useUserStore } from "stores/user";
 import MainDialog from "components/ui/dialog/MainDialog.vue";
 import RegistrForm from "components/auth/RegistrForm.vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   modelValue: {
@@ -129,7 +130,10 @@ const requestStore = useRequestStore();
 const typeRightsStore = useTypeRightsStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
+const router = useRouter();
 // INJECTABLE
+
+const emits = defineEmits(["close"]);
 
 // REFS
 const myForm = ref(null);
@@ -155,18 +159,22 @@ const onSubmit = () => {
         message: "Заполните все поля!",
       });
     } else {
-      console.log(options.value, typeRight.value);
-      await requestStore.createRequest(
+      const createdRequest = await requestStore.createRequest(
         description.value,
         rights.value.find((el) => el.name === typeRight.value)?.id,
         typeProblems.value.find((el) => !!el.check)?.trouble
       );
-      quasar.notify({
-        color: "positive",
-        textColor: "white",
-        icon: "cloud_done",
-        message: "Заяка создана!",
-      });
+      if (!!createdRequest) {
+        console.log(createdRequest);
+        emits("close");
+        quasar.notify({
+          color: "positive",
+          textColor: "white",
+          icon: "cloud_done",
+          message: "Заяка создана!",
+        });
+        await router.push(`/requestInfo/${+createdRequest.id}`);
+      }
     }
   });
 };
@@ -204,13 +212,15 @@ onMounted(async () => {
     typeRight.value = props.modelValue.typeRight;
   }
   rights.value = await typeRightsStore.getAllTypeRights();
-  const allClient = await userStore.getAllClients();
-  allClient.forEach((el) =>
-    allClients.value.push({
-      name: `${el.last_name} ${el.first_name} ${el.middle_name}`,
-      id: el.id,
-    })
-  );
+  if (authStore.isOperator) {
+    const allClient = await userStore.getAllClients();
+    allClient.forEach((el) =>
+      allClients.value.push({
+        name: `${el.last_name} ${el.first_name} ${el.middle_name}`,
+        id: el.id,
+      })
+    );
+  }
   options.value = rights.value?.map((typeRight) => typeRight.name);
 });
 </script>

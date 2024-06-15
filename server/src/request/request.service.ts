@@ -8,6 +8,7 @@ import { ChangeStatusDto } from './dto/change-status.dto';
 import { tr } from '@faker-js/faker';
 import { User } from '../user/entities/user.entity';
 import { GetAllRequestDto } from './dto/getAllRequest.dto';
+import { ProposedRequestDto } from './dto/ProposedRequest.dto';
 
 @Injectable()
 export class RequestService {
@@ -131,9 +132,25 @@ export class RequestService {
       where: { lawyerId: IsNull() },
     });
   }
+
+  async proposedRequest(dto: ProposedRequestDto) {
+    return await this.requestRepository.update(
+      { id: +dto.requestId },
+      {
+        proposedLawyerId: +dto.lawyerId,
+      },
+    );
+  }
   async fetchMyRequests(lawyerId: number) {
     return await this.requestRepository.find({
       where: { lawyerId: lawyerId },
+      relations: { type_right: true, user: true },
+    });
+  }
+
+  async getProposedRequest(lawyerId: number) {
+    return await this.requestRepository.find({
+      where: { proposedLawyerId: lawyerId },
       relations: { type_right: true, user: true },
     });
   }

@@ -1,7 +1,10 @@
 import {
+  ArrayNotEmpty,
+  IsArray,
   IsBoolean,
   IsDate,
   IsDateString,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -67,6 +70,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
+  @IsEmail()
   @ApiProperty({ example: 'mail@mail.ru', description: 'Почта пользователя' })
   contact_email?: string;
 
@@ -77,6 +81,10 @@ export class CreateUserDto {
     description: 'Хочет ли пользователь зарегистрироваться как юрист',
   })
   isLawyer?: boolean;
+
+  @IsArray()
+  @IsOptional()
+  type_law?: string[];
 
   @ApiProperty({ example: RoleReturnObject })
   role: RoleReturnObject;

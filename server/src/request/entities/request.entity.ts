@@ -20,7 +20,7 @@ export class Request {
   @Column({ enum: ['pending', 'accepted', 'inProgress', 'canceled'] })
   status: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Column({ nullable: true })
@@ -46,6 +46,9 @@ export class Request {
 
   @Column({ nullable: true })
   additional_inf: string;
+
+  @Column({ nullable: true })
+  proposedLawyerId: number;
 
   @ManyToOne(() => TypeRight, (type_right) => type_right.request)
   @JoinColumn()

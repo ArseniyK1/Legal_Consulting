@@ -71,7 +71,7 @@
               <q-tab
                 name="myRequest"
                 label="Мои заявки"
-                v-if="authStore.isLawyer"
+                v-if="authStore.isLawyer || authStore.isUser"
               />
               <q-tab
                 name="pendingConfirm"
@@ -101,7 +101,7 @@
               </q-tab-panel>
               <q-tab-panel name="pendingConfirm" class="bg-secondary"
                 ><div
-                  v-for="item in requests"
+                  v-for="item in proposedRequest"
                   :key="item.id"
                   style="width: calc(100% - 32px); margin: 1rem auto"
                 >
@@ -115,7 +115,7 @@
             :key="item.id"
             style="width: calc(100% - 32px); margin: 1rem auto"
           >
-            <request-card :request="item"> </request-card>
+            <request-card :request="item" />
           </div>
         </scroll-area>
       </div>
@@ -147,6 +147,7 @@ const userInput = ref("");
 const statusInput = ref("");
 const troubleTypeInput = ref("");
 const visibleFilter = ref(false);
+const proposedRequest = ref([]);
 const options = [
   { id: 1, name: "В работе", dbName: requestStatus.accepted },
   { id: 2, name: "Ожидает отклика", dbName: requestStatus.pending },
@@ -203,6 +204,9 @@ watch(
 onMounted(async () => {
   if (authStore.isOperator || authStore.isLawyer) {
     requests.value = await requestStore.getAllRequests();
+    if (authStore.isLawyer) {
+      proposedRequest.value = await requestStore.getProposedRequest();
+    }
   } else {
     requests.value = await requestStore.getMyRequests();
   }

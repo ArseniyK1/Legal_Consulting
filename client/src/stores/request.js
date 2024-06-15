@@ -8,6 +8,7 @@ export const useRequestStore = defineStore({
   state: () => ({
     openRequests: [],
     myRequests: [],
+    requests: [],
   }),
   getters: {
     getOpenRequests: (state) => state.openRequests,
@@ -95,6 +96,32 @@ export const useRequestStore = defineStore({
       }
       // this.openRequests = data;
     },
+    async getProposedRequest() {
+      try {
+        const { data } = await api({
+          url: "api/request/getProposedRequest",
+          method: "get",
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+      // this.openRequests = data;
+    },
+    async proposedLawyer(lawyerId, requestId) {
+      console.log("АЙДИ ЮРИСТА", lawyerId, requestId);
+      try {
+        const { data } = await api({
+          url: "api/request/proposedRequest",
+          method: "patch",
+          params: { lawyerId, requestId },
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+      // this.openRequests = data;
+    },
     async getInfoByReqId(id) {
       try {
         const { data } = await api({
@@ -112,6 +139,8 @@ export const useRequestStore = defineStore({
           url: `api/request/${id}`,
           method: "delete",
         });
+        this.$router.go(0);
+        this.requests = this.requests.filter((item) => item.id !== id);
         return data;
       } catch (e) {
         console.log(e);

@@ -51,6 +51,9 @@ export class User {
   @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
   portfolio: Portfolio[];
 
+  @Column({ default: null, type: 'jsonb' })
+  type_law: JSON;
+
   @ManyToOne(() => Organization, (organization) => organization.user)
   @JoinColumn({ name: 'organizationId' })
   organization: Organization;

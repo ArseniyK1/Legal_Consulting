@@ -68,7 +68,6 @@
               </q-item-section>
             </q-item>
 
-            <!-- Add more fields as needed -->
             <div class="row">
               <div class="col-3">
                 <q-item>
@@ -96,7 +95,7 @@
               <div class="col-3" v-if="request.lawyerId || request.lawyer?.id">
                 <q-item>
                   <q-item-section>
-                    <q-item-label>ФИО адвоката: </q-item-label>
+                    <q-item-label>ФИО юриста: </q-item-label>
                     <q-item-label
                       caption
                       class="text_style flex justify-between"
@@ -135,6 +134,23 @@
                     <q-item-label>Отрасль права: </q-item-label>
                     <q-item-label caption class="text_style"
                       >{{ request.type_right?.name }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div
+                class="col-3"
+                v-if="request.proposedLawyerId && authStore.isOperator"
+              >
+                <q-item>
+                  <q-item-section>
+                    <q-item-label>Статус подтверждения заявки: </q-item-label>
+                    <q-item-label caption class="text_style"
+                      >{{
+                        request.proposedLawyerId === 0
+                          ? "Юрист  подтвердил"
+                          : "Юрист пока не подтвердил"
+                      }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>

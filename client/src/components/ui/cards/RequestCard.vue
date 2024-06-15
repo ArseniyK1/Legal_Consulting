@@ -76,7 +76,11 @@
         flat
         class="bg-accent"
         @click="deleteRequest"
-        v-if="!request.active && (authStore.isUser || authStore.isOperator)"
+        v-if="
+          !request.active &&
+          (authStore.isUser || authStore.isOperator) &&
+          !request.proposedLawyerId
+        "
         >Удалить</q-btn
       >
       <q-btn
@@ -89,19 +93,27 @@
       <q-btn
         flat
         class="bg-accent"
-        @click="actionThree"
-        v-if="authStore.isOperator"
+        @click="visibleProposed = !visibleProposed"
+        v-if="
+          authStore.isOperator &&
+          !request.proposedLawyerId &&
+          !request.active &&
+          !request.lawyerId
+        "
         >Привязать юриста</q-btn
       >
+
       <q-btn
         flat
         class="bg-accent"
-        @click="actionThree"
         v-if="authStore.isUser && request?.status === requestStatus.done"
         >Оставить отзыв</q-btn
       >
     </q-card-actions>
   </q-card>
+  <main-dialog v-model="visibleProposed" title="Выберите юриста" width="80%">
+    <select-lawyer @confirm="proposedLawyer" />
+  </main-dialog>
 </template>
 
 <script setup>
@@ -112,6 +124,8 @@ import { useRequestStore } from "stores/request";
 import { Notify } from "quasar";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import MainDialog from "components/ui/dialog/MainDialog.vue";
+import SelectLawyer from "components/ui/cards/SelectLawyer.vue";
 
 const authStore = useAuthStore();
 const requestStore = useRequestStore();
@@ -139,6 +153,7 @@ const props = defineProps({
   },
 });
 const icon = ref("");
+const visibleProposed = ref(false);
 
 const respondToRequest = async () => {
   try {
@@ -155,9 +170,18 @@ const respondToRequest = async () => {
 };
 
 const deleteRequest = async () => {
-  // await requestStore.deleteRequest(+props.request.id);
+  await requestStore.deleteRequest(+props.request.id);
 
   Notify.create({ message: "Заявка успешно удалена!", type: "positive" });
+};
+
+const proposedLawyer = async (lawyer) => {
+  if (!!lawyer) {
+    visibleProposed.value = false;
+    const res = await requestStore.proposedLawyer(lawyer.id, props.request.id);
+    if (!!res) await router.push(`/requestInfo/${props.request.id}`);
+  }
+  // requestStore.proposedLawyer(props.request.id, lawyer.id);
 };
 
 onMounted(() => {

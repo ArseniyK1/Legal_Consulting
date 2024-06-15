@@ -19,6 +19,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
 import { GetInfoAboutLawyerDto } from './dto/getInfoAboutLawyer.dto';
 import { FindOneUserDto } from './dto/FindOneUser.dto';
+import { QueryLawyerDto } from './dto/QueryLawyer.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -53,8 +54,8 @@ export class UserController {
   @ApiOperation({ summary: 'Показать всех юристов' })
   @Public()
   @ApiResponse({ type: [CreateUserDto] })
-  getAllLawyer() {
-    return this.userService.getAllLawyer();
+  getAllLawyer(@Query() query: QueryLawyerDto) {
+    return this.userService.getAllLawyer(query);
   }
 
   @Get('byLogin')

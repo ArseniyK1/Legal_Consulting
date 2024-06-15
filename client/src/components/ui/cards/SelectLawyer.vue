@@ -1,9 +1,6 @@
 <template>
-  <q-page-container style="padding: 0 !important" class="overflow-auto">
-    <div class="row flex justify-between">
-      <div class="col-2">
-        <div class="text-h2 text-dark q-pa-md">Юристы</div>
-      </div>
+  <div style="padding: 0 !important; position: relative">
+    <div class="row flex items-center">
       <div class="col-6">
         <div class="row">
           <q-input
@@ -48,13 +45,44 @@
           </q-input>
         </div>
       </div>
+      <div class="col-4">
+        <q-btn
+          label="Подтвердить выбор"
+          color="info"
+          class="q-mr-md"
+          style="z-index: 1"
+          @click="$emit('confirm', selectedLawyer)"
+        />
+        <q-btn
+          v-if="selectedLawyer"
+          label="Сбросить выбор"
+          color="warning"
+          @click="resetFilters"
+        />
+      </div>
     </div>
     <div class="cards-container">
       <div v-for="item in lawyers" :key="item.id" class="card-wrapper q-pa-sm">
-        <lawyer-card :data="item" />
+        <q-card
+          class="my-card bg-primary cursor-pointer"
+          @click="selectLawyer(item)"
+          :class="{ selected: selectedLawyer && selectedLawyer.id === item.id }"
+          style="transition: transform 0.2s ease-in-out"
+          :style="{
+            transform:
+              selectedLawyer && selectedLawyer.id === item.id
+                ? 'scale(1.05)'
+                : 'scale(1)',
+          }"
+        >
+          <q-card-section style="height: 100%" class="bg-primary">
+            <lawyer-card :data="item" />
+          </q-card-section>
+        </q-card>
       </div>
     </div>
-  </q-page-container>
+    <div class="q-pa-md"></div>
+  </div>
 </template>
 <script setup>
 import { onMounted, ref, watch } from "vue";
@@ -63,6 +91,7 @@ import { debounce } from "quasar";
 import { mdiClose } from "@mdi/js";
 import { useRoute } from "vue-router";
 import LawyerCard from "components/ui/cards/LawyerCard.vue";
+import ScrollArea from "components/common/ScrollArea.vue";
 
 const props = defineProps({
   height: {
@@ -70,6 +99,7 @@ const props = defineProps({
     default: "100%",
   },
 });
+const emit = defineEmits(["confirm"]);
 
 // INJECTABLE
 const route = useRoute();
@@ -79,6 +109,7 @@ const lawyerStore = useLawyerStore();
 // REFS
 const lawyers = ref([]);
 const typeLaw = ref("");
+const selectedLawyer = ref(null);
 const lawyerName = ref("");
 // REFS
 
@@ -94,12 +125,34 @@ watch(
   () => updateList()
 );
 
+const resetFilters = () => {
+  selectedLawyer.value = null;
+  typeLaw.value = "";
+  lawyerName.value = "";
+  lawyers.value.forEach((l) => {
+    l.selected = false;
+  });
+};
+
+const selectLawyer = (lawyer) => {
+  if (selectedLawyer.value && selectedLawyer.value.id === lawyer.id) {
+    selectedLawyer.value = null;
+  } else {
+    selectedLawyer.value = lawyer;
+    lawyers.value.forEach((l) => {
+      if (l.id !== lawyer.id) {
+        l.selected = false;
+      }
+    });
+  }
+};
+
 // LIFECYCLE HOOKS
 onMounted(async () => {
   lawyers.value = await lawyerStore.getAllLawyersFunc();
 });
 </script>
-<style scoped>
+<style scoped lang="scss">
 .cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -114,5 +167,10 @@ onMounted(async () => {
 
 .my-card {
   flex-grow: 1;
+  height: 100%;
+}
+
+.selected {
+  border: 2px solid $accent;
 }
 </style>

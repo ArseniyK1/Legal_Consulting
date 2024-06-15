@@ -41,7 +41,7 @@
       @click="dialog = !dialog"
     >
       <main-dialog v-model="dialog" width="80%" title="Создание заявки">
-        <request-form />
+        <request-form @close="dialog = !dialog" />
       </main-dialog>
     </q-btn>
   </q-page-container>

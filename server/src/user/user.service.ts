@@ -13,7 +13,7 @@ import { genSalt, hash } from 'bcrypt';
 import { ByLoginDto } from './dto/by-login.dto';
 import { PortfolioService } from '../portfolio/portfolio.service';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
-import { getManager, Raw, Repository } from 'typeorm';
+import { Brackets, getManager, Raw, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { roleEnum } from '../constants';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -105,20 +105,39 @@ export class UserService {
   }
 
   async getAllLawyer(query: QueryLawyerDto) {
+    console.log(query);
     const typeLaw = !!query?.type_law ? query?.type_law : null;
+    const userName = !!query?.lawyerName ? query?.lawyerName : null;
     let whereCondition = {};
 
     if (typeLaw) {
       whereCondition = `EXISTS (SELECT 1 FROM jsonb_array_elements_text(type_law) AS j WHERE j ILIKE '%${typeLaw}%')`;
     }
 
-    return await this.userRepository
+    const queryBuilder = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roleId', 'role')
       .where('user.roleId = :roleId', { roleId: 3 })
       .andWhere(whereCondition)
-      .orderBy('user.id', 'DESC')
-      .getMany();
+      .orderBy('user.id', 'DESC');
+
+    if (userName) {
+      queryBuilder.andWhere(
+        new Brackets((qb) => {
+          qb.where('LOWER(user.last_name) LIKE LOWER(:name)', {
+            name: `%${userName}%`,
+          })
+            .orWhere('LOWER(user.first_name) LIKE LOWER(:name)', {
+              name: `%${userName}%`,
+            })
+            .orWhere('LOWER(user.middle_name) LIKE LOWER(:name)', {
+              name: `%${userName}%`,
+            });
+        }),
+      );
+    }
+
+    return await queryBuilder.getMany();
   }
 
   async findOne(id: number) {

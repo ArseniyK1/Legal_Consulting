@@ -121,53 +121,38 @@
           />
 
           <div v-if="isLawyer">
+            <q-toggle
+              v-model="selectAll"
+              label="Выбрать все"
+              color="accent"
+              class="text-white"
+              @update:model-value="handleSelectAllChange"
+            />
+
             <q-select
               rounded
               outlined
               bg-color="primary"
-              color="dark"
+              color="accent"
               label-color="black"
-              v-model="typeRight"
+              v-model="selectedTypeLaw"
               :options="options"
               label="Отрасль права"
               popup-content-class="popup"
-              style="color: black"
+              multiple
+              use-chips
             >
               <template v-slot:append>
                 <q-icon
                   color="dark"
                   class="q-ml-md q-mr-sm"
                   name="clear"
-                  v-if="typeRight"
-                  @click="typeRight = ''"
+                  v-if="selectedTypeLaw.length > 0"
+                  @click="selectedTypeLaw = []"
                 />
               </template>
             </q-select>
-            <q-toggle
-              v-model="selectAll"
-              label="Всё"
-              color="accent"
-              class="text-white"
-              v-if="typeRight"
-              @update:model-value="handleSelectAllChange"
-            />
-            <div
-              v-for="item in typeProblems"
-              :key="item.trouble"
-              class="row"
-              style="margin: 5px; width: 100%"
-            >
-              <div class="col-12">
-                <q-toggle
-                  :disable="item.disabled"
-                  v-model="item.check"
-                  :label="item.trouble"
-                  color="accent"
-                  class="text-white"
-                  @update:model-value="handleCheckboxChange(item)"
-                />
-              </div>
-            </div>
+
             <q-input
               v-if="selectedTypeLaw.includes('Другое')"
               v-model="etc"
@@ -176,7 +161,8 @@
               rounded
               bg-color="primary"
               color="accent"
-              label-color="black"
+              label-color="secondary"
+              readonly
             />
           </div>
         </div>
@@ -219,12 +205,8 @@ const email = ref("123@gmail.com");
 const date = ref("");
 const selectedTypeLaw = ref([]);
 const etc = ref("");
-const typeRightsOptions = ref([]);
-const typeRight = ref("");
 const options = ref([]);
-const typeProblems = ref([]);
 const rights = ref([]);
-const selectedCheckbox = ref(false);
 const selectAll = ref(false);
 
 const props = defineProps({
@@ -241,54 +223,11 @@ const passRules = [
 
 const profile = computed(() => authStore.getProfile);
 
-const handleCheckboxChange = (item) => {
-  if (item.trouble === "Другое") {
-    typeProblems.value.forEach((problem) => {
-      if (problem.trouble !== "Другое") {
-        problem.check = false;
-        problem.disabled = item.check;
-      }
-    });
-    if (item.check) {
-      selectedTypeLaw.value = ["Другое", etc.value];
-    } else {
-      selectedTypeLaw.value = selectedTypeLaw.value.filter(
-        (type) => type !== "Другое" && type !== etc.value
-      );
-    }
-    selectAll.value = false;
-  } else {
-    typeProblems.value.forEach((problem) => {
-      if (problem.trouble === "Другое") {
-        problem.check = false;
-        problem.disabled = false;
-      }
-    });
-    if (item.check) {
-      selectedTypeLaw.value.push(item.trouble);
-    } else {
-      selectedTypeLaw.value = selectedTypeLaw.value.filter(
-        (type) => type !== item.trouble
-      );
-    }
-    selectAll.value =
-      selectedTypeLaw.value.length ===
-      typeProblems.value.filter((problem) => problem.trouble !== "Другое")
-        .length;
-  }
-};
-
 const handleSelectAllChange = () => {
-  typeProblems.value.forEach((problem) => {
-    if (problem.trouble !== "Другое") {
-      problem.check = selectAll.value;
-      problem.disabled = selectAll.value;
-    }
-  });
   if (selectAll.value) {
-    selectedTypeLaw.value = typeProblems.value
-      .filter((problem) => problem.trouble !== "Другое" && problem.check)
-      .map((problem) => problem.trouble);
+    selectedTypeLaw.value = options.value.filter(
+      (option) => option !== "Другое"
+    );
   } else {
     selectedTypeLaw.value = [];
   }
@@ -330,28 +269,10 @@ const submitForm = async () => {
   });
 };
 
-watch(typeProblems, () => {
-  selectedCheckbox.value = typeProblems.value.some((problem) => problem.check);
-});
-
-watch(typeRight, () => {
-  typeProblems.value = [];
-  rights.value
-    .find((el) => el.name === typeRight.value)
-    ?.type_trouble.forEach((el) =>
-      typeProblems.value.push({ trouble: el, check: false })
-    );
-  typeProblems.value.push({ trouble: "Другое", check: false });
-});
-
 onMounted(async () => {
-  const data = await typeRightsStore.getAllTypeRights();
-  data.forEach((el) => {
-    el.type_trouble.forEach((el) => typeRightsOptions.value.push(el));
-  });
   rights.value = await typeRightsStore.getAllTypeRights();
-  typeRightsOptions.value.push("Другое");
   options.value = rights.value?.map((typeRight) => typeRight.name);
+  // options.value.push("Другое");
 });
 </script>
 

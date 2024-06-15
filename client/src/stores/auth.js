@@ -100,25 +100,49 @@ export const useAuthStore = defineStore({
       password,
       isLawyer,
       date_of_birth,
-      regByOperator = false
+      regByOperator = false,
+      typeLaw = [],
+      contact_email
     ) {
       // Ensure date_of_birth is a Date instance
-      const { data } = await api.post("api/user", {
-        login: login,
-        first_name: name || null,
-        last_name: lastName || null,
-        middle_name: middleName || null,
-        password,
-        isLawyer,
-        date_of_birth: normaliseDate(date_of_birth),
-      });
-      const access_token = await this.login(login, password);
-      !regByOperator &&
-        localStorage.setItem("user-token", access_token?.access_token);
-      !regByOperator && localStorage.setItem("user-login", data?.login);
-      !regByOperator && localStorage.setItem("user-name", data?.first_name);
-      !regByOperator ? (this.token = access_token?.access_token) : "";
-      !regByOperator && this.router.push("/main");
+      try {
+        const { data } = await api.post("api/user", {
+          login: login,
+          first_name: name || null,
+          last_name: lastName || null,
+          middle_name: middleName || null,
+          password,
+          isLawyer,
+          date_of_birth: normaliseDate(date_of_birth),
+          type_law: typeLaw,
+          contact_email,
+        });
+        console.log({
+          login: login,
+          first_name: name || null,
+          last_name: lastName || null,
+          middle_name: middleName || null,
+          password,
+          isLawyer,
+          date_of_birth: normaliseDate(date_of_birth),
+          typeLaw,
+          contact_email,
+        });
+        const access_token = await this.login(login, password);
+        !regByOperator &&
+          localStorage.setItem("user-token", access_token?.access_token);
+        !regByOperator && localStorage.setItem("user-login", data?.login);
+        !regByOperator && localStorage.setItem("user-name", data?.first_name);
+        !regByOperator ? (this.token = access_token?.access_token) : "";
+        !regByOperator && this.router.push("/main");
+      } catch (e) {
+        Notify.create({
+          type: "negative",
+          color: "secondary",
+          message: e?.message ? e.message : "Ошибка регистрации",
+        });
+        console.log(e);
+      }
     },
   },
 });

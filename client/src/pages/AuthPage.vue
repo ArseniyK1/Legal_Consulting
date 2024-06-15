@@ -30,7 +30,7 @@
             animated
             class="q-pa-none shadow-3"
             bordered="bordered"
-            style="height: 95%; border-radius: 0 0 1rem 1rem !important"
+            style="height: 100%; border-radius: 0 0 1rem 1rem !important"
           >
             <q-tab-panel name="registr" class="q-pa-none">
               <registr-form />
