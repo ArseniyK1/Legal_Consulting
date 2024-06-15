@@ -13,16 +13,17 @@ import { genSalt, hash } from 'bcrypt';
 import { ByLoginDto } from './dto/by-login.dto';
 import { PortfolioService } from '../portfolio/portfolio.service';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
-import { Repository } from 'typeorm';
+import { getManager, Raw, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { roleEnum } from '../constants';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { QueryLawyerDto } from './dto/QueryLawyer.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject('USER_REPOSITORY')
-    private userRepository: Repository<User>,
+    private userRepository: Repository<any>,
     private roleService: RolesService,
     private portfolioService: PortfolioService,
   ) {}
@@ -38,9 +39,9 @@ export class UserService {
 
       if (!!createUserDto.isLawyer) {
         const role = await this.roleService.getRoleByValue(roleEnum.LAWYER);
-        console.log(role);
         return await this.userRepository.save({
           ...createUserDto,
+          type_law: createUserDto.type_law,
           roleId: role.id,
           password: hashPassword,
         });
@@ -103,8 +104,21 @@ export class UserService {
     }
   }
 
-  async getAllLawyer() {
-    return await this.findAll(3);
+  async getAllLawyer(query: QueryLawyerDto) {
+    const typeLaw = !!query?.type_law ? query?.type_law : null;
+    let whereCondition = {};
+
+    if (typeLaw) {
+      whereCondition = `EXISTS (SELECT 1 FROM jsonb_array_elements_text(type_law) AS j WHERE j ILIKE '%${typeLaw}%')`;
+    }
+
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roleId', 'role')
+      .where('user.roleId = :roleId', { roleId: 3 })
+      .andWhere(whereCondition)
+      .orderBy('user.id', 'DESC')
+      .getMany();
   }
 
   async findOne(id: number) {
