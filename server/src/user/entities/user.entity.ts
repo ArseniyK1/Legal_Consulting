@@ -11,6 +11,7 @@ import { Feedback } from '../../feedback/entities/feedback.entity';
 import { Request } from '../../request/entities/request.entity';
 import { Roles } from '../../roles/entities/roles.entity';
 import { Organization } from '../../organization/entities/organization.entity';
+import { Case } from '../../case/entities/case.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -62,6 +63,9 @@ export class User {
 
   @OneToMany(() => Request, (request) => request.user)
   request: Request[];
+
+  @OneToMany(() => Case, (caseEntity) => caseEntity.user)
+  case: Case[];
 
   @ManyToOne(() => Roles, (roles) => roles.user)
   @JoinColumn({ name: 'roleId' })

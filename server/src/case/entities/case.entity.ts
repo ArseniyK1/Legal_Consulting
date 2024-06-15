@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Roles } from '../../roles/entities/roles.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Case {
@@ -9,11 +17,16 @@ export class Case {
   type: string;
 
   @Column()
-  success: boolean;
+  issue: string;
 
   @Column()
   description: string;
 
   @Column()
   article: string;
+
+  @ManyToOne(() => User, (user) => user.case)
+  @JoinColumn()
+  user: User;
 }
+//
