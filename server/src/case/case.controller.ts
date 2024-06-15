@@ -19,7 +19,7 @@ export class CaseController {
   constructor(private readonly caseService: CaseService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Добавление дел(а) в портфолио' })
+  @ApiOperation({ summary: 'Добавление дел(а)' })
   create(@Request() req: any, @Body() createCaseDto: CreateCaseDto) {
     return this.caseService.create(req, createCaseDto);
   }
@@ -28,6 +28,12 @@ export class CaseController {
   @ApiOperation({ summary: 'Получение всех дел из портфолио пользователя' })
   findAll(@Request() req: any) {
     return this.caseService.findAll(req);
+  }
+
+  @Get('/myCases')
+  @ApiOperation({ summary: 'Получение своих дел из портфолио юриста' })
+  getMyCases(@Request() req: any) {
+    return this.caseService.getMyCases(req);
   }
 
   @Get(':id')

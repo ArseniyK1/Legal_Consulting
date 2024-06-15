@@ -1,7 +1,6 @@
 import { DataSource } from 'typeorm';
 import { User } from './user/entities/user.entity';
 import { Roles } from './roles/entities/roles.entity';
-import { Portfolio } from './portfolio/entities/portfolio.entity';
 import { Case } from './case/entities/case.entity';
 import { Request } from './request/entities/request.entity';
 import { TypeRight } from './type_right/entities/type_right.entity';
@@ -15,11 +14,6 @@ export const providers = [
   {
     provide: 'ROLES_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Roles),
-    inject: ['DATA_SOURCE'],
-  },
-  {
-    provide: 'PORTFOLIO_REPOSITORY',
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(Portfolio),
     inject: ['DATA_SOURCE'],
   },
   {

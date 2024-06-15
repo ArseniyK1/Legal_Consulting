@@ -461,7 +461,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style scoped>
 .text_style {
   font-size: 1rem;
   line-height: 15px;

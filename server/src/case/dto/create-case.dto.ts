@@ -1,19 +1,19 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateCaseDto {
   @IsString()
-  @IsOptional()
-  type?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  success?: boolean;
+  @IsNotEmpty()
+  type: string;
 
   @IsString()
-  @IsOptional()
-  description?: string;
+  @IsNotEmpty()
+  issue: string;
 
   @IsString()
-  @IsOptional()
-  article?: string;
+  @IsNotEmpty()
+  description: string;
+
+  @IsString()
+  @IsNotEmpty()
+  article: string;
 }

@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Roles } from '../../roles/entities/roles.entity';
 import { User } from '../../user/entities/user.entity';
-import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 
 @Entity()
 export class Case {
@@ -17,7 +17,7 @@ export class Case {
   type: string;
 
   @Column()
-  success: boolean;
+  issue: string;
 
   @Column()
   description: string;
@@ -25,7 +25,8 @@ export class Case {
   @Column()
   article: string;
 
-  @ManyToOne(() => Portfolio, (portfolio) => portfolio.case)
+  @ManyToOne(() => User, (user) => user.case)
   @JoinColumn()
-  portfolio: Portfolio;
+  user: User;
 }
+//

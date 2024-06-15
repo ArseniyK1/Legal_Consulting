@@ -6,12 +6,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 import { Discount } from '../../discount/entities/discount.entity';
 import { Feedback } from '../../feedback/entities/feedback.entity';
 import { Request } from '../../request/entities/request.entity';
 import { Roles } from '../../roles/entities/roles.entity';
 import { Organization } from '../../organization/entities/organization.entity';
+import { Case } from '../../case/entities/case.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -48,9 +48,6 @@ export class User {
   @Column({ nullable: true })
   contact_email: string;
 
-  @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
-  portfolio: Portfolio[];
-
   @Column({ default: null, type: 'jsonb' })
   type_law: JSON;
 
@@ -66,6 +63,9 @@ export class User {
 
   @OneToMany(() => Request, (request) => request.user)
   request: Request[];
+
+  @OneToMany(() => Case, (caseEntity) => caseEntity.user)
+  case: Case[];
 
   @ManyToOne(() => Roles, (roles) => roles.user)
   @JoinColumn({ name: 'roleId' })
