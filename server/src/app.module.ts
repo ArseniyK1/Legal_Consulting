@@ -1,22 +1,13 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  OnApplicationBootstrap,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { RolesModule } from './roles/roles.module';
 import { RequestModule } from './request/request.module';
-import { PortfolioModule } from './portfolio/portfolio.module';
 import { CaseModule } from './case/case.module';
 import { databaseProviders } from './db/database.providers';
 import { DiscountModule } from './discount/discount.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { AuthModule } from './auth/auth.module';
-import { LoggerMiddleware } from './core/logger.middleware';
-import { DatabaseModule } from './db/database.module';
-import { EntityManager } from 'typeorm';
 import { AppController } from './app.controller';
 import { OrganizationModule } from './organization/organization.module';
 import { TypeRightModule } from './type_right/type_right.module';
@@ -27,7 +18,6 @@ import { TypeRightModule } from './type_right/type_right.module';
     UserModule,
     RolesModule,
     RequestModule,
-    PortfolioModule,
     CaseModule,
     DiscountModule,
     FeedbackModule,

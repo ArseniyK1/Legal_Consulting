@@ -6,7 +6,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Portfolio } from '../../portfolio/entities/portfolio.entity';
 import { Discount } from '../../discount/entities/discount.entity';
 import { Feedback } from '../../feedback/entities/feedback.entity';
 import { Request } from '../../request/entities/request.entity';
@@ -47,9 +46,6 @@ export class User {
 
   @Column({ nullable: true })
   contact_email: string;
-
-  @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
-  portfolio: Portfolio[];
 
   @Column({ default: null, type: 'jsonb' })
   type_law: JSON;

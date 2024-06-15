@@ -11,10 +11,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from '../roles/roles.service';
 import { genSalt, hash } from 'bcrypt';
 import { ByLoginDto } from './dto/by-login.dto';
-import { PortfolioService } from '../portfolio/portfolio.service';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
-import { Brackets, getManager, Raw, Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { Brackets, Repository } from 'typeorm';
 import { roleEnum } from '../constants';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryLawyerDto } from './dto/QueryLawyer.dto';
@@ -25,7 +23,6 @@ export class UserService {
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<any>,
     private roleService: RolesService,
-    private portfolioService: PortfolioService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     if (!!createUserDto.password && !!createUserDto.login) {
