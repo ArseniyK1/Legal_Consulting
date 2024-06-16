@@ -13,7 +13,10 @@ export class CaseService {
   async create(req: any, createCaseDto: CreateCaseDto) {
     if (req.user.role === roleEnum.LAWYER) {
       return await this.caseRepository.save({
-        ...createCaseDto,
+        issue: createCaseDto.issue,
+        description: createCaseDto.description,
+        article: createCaseDto.article,
+        number: createCaseDto.number,
         user: req.user.userId,
       });
     } else {
@@ -22,7 +25,10 @@ export class CaseService {
   }
 
   async findAll(req: any) {
-    return await this.caseRepository.find({ relations: { user: true } });
+    return await this.caseRepository.find({
+      relations: { user: true },
+      order: { id: 'DESC' },
+    });
   }
   //
   async findOne(req: any, id: number) {
@@ -34,7 +40,7 @@ export class CaseService {
 
   async getMyCases(req: any) {
     return await this.caseRepository.find({
-      where: { user: req.user.userId },
+      where: { user: { id: req.user.userId } },
       relations: { user: true },
     });
   }

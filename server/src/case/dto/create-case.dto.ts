@@ -3,11 +3,11 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateCaseDto {
   @IsString()
   @IsNotEmpty()
-  type: string;
+  issue: string;
 
   @IsString()
-  @IsNotEmpty()
-  issue: string;
+  @IsOptional()
+  number?: string;
 
   @IsString()
   @IsNotEmpty()

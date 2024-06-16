@@ -1,7 +1,7 @@
 <template>
-  <q-page-container style="padding: 0 !important" class="overflow-hidden">
+  <q-page-container style="padding: 0 !important">
     <scroll-area>
-      <div class="q-mt-md">
+      <div class="q-mt-md" v-if="cases.length">
         <div class="row q-col-gutter-md q-ml-sm q-mr-md">
           <div v-for="caseItem in cases" :key="caseItem.id" class="col-md-12">
             <q-card class="bg-dark text-white">
@@ -12,7 +12,11 @@
                   size="md"
                   color="accent"
                 />
-                <div class="text-h6">{{ `Дело №${caseItem.id}` }}</div>
+                <div class="text-h6">
+                  {{
+                    `Дело №${caseItem.number ? caseItem.number : caseItem.id}`
+                  }}
+                </div>
               </q-card-section>
 
               <q-card-section>
@@ -31,13 +35,23 @@
           </div>
         </div>
       </div>
+      <div
+        class="text-center full-width"
+        v-else
+        style="height: 90vh !important"
+      >
+        <div class="flex column justify-center items-center full-height">
+          <q-icon :name="mdiBriefcase" class="" size="md" color="accent" />
+          <div class="text-h6 text-black">Нет дел</div>
+        </div>
+      </div>
       <main-dialog v-model="dialogOpen" width="50%" title="Добавление дела">
         <q-card class="bg-transparent" style="box-shadow: none">
           <q-card-section>
             <q-form @submit="addCase">
               <q-input
-                v-model="newCase.title"
-                label="Название"
+                v-model="number"
+                label="Номер дела"
                 rounded
                 outlined
                 bg-color="primary"
@@ -46,10 +60,13 @@
                 class="q-pa-md"
               />
               <q-input
-                v-model="newCase.description"
-                label="Описание"
+                v-model="description"
+                label="Описание *"
                 type="textarea"
                 rounded
+                :rules="[
+                  (val) => (val && val.length > 0) || 'Это обязательно поле!',
+                ]"
                 outlined
                 bg-color="primary"
                 color="info"
@@ -57,34 +74,37 @@
                 class="q-pa-md"
               />
               <q-input
-                v-model="newCase.date"
-                label="Дата"
-                mask="date"
-                :rules="['date']"
+                v-model="issue"
+                label="Результат *"
+                rounded
+                :rules="[
+                  (val) => (val && val.length > 0) || 'Это обязательно поле!',
+                ]"
+                type="textarea"
+                outlined
+                bg-color="primary"
+                color="info"
+                label-color="dark"
+                class="q-pa-md"
+              />
+              <q-input
+                v-model="article"
+                label="Статья "
                 rounded
                 outlined
                 bg-color="primary"
                 color="info"
                 label-color="dark"
                 class="q-pa-md"
-              >
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy
-                      ref="qDateProxy"
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-date
-                        v-model="newCase.date"
-                        @input="() => $refs.qDateProxy.hide()"
-                      />
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-              <div class="q-mt-md">
-                <q-btn label="Добавить" type="submit" color="primary" />
+              />
+
+              <div class="q-mt-md q-ml-md">
+                <q-btn
+                  label="Добавить"
+                  type="submit"
+                  color="accent"
+                  @click.prevent="addCase"
+                />
                 <q-btn
                   label="Отмена"
                   @click="closeDialog"
@@ -122,11 +142,11 @@ const $q = useQuasar();
 const caseStore = useCaseStore();
 
 const dialogOpen = ref(false);
-const newCase = ref({
-  title: "",
-  description: "",
-  date: "",
-});
+
+const number = ref("");
+const issue = ref("");
+const description = ref("");
+const article = ref("");
 const cases = ref([]);
 
 function openDialog() {
@@ -142,17 +162,27 @@ function closeDialog() {
   };
 }
 
-function addCase() {
-  cases.value.push({ ...newCase.value, id: Date.now() });
-  closeDialog();
-  $q.notify({
-    message: "Дело успешно добавлено",
-    type: "positive",
-  });
-}
+const addCase = async () => {
+  const res = await caseStore.addCase(
+    number.value,
+    issue.value,
+    description.value,
+    article.value
+  );
+
+  if (!!res) {
+    await caseStore.getAllCase();
+    cases.value = caseStore.getAllCases;
+    closeDialog();
+    $q.notify({
+      message: "Дело успешно добавлено",
+      type: "positive",
+    });
+  }
+};
 
 onMounted(async () => {
-  await caseStore.getAllCase();
+  await caseStore.getMyCase();
   cases.value = caseStore.getAllCases;
 });
 </script>

@@ -13,20 +13,19 @@ export class Case {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  type: string;
+  @Column({ nullable: true })
+  number: string;
 
-  @Column()
+  @Column({ nullable: true })
   issue: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   article: string;
 
   @ManyToOne(() => User, (user) => user.case)
   @JoinColumn()
   user: User;
 }
-//

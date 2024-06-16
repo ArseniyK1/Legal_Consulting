@@ -19,5 +19,32 @@ export const useCaseStore = defineStore({
         console.log(e);
       }
     },
+    async getMyCase() {
+      try {
+        const { data } = await api.get("api/case/myCases");
+        this.cases = data;
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async addCase(number, issue, description, article) {
+      try {
+        const { data } = await api({
+          method: "post",
+          url: "api/case",
+          data: {
+            number,
+            issue,
+            description,
+            article,
+          },
+        });
+        this.cases = data;
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 });

@@ -36,9 +36,6 @@ export class User {
   @Column({ nullable: true })
   phonenumber: string;
 
-  @Column({ default: false })
-  verified: boolean;
-
   @Column({ nullable: true })
   photo: string;
 
