@@ -83,6 +83,19 @@ export const useRequestStore = defineStore({
       }
       // this.openRequests = data;
     },
+    async confirmSuggestedTime(requestId) {
+      try {
+        const { data } = await api({
+          url: "api/request/confirmSuggestedTime",
+          method: "patch",
+          params: { requestId },
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+      // this.openRequests = data;
+    },
     async offerTime(requestId, suggested_date) {
       try {
         const { data } = await api({

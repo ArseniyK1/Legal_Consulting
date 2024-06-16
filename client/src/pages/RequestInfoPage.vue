@@ -290,6 +290,57 @@
                   </q-item-section>
                 </q-item>
               </div>
+              <div
+                class="col-6"
+                v-if="
+                  !request.date_meeting &&
+                  authStore.isUser &&
+                  JSON.parse(authStore.getId).id === request.user.id
+                "
+              >
+                <q-item
+                  class="flex items-center justify-center q-pa-md q-ma-md relative-position"
+                  style="border: 0.2rem solid #f06543; border-radius: 1rem"
+                >
+                  <div
+                    class="q-pl-xs q-pr-xs bg-dark"
+                    style="position: absolute; top: -1rem; left: 15px"
+                  >
+                    Юриcт предложил дату консультации!!!
+                  </div>
+
+                  <q-item-section class="q-mt-md">
+                    <q-item-label>Предложенная дата: </q-item-label>
+                    <q-item-label caption class="text_style"
+                      >{{ normaliseDate(request.suggested_date_meeting) }}
+                    </q-item-label>
+                  </q-item-section>
+                  <q-item-section class="q-mt-md">
+                    <q-item-label>Предложенное время: </q-item-label>
+                    <q-item-label caption class="text_style">
+                      {{
+                        new Date(
+                          request.suggested_date_meeting
+                        ).toLocaleTimeString("en-US", {
+                          hour12: false,
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      }}
+                    </q-item-label>
+                  </q-item-section>
+                  <q-item-section class="q-mt-xl flex justify-end items-end">
+                    <div>
+                      <q-btn
+                        rounded
+                        label="Подтвердить выбор"
+                        color="positive"
+                        @click.prevent="confirmSuggestedTime"
+                      />
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </div>
               <div class="col-4" v-if="!!request.date_meeting">
                 <q-item>
                   <q-item-section>
@@ -308,39 +359,39 @@
                         outlined
                         rounded
                       >
-                        <template v-slot:append>
-                          <q-icon
-                            name="event"
-                            class="cursor-pointer q-ml-md q-mr-sm"
-                            color="dark"
-                            disable
-                          >
-                            <q-popup-proxy
-                              cover
-                              class="bg-info"
-                              transition-show="scale"
-                              transition-hide="scale"
-                            >
-                              <q-date
-                                v-model="dateMeeting"
-                                class="bg-primary"
-                                :locale="locale"
-                                color="info"
-                                text-color="white"
-                                mask="DD.MM.YYYY"
-                              >
-                                <div class="row items-center justify-end">
-                                  <q-btn
-                                    v-close-popup
-                                    label="Закрыть"
-                                    color="primary"
-                                    class="bg-info"
-                                  />
-                                </div>
-                              </q-date>
-                            </q-popup-proxy>
-                          </q-icon>
-                        </template>
+                        <!--                        <template v-slot:append>-->
+                        <!--                          <q-icon-->
+                        <!--                            name="event"-->
+                        <!--                            class="cursor-pointer q-ml-md q-mr-sm"-->
+                        <!--                            color="dark"-->
+                        <!--                            disable-->
+                        <!--                          >-->
+                        <!--                            <q-popup-proxy-->
+                        <!--                              cover-->
+                        <!--                              class="bg-info"-->
+                        <!--                              transition-show="scale"-->
+                        <!--                              transition-hide="scale"-->
+                        <!--                            >-->
+                        <!--                              <q-date-->
+                        <!--                                v-model="dateMeeting"-->
+                        <!--                                class="bg-primary"-->
+                        <!--                                :locale="locale"-->
+                        <!--                                color="info"-->
+                        <!--                                text-color="white"-->
+                        <!--                                mask="DD.MM.YYYY"-->
+                        <!--                              >-->
+                        <!--                                <div class="row items-center justify-end">-->
+                        <!--                                  <q-btn-->
+                        <!--                                    v-close-popup-->
+                        <!--                                    label="Закрыть"-->
+                        <!--                                    color="primary"-->
+                        <!--                                    class="bg-info"-->
+                        <!--                                  />-->
+                        <!--                                </div>-->
+                        <!--                              </q-date>-->
+                        <!--                            </q-popup-proxy>-->
+                        <!--                          </q-icon>-->
+                        <!--                        </template>-->
                       </q-input>
                       <q-input
                         v-model="dateMeetingTime"
@@ -354,42 +405,43 @@
                         rounded
                         label-color="dark"
                       >
-                        <template v-slot:append>
-                          <q-icon
-                            name="access_time"
-                            class="cursor-pointer q-mr-sm q-ml-md"
-                            color="black"
-                          >
-                            <q-popup-proxy
-                              cover
-                              transition-show="scale"
-                              transition-hide="scale"
-                            >
-                              <q-time
-                                v-model="dateMeetingTime"
-                                color="info"
-                                format24h
-                              >
-                                <div class="row items-center justify-end">
-                                  <q-btn
-                                    v-close-popup
-                                    label="Закрыть"
-                                    color="info"
-                                    flat
-                                  />
-                                </div>
-                              </q-time>
-                            </q-popup-proxy>
-                          </q-icon>
-                        </template>
+                        <!--                        <template v-slot:append>-->
+                        <!--                          <q-icon-->
+                        <!--                            name="access_time"-->
+                        <!--                            class="cursor-pointer q-mr-sm q-ml-md"-->
+                        <!--                            color="black"-->
+                        <!--                          >-->
+                        <!--                            <q-popup-proxy-->
+                        <!--                              cover-->
+                        <!--                              transition-show="scale"-->
+                        <!--                              transition-hide="scale"-->
+                        <!--                            >-->
+                        <!--                              <q-time-->
+                        <!--                                v-model="dateMeetingTime"-->
+                        <!--                                color="info"-->
+                        <!--                                format24h-->
+                        <!--                              >-->
+                        <!--                                <div class="row items-center justify-end">-->
+                        <!--                                  <q-btn-->
+                        <!--                                    v-close-popup-->
+                        <!--                                    label="Закрыть"-->
+                        <!--                                    color="info"-->
+                        <!--                                    flat-->
+                        <!--                                  />-->
+                        <!--                                </div>-->
+                        <!--                              </q-time>-->
+                        <!--                            </q-popup-proxy>-->
+                        <!--                          </q-icon>-->
+                        <!--                        </template>-->
                       </q-input>
                     </q-item-label>
                   </q-item-section>
                 </q-item>
               </div>
             </div>
-          </q-list> </q-card-section
-      ></scroll-area>
+          </q-list>
+        </q-card-section></scroll-area
+      >
     </q-card>
   </q-page>
 </template>
@@ -410,7 +462,7 @@ import ScrollArea from "components/common/ScrollArea.vue";
 import { useAuthStore } from "stores/auth";
 import DateInput from "components/ui/input/DateInput.vue";
 import { date, Notify } from "quasar";
-import { formatDate } from "src/helpers/format";
+import { formatDate, normaliseDate } from "src/helpers/format";
 
 const route = useRoute();
 const requestStore = useRequestStore();
@@ -443,6 +495,12 @@ const offerTime = async () => {
   console.log(timestamp);
 
   const res = await requestStore.offerTime(request.value.id, timestamp);
+  const reqId = +route.params.id;
+  request.value = await requestStore.getInfoByReqId(reqId);
+};
+
+const confirmSuggestedTime = async () => {
+  await requestStore.confirmSuggestedTime(request.value.id);
   const reqId = +route.params.id;
   request.value = await requestStore.getInfoByReqId(reqId);
 };
@@ -480,7 +538,7 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .text_style {
   font-size: 1rem;
   line-height: 15px;
@@ -489,5 +547,9 @@ onMounted(async () => {
   padding: 10px;
   border-radius: 10px;
   background: white;
+}
+.gradient-wow {
+  background: linear-gradient(white, white),
+    linear-gradient(130deg, #696984 10%, $info 100%);
 }
 </style>

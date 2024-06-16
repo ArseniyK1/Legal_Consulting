@@ -119,6 +119,15 @@ export class RequestController {
     );
   }
 
+  @ApiOperation({ summary: 'Согласиться на предложенное время консультации' })
+  @Patch('/confirmSuggestedTime')
+  async confirmSuggestedTime(
+    @Request() req: any,
+    @Query() query: RespondRequestDto,
+  ) {
+    return await this.requestService.confirmSuggestedTime(+query.requestId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRequestDto: UpdateRequestDto) {
     return this.requestService.update(+id, updateRequestDto);

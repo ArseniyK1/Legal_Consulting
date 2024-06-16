@@ -200,6 +200,24 @@ export class RequestService {
     });
   }
 
+  async confirmSuggestedTime(requestId: number) {
+    const req = await this.requestRepository.findOne({
+      where: {
+        id: requestId,
+      },
+    });
+    if (!req?.id)
+      throw new HttpException('Заявка не найдена', HttpStatus.NOT_FOUND);
+    const dateMeeting = req.suggested_date_meeting;
+    return await this.requestRepository.update(
+      { id: requestId },
+      {
+        date_meeting: dateMeeting,
+        suggested_date_meeting: null,
+      },
+    );
+  }
+
   async changeStatus(dto: ChangeStatusDto) {
     // const portfolio = await this.findOne(requestId);
     // if (!portfolio?.id)
