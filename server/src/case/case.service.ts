@@ -38,6 +38,13 @@ export class CaseService {
     });
   }
 
+  async getCasesByLawyer(req: any, id: number) {
+    return await this.caseRepository.find({
+      where: { user: { id } },
+      relations: { user: true },
+    });
+  }
+
   async getMyCases(req: any) {
     return await this.caseRepository.find({
       where: { user: { id: req.user.userId } },
@@ -50,6 +57,6 @@ export class CaseService {
   }
 
   async remove(req: any, id: number) {
-    return `This action removes a #${id} case`;
+    return await this.caseRepository.delete(id);
   }
 }

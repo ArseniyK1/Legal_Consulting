@@ -6,6 +6,14 @@
           <div v-for="caseItem in cases" :key="caseItem.id" class="col-md-12">
             <q-card class="bg-dark text-white">
               <q-card-section class="row flex items-center">
+                <q-btn
+                  dense
+                  v-if="caseItem.user.id === userId"
+                  class="absolute-top-right cursor-pointer q-ma-md"
+                  :icon="mdiDelete"
+                  color="red"
+                  @click.prevent="deleteCase(caseItem.id)"
+                />
                 <q-icon
                   :name="mdiBriefcase"
                   class="q-mr-sm q-mt-xs"
@@ -135,11 +143,14 @@ import { onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
 import MainDialog from "components/ui/dialog/MainDialog.vue";
 import ScrollArea from "components/common/ScrollArea.vue";
-import { mdiFolderPlusOutline, mdiBriefcase } from "@mdi/js";
+import { mdiFolderPlusOutline, mdiBriefcase, mdiDelete } from "@mdi/js";
 import { useCaseStore } from "stores/case";
+import { useAuthStore } from "stores/auth";
 
 const $q = useQuasar();
 const caseStore = useCaseStore();
+const authStore = useAuthStore();
+const userId = JSON.parse(authStore.getId).id;
 
 const dialogOpen = ref(false);
 
@@ -171,7 +182,7 @@ const addCase = async () => {
   );
 
   if (!!res) {
-    await caseStore.getAllCase();
+    await caseStore.getMyCase();
     cases.value = caseStore.getAllCases;
     closeDialog();
     $q.notify({
@@ -179,6 +190,12 @@ const addCase = async () => {
       type: "positive",
     });
   }
+};
+
+const deleteCase = async (id) => {
+  await caseStore.deleteCase(id);
+  await caseStore.getMyCase();
+  cases.value = caseStore.getAllCases;
 };
 
 onMounted(async () => {

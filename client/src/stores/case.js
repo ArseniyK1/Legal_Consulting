@@ -46,5 +46,23 @@ export const useCaseStore = defineStore({
         console.log(e);
       }
     },
+    async deleteCase(id) {
+      try {
+        const { data } = await api.delete(`api/case/${id}`);
+        this.cases = data;
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getCasesByLawyer(id) {
+      try {
+        const { data } = await api.get(`api/case/lawyer/${id}`);
+        this.cases = data;
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 });

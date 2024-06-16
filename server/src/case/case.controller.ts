@@ -42,6 +42,12 @@ export class CaseController {
     return this.caseService.findOne(req, +id);
   }
 
+  @Get('/lawyer/:id')
+  @ApiOperation({ summary: 'Получение одного дела из портфолио пользователя' })
+  getCasesByLawyer(@Request() req: any, @Param('id') id: string) {
+    return this.caseService.getCasesByLawyer(req, +id);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Изменение одного дела в портфолио пользователя' })
   update(

@@ -83,6 +83,7 @@
                       </div>
                       <q-icon
                         :name="mdiEyeOutline"
+                        @click="infoUser = true"
                         class="cursor-pointer"
                         size="sm"
                       >
@@ -107,6 +108,7 @@
                       <q-icon
                         :name="mdiEyeOutline"
                         class="cursor-pointer"
+                        @click="infolawyer = true"
                         size="sm"
                       >
                         <q-tooltip>Подробная информация</q-tooltip>
@@ -443,6 +445,16 @@
         </q-card-section></scroll-area
       >
     </q-card>
+    <main-dialog
+      v-model="infolawyer"
+      title="Информация о юристе"
+      width="1300px"
+    >
+      <lawyer-info-card :data="request?.lawyer" />
+    </main-dialog>
+    <main-dialog v-model="infoUser" title="Информация о клиенте" width="1300px">
+      <lawyer-info-card :data="request?.user" />
+    </main-dialog>
   </q-page>
 </template>
 
@@ -463,6 +475,8 @@ import { useAuthStore } from "stores/auth";
 import DateInput from "components/ui/input/DateInput.vue";
 import { date, Notify } from "quasar";
 import { formatDate, normaliseDate } from "src/helpers/format";
+import MainDialog from "components/ui/dialog/MainDialog.vue";
+import LawyerInfoCard from "components/ui/cards/LawyerInfoCard.vue";
 
 const route = useRoute();
 const requestStore = useRequestStore();
@@ -474,6 +488,8 @@ const suggestedDateMeeting = ref("");
 const dateMeeting = ref("");
 const dateMeetingTime = ref("");
 const proposedLawyer = ref({});
+const infolawyer = ref(false);
+const infoUser = ref(false);
 
 const offerTime = async () => {
   if (!suggestedDateMeeting.value || !time.value) {

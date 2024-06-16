@@ -6,16 +6,10 @@
           class="flex align-center justify-center bg-primary q-pa-md"
           style="border-radius: 1rem"
         >
-          <div
-            class="full-height q-my-md q-mr-md flex-center column justify-center"
-          >
+          <div class="full-height q-mr-md flex-center column justify-center">
             <div class="text-h6 q-mb-xl">Профиль пользователя</div>
-            <q-avatar size="2000%" square="square">
-              <q-img
-                :src="profile.photo || avatarImage"
-                fit="contain"
-                width="100%"
-              ></q-img>
+            <q-avatar size="2000%" square>
+              <q-img :src="profile.photo || avatarImage" width="100%"></q-img>
             </q-avatar>
           </div>
           <div
@@ -149,7 +143,8 @@ const changeUserData = async () => {
     const changeData = await userStore.updateInfoUser(formData);
     if (changeData) {
       profile.value.photo = changeData.photo; // Обновите URL-адрес фото
-      Notify.create("Профиль успешно измененен!");
+
+      Notify.create("Чтобы изменения вступили в силу обновите страницу!");
     }
   } catch (error) {
     Notify.create("Failed to update profile.");

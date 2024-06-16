@@ -9,9 +9,11 @@ export const useRequestStore = defineStore({
     openRequests: [],
     myRequests: [],
     requests: [],
+    requestInfo: {},
   }),
   getters: {
     getOpenRequests: (state) => state.openRequests,
+    getRequestInfo: (state) => state.requestInfo,
   },
   actions: {
     async getAllOpenRequests() {
@@ -141,6 +143,7 @@ export const useRequestStore = defineStore({
           url: `api/request/${id}`,
           method: "get",
         });
+        this.requestInfo = data;
         return data;
       } catch (e) {
         console.log(e);

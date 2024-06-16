@@ -1,6 +1,8 @@
 <template>
   <q-card class="my-card bg-dark" flat bordered>
-    <q-img src="public/lawyer.svg" />
+    <q-card-section>
+      <q-img :src="computedPhoto" class="lawyer-image" />
+    </q-card-section>
 
     <q-card-section class="card-content">
       <div class="row no-wrap items-center">
@@ -24,7 +26,7 @@
     <q-separator class="card-separator" />
     <q-card-actions class="card-actions">
       <!--            <q-btn flat round icon="bookmark_add" class="bg-white disabled" color="accent" />-->
-      <q-btn flat color="primary" @click.prevent="infolawyer = true"
+      <q-btn color="accent" @click.prevent="infolawyer = true"
         >Подробнее
         <main-dialog
           v-model="infolawyer"
@@ -42,6 +44,7 @@
 import { ref, computed } from "vue";
 import MainDialog from "components/ui/dialog/MainDialog.vue";
 import LawyerInfoCard from "components/ui/cards/LawyerInfoCard.vue";
+import avatarImage from "assets/avatar.png";
 
 const props = defineProps({
   title: {
@@ -78,6 +81,11 @@ const inception = ref(false);
 // COMPUTED
 const formattedTypeLawArray = computed(() => {
   return props.data?.type_law || [];
+});
+const computedPhoto = computed(() => {
+  return props.data?.photo?.length
+    ? `http://localhost:7000/uploads/${props.data?.photo}`
+    : "public/lawyer.svg";
 });
 // COMPUTED
 
@@ -118,5 +126,12 @@ ul {
 li {
   color: #ffffff;
   margin: 5px 0;
+}
+
+.lawyer-image {
+  width: 100%; /* Adjust the size as needed */
+  height: 350px; /* Adjust the size as needed */
+  object-fit: cover;
+  margin: 0 auto; /* Center the image */
 }
 </style>
