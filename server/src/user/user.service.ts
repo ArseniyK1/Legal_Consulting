@@ -77,11 +77,15 @@ export class UserService {
     }
   }
 
-  async updateUserContent(userId: number, dto: UpdateUserDto) {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    });
-
+  async updateUserContent(
+    userId: number,
+    dto: UpdateUserDto,
+    photo?: Express.Multer.File,
+  ) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (photo) {
+      dto.photo = photo.filename; // сохраняем имя файла в БД
+    }
     return this.userRepository.save({
       ...user,
       ...dto,

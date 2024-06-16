@@ -8,6 +8,8 @@ import {
   Post,
   Query,
   Request,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,11 +17,20 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from '../auth/public.decorator';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
 import { ByLoginDto } from './dto/by-login.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
 import { GetInfoAboutLawyerDto } from './dto/getInfoAboutLawyer.dto';
 import { FindOneUserDto } from './dto/FindOneUser.dto';
 import { QueryLawyerDto } from './dto/QueryLawyer.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @ApiTags('User')
 @Controller('user')
@@ -81,8 +92,36 @@ export class UserController {
 
   @Patch()
   @ApiOperation({ summary: 'Изменение данных о конкретном пользователе' })
-  update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUserContent(+req.user.userId, updateUserDto);
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          callback(
+            null,
+            `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`,
+          );
+        },
+      }),
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Форма обновления пользователя',
+    type: UpdateUserDto,
+  })
+  update(
+    @Request() req: any,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() photo: Express.Multer.File,
+  ) {
+    return this.userService.updateUserContent(
+      +req.user.userId,
+      updateUserDto,
+      photo,
+    );
   }
 
   @Delete(':id')

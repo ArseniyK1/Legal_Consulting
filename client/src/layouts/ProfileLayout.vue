@@ -11,7 +11,11 @@
           >
             <div class="text-h6 q-mb-xl">Профиль пользователя</div>
             <q-avatar size="2000%" square="square">
-              <q-img :src="avatarImage" fit="contain" width="100%"></q-img>
+              <q-img
+                :src="profile.photo || avatarImage"
+                fit="contain"
+                width="100%"
+              ></q-img>
             </q-avatar>
           </div>
           <div
@@ -71,11 +75,13 @@
               v-model="profile.group"
               v-if="authStore.isLawyer"
             ></q-input>
+            <q-file v-model="photo" label="Новое фото профиля" color="info">
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
           </div>
         </div>
-        <!--        <q-separator class="q-mt-md"></q-separator>-->
-
-        <!--        <q-separator class="q-mb-md"></q-separator>-->
         <div class="flex align-center justify-end q-mt-md">
           <q-btn
             class="q-my-xs bg-accent"
@@ -103,27 +109,18 @@
   </q-layout>
 </template>
 
-<script setup="props">
-import { useAuthStore } from "../stores/auth";
-import { computed, onMounted, ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
+<script setup>
+import { useAuthStore } from "stores/auth";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import avatarImage from "../assets/avatar.png";
 import { mdiContentSaveAllOutline } from "@mdi/js";
-import { rolesValue } from "src/constants";
 import { useUserStore } from "stores/user";
 import { Notify } from "quasar";
+
 const authStore = useAuthStore();
-
 const router = useRouter();
-const route = useRoute();
 const userStore = useUserStore();
-
-const props = defineProps({
-  createNewUser: {
-    type: Boolean,
-    default: false,
-  },
-});
 
 const profile = ref({
   last_name: "",
@@ -134,25 +131,29 @@ const profile = ref({
   org: "",
   phonenumber: "",
   contact_email: "",
+  photo: "", // Используйте это поле для хранения URL-адреса фото
 });
+const photo = ref(null);
 
 const changeUserData = async () => {
-  const changeData = await userStore.updateInfoUser(
-    profile.value.first_name,
-    profile.value.last_name,
-    profile.value.middle_name,
-    profile.value.login,
-    undefined,
-    profile.value.phonenumber,
-    undefined,
-    undefined,
-    profile.value.contact_email
-  );
-  Notify.create("success");
-};
+  const formData = new FormData();
+  formData.append("first_name", profile.value.first_name);
+  formData.append("last_name", profile.value.last_name);
+  formData.append("middle_name", profile.value.middle_name);
+  formData.append("login", profile.value.login);
+  formData.append("phonenumber", profile.value.phonenumber);
+  formData.append("contact_email", profile.value.contact_email);
+  formData.append("photo", photo.value);
 
-const createUser = async () => {
-  router.go(-1);
+  try {
+    const changeData = await userStore.updateInfoUser(formData);
+    if (changeData) {
+      profile.value.photo = changeData.photo; // Обновите URL-адрес фото
+      Notify.create("Профиль успешно измененен!");
+    }
+  } catch (error) {
+    Notify.create("Failed to update profile.");
+  }
 };
 
 onMounted(async () => {
@@ -165,21 +166,6 @@ onMounted(async () => {
   profile.value.org = res.org;
   profile.value.phonenumber = res.phonenumber;
   profile.value.contact_email = res.contact_email;
-  console.log(authStore.$state.roles);
-  console.log(authStore.getRole);
-  // if (!!router.currentRoute.value.params.id)
-  //   profile.value = await userStore.getUserById(
-  //     router.currentRoute.value.params.id
-  //   );
-  // else {
-  //   await authStore.loadProfile();
-  //   profile.value = authStore.getProfile;
-  // }
+  profile.value.photo = `http://localhost:7000/uploads/${res.photo}`; // Загрузите URL-адрес фото при загрузке профиля
 });
 </script>
-
-<style>
-.profile-tabs {
-  height: calc(100vh - 490px);
-}
-</style>

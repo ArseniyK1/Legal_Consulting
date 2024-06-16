@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './core/all-exceptions.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -13,6 +14,13 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   const adapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
+  app.useStaticAssets('D:/development/VKR/server/uploads', {
+    prefix: '/uploads/',
+  });
+
+  console.log(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
 
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');

@@ -51,10 +51,8 @@ export class CreateUserDto {
   @ApiProperty({ example: '89127418291', description: 'Телефон пользователя' })
   phonenumber?: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @ApiProperty({ type: 'string', format: 'binary', required: false })
   @IsOptional()
-  @ApiProperty({ example: 'photo.jpg', description: 'Фото пользователя' })
   photo?: string;
 
   @IsString()
