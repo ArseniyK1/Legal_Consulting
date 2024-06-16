@@ -87,7 +87,11 @@
         flat
         class="bg-accent"
         @click="respondToRequest"
-        v-if="authStore.isLawyer && !request.active"
+        v-if="
+          authStore.isLawyer &&
+          !request.active &&
+          request.proposedLawyerId !== 0
+        "
         >Откликнуться</q-btn
       >
       <q-btn
@@ -159,7 +163,7 @@ const respondToRequest = async () => {
   try {
     await requestStore.respondRequest(props.request.id);
     await requestStore.getInfoByReqId(props.request.id);
-    await router.push(`/requestInfo/${props.request.id}`);
+    // await router.push(`/requestInfo/${props.request.id}`);
     Notify.create({
       message: "Вы успешно откликнулись на заявку",
       type: "positive",

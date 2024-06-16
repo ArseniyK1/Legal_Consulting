@@ -124,7 +124,6 @@ export const useRequestStore = defineStore({
       // this.openRequests = data;
     },
     async proposedLawyer(lawyerId, requestId) {
-      console.log("АЙДИ ЮРИСТА", lawyerId, requestId);
       try {
         const { data } = await api({
           url: "api/request/proposedRequest",

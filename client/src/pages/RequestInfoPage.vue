@@ -295,9 +295,9 @@
               <div
                 class="col-6"
                 v-if="
-                  !request.date_meeting &&
+                  !!request.date_meeting &&
                   authStore.isUser &&
-                  JSON.parse(authStore.getId).id === request.user.id
+                  JSON.parse(authStore.getId).id === request.user?.id
                 "
               >
                 <q-item
@@ -496,47 +496,48 @@ const offerTime = async () => {
     Notify.create({ message: "Введите дату и(или) время!", type: "negative" });
     return;
   }
-
   const [day, month, year] = suggestedDateMeeting.value.split(".");
   const formattedDate = `${month}/${day}/${year}`;
   const date = new Date(formattedDate);
-
   const [hours, minutes] = time.value.split(":").map(Number);
   date.setHours(hours);
-  console.log(date);
   date.setMinutes(minutes);
-
   const timestamp = date.toISOString();
-
-  console.log(timestamp);
-
   const res = await requestStore.offerTime(request.value.id, timestamp);
   const reqId = +route.params.id;
-  request.value = await requestStore.getInfoByReqId(reqId);
+  await requestStore.getInfoByReqId(reqId);
+  if (!!res?.request) {
+    request.value = requestStore.getRequestInfo.request;
+  } else {
+    request.value = requestStore.getRequestInfo;
+  }
 };
 
 const confirmSuggestedTime = async () => {
   await requestStore.confirmSuggestedTime(request.value.id);
   const reqId = +route.params.id;
-  request.value = await requestStore.getInfoByReqId(reqId);
+  await requestStore.getInfoByReqId(reqId);
+  if (!!res?.request) {
+    request.value = requestStore.getRequestInfo.request;
+  } else {
+    request.value = requestStore.getRequestInfo;
+  }
 };
 
 onMounted(async () => {
   const reqId = +route.params.id;
   const res = await requestStore.getInfoByReqId(reqId);
   if (!!res?.request) {
-    request.value = res.request;
+    request.value = requestStore.getRequestInfo.request;
     proposedLawyer.value = res.proposedLawyer;
   } else {
-    request.value = res;
+    request.value = requestStore.getRequestInfo;
   }
   suggestedDateMeeting.value = formatDate(
     request.value?.suggested_date_meeting
   );
-  console.log("ASD", suggestedDateMeeting.value);
   dateMeeting.value =
     request.value?.date_meeting && formatDate(request.value?.date_meeting);
-  console.log(dateMeeting.value);
   switch (request.value.status) {
     case requestStatus.pending:
       icon.value = mdiTimerSand;
