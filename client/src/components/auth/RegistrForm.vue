@@ -134,7 +134,7 @@
               outlined
               bg-color="primary"
               color="accent"
-              label-color="black"
+              label-color="dark"
               v-model="selectedTypeLaw"
               :options="options"
               label="Отрасль права"
@@ -163,6 +163,27 @@
               color="accent"
               label-color="secondary"
               readonly
+            />
+            <q-input
+              v-if="isLawyer"
+              v-model="education"
+              label="Образование"
+              outlined
+              rounded
+              bg-color="primary"
+              class="q-mt-sm q-mb-sm"
+              color="info"
+              label-color="dark"
+            />
+            <q-input
+              v-if="isLawyer"
+              v-model="work_experience"
+              label="Стаж работы"
+              outlined
+              rounded
+              bg-color="primary"
+              color="info"
+              label-color="dark"
             />
           </div>
         </div>
@@ -203,6 +224,8 @@ const showPassword = ref(false);
 const isLawyer = ref(false);
 const email = ref("123@gmail.com");
 const date = ref("");
+const education = ref("");
+const work_experience = ref("");
 const selectedTypeLaw = ref([]);
 const etc = ref("");
 const options = ref([]);
@@ -247,7 +270,9 @@ const submitForm = async () => {
           date.value,
           true,
           selectedTypeLaw.value,
-          email.value
+          email.value,
+          education.value,
+          work_experience.value
         );
       } else {
         await authStore.registration(
@@ -259,7 +284,7 @@ const submitForm = async () => {
           isLawyer.value,
           date.value,
           false,
-          selectedTypeLaw.value,
+          undefined,
           email.value
         );
       }

@@ -19,15 +19,12 @@
           </li>
         </ul>
       </div>
-      <div class="text-caption text-grey">
-        Small plates, salads & sandwiches in an intimate setting.
-      </div>
     </q-card-section>
 
     <q-separator class="card-separator" />
     <q-card-actions class="card-actions">
-      <q-btn flat round icon="bookmark_add" class="bg-white" color="accent" />
-      <q-btn flat color="primary" @click="infolawyer = true"
+      <!--            <q-btn flat round icon="bookmark_add" class="bg-white disabled" color="accent" />-->
+      <q-btn flat color="primary" @click.prevent="infolawyer = true"
         >Подробнее
         <main-dialog
           v-model="infolawyer"
@@ -109,7 +106,7 @@ const formattedTypeLawArray = computed(() => {
 
 .card-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 ul {

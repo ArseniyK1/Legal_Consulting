@@ -48,6 +48,12 @@ export class User {
   @Column({ default: null, type: 'jsonb' })
   type_law: JSON;
 
+  @Column({ nullable: true })
+  education: string;
+
+  @Column({ nullable: true })
+  work_experience: string;
+
   @ManyToOne(() => Organization, (organization) => organization.user)
   @JoinColumn({ name: 'organizationId' })
   organization: Organization;

@@ -11,19 +11,21 @@
       <div class="flex flex-center" style="height: 100%">
         <q-card
           class="shadow-4 bg-dark relative-position"
-          style="width: 50%; height: 65%; border-radius: 1rem"
+          style="width: 60%; height: 80%; border-radius: 1rem"
         >
-          <q-tabs
-            v-model="tab"
-            dense
-            active-color="white"
-            indicator-color="accent"
-            align="justify"
-            class="text-white"
-          >
-            <q-tab name="registr" label="Регистрация" />
-            <q-tab name="auth" label="Авторизация" />
-          </q-tabs>
+          <div class="tabs-container">
+            <q-tabs
+              v-model="tab"
+              dense
+              active-color="white"
+              indicator-color="accent"
+              align="justify"
+              class="text-white"
+            >
+              <q-tab name="registr" label="Регистрация" />
+              <q-tab name="auth" label="Авторизация" />
+            </q-tabs>
+          </div>
           <q-separator />
           <q-tab-panels
             v-model="tab"
@@ -40,17 +42,12 @@
               <login-form />
             </q-tab-panel>
           </q-tab-panels>
-          <!--          <div-->
-          <!--            style="position: absolute; top: -3rem; left: 10px; max-width: 400px"-->
-          <!--            class="text-h3"-->
-          <!--          >-->
-          <!--            <strong class="text-warning text-h3">Ю</strong>КО-->
-          <!--          </div>-->
         </q-card>
       </div>
     </div>
   </q-page>
 </template>
+
 <script setup>
 import { Notify, useQuasar } from "quasar";
 import { onMounted, ref } from "vue";
@@ -85,7 +82,6 @@ const tab = ref("auth");
   border-radius: 20px;
   background-image: linear-gradient(white, white),
     linear-gradient(130deg, #696984 10%, $info 100%);
-  /*border-image: linear-gradient( 130deg, #FDA219 10%, #E80505 100%) 1;*/
   padding: 10px;
   background-origin: border-box;
   background-clip: padding-box, border-box;
@@ -99,5 +95,13 @@ const tab = ref("auth");
   .trq {
     width: 100% !important;
   }
+}
+
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 </style>

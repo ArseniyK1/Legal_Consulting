@@ -101,8 +101,10 @@ export const useAuthStore = defineStore({
       isLawyer,
       date_of_birth,
       regByOperator = false,
-      typeLaw = [],
-      contact_email
+      typeLaw,
+      contact_email,
+      education,
+      work_experience
     ) {
       // Ensure date_of_birth is a Date instance
       try {
@@ -116,18 +118,10 @@ export const useAuthStore = defineStore({
           date_of_birth: normaliseDate(date_of_birth),
           type_law: typeLaw,
           contact_email,
+          education,
+          work_experience,
         });
-        console.log({
-          login: login,
-          first_name: name || null,
-          last_name: lastName || null,
-          middle_name: middleName || null,
-          password,
-          isLawyer,
-          date_of_birth: normaliseDate(date_of_birth),
-          typeLaw,
-          contact_email,
-        });
+
         const access_token = await this.login(login, password);
         !regByOperator &&
           localStorage.setItem("user-token", access_token?.access_token);

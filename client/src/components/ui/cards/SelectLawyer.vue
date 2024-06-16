@@ -49,6 +49,7 @@
         <q-btn
           label="Подтвердить выбор"
           color="info"
+          v-if="selectedLawyer"
           class="q-mr-md"
           style="z-index: 1"
           @click="$emit('confirm', selectedLawyer)"

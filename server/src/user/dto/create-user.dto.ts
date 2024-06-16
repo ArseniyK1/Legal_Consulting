@@ -57,6 +57,20 @@ export class CreateUserDto {
   @ApiProperty({ example: 'photo.jpg', description: 'Фото пользователя' })
   photo?: string;
 
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    example:
+      'Липецкий Государственный Технический Университет Кафедра Юриприспруденции',
+    description: 'Образование юриста',
+  })
+  education?: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ example: '2 года 4 месяца', description: 'Стаж юриста' })
+  work_experience?: string;
+
   @IsNotEmpty()
   @IsOptional()
   @IsDate()

@@ -165,10 +165,15 @@ export class RequestService {
       const lawyer = await this.userRepository.findOne({
         where: { id: request.lawyerId },
       });
-      return { ...request, lawyer: lawyer };
+      const proposedLawyer = await this.userRepository.findOne({
+        where: { id: request.proposedLawyerId },
+      });
+      return { ...request, lawyer: lawyer, proposedLawyer: proposedLawyer };
     }
-
-    return request;
+    const proposedLawyer = await this.userRepository.findOne({
+      where: { id: request.proposedLawyerId },
+    });
+    return { request, proposedLawyer };
   }
 
   async update(requestId: number, dto: UpdateRequestDto) {
@@ -217,6 +222,7 @@ export class RequestService {
     return await this.requestRepository.save({
       ...request,
       lawyerId,
+      proposedLawyerId: 0,
       active: true,
       status: requestStatusEnum.ACCEPTED,
     });

@@ -148,8 +148,20 @@
                     <q-item-label caption class="text_style"
                       >{{
                         request.proposedLawyerId === 0
-                          ? "Юрист  подтвердил"
-                          : "Юрист пока не подтвердил"
+                          ? `${
+                              proposedLawyer.last_name
+                            } ${proposedLawyer.first_name
+                              .split("")[0]
+                              .toUpperCase()}. ${proposedLawyer.middle_name
+                              .split("")[0]
+                              .toUpperCase()}. подтвердил`
+                          : `${
+                              proposedLawyer.last_name
+                            } ${proposedLawyer.first_name
+                              .split("")[0]
+                              .toUpperCase()}. ${proposedLawyer.middle_name
+                              .split("")[0]
+                              .toUpperCase()}. пока не подтвердил`
                       }}
                     </q-item-label>
                   </q-item-section>
@@ -409,6 +421,7 @@ const time = ref("");
 const suggestedDateMeeting = ref("");
 const dateMeeting = ref("");
 const dateMeetingTime = ref("");
+const proposedLawyer = ref({});
 
 const offerTime = async () => {
   if (!suggestedDateMeeting.value || !time.value) {
@@ -436,7 +449,13 @@ const offerTime = async () => {
 
 onMounted(async () => {
   const reqId = +route.params.id;
-  request.value = await requestStore.getInfoByReqId(reqId);
+  const res = await requestStore.getInfoByReqId(reqId);
+  if (!!res?.request) {
+    request.value = res.request;
+    proposedLawyer.value = res.proposedLawyer;
+  } else {
+    request.value = res;
+  }
   suggestedDateMeeting.value = formatDate(
     request.value?.suggested_date_meeting
   );
