@@ -295,7 +295,8 @@
               <div
                 class="col-6"
                 v-if="
-                  !!request.date_meeting &&
+                  !!!request.date_meeting &&
+                  !!request.suggested_date_meeting &&
                   authStore.isUser &&
                   JSON.parse(authStore.getId).id === request.user?.id
                 "
