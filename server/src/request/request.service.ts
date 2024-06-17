@@ -252,4 +252,12 @@ export class RequestService {
     });
     return await this.requestRepository.remove(request);
   }
+
+  async rejectDateMeeting(requestId: string) {
+    const request = await this.requestRepository.update(
+      { id: +requestId },
+      { status: requestStatusEnum.CANCELED },
+    );
+    return request;
+  }
 }

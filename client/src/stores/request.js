@@ -98,6 +98,19 @@ export const useRequestStore = defineStore({
       }
       // this.openRequests = data;
     },
+    async rejectDateMeeting(requestId) {
+      try {
+        const { data } = await api({
+          url: "api/request/rejectDateMeeting",
+          method: "patch",
+          params: { requestId },
+        });
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+      // this.openRequests = data;
+    },
     async offerTime(requestId, suggested_date) {
       try {
         const { data } = await api({

@@ -281,13 +281,13 @@
                         color="accent"
                         @click="offerTime"
                       />
-                      <q-btn
-                        label="Согласиться с предложенным временем"
-                        v-if="authStore.isUser && !!request.date_meeting"
-                        class="q-mt-sm"
-                        color="accent"
-                        @click="offerTime"
-                      />
+                      <!--                      <q-btn-->
+                      <!--                        label="Согласиться с предложенным временем"-->
+                      <!--                        v-if="authStore.isUser && !!request.date_meeting"-->
+                      <!--                        class="q-mt-sm"-->
+                      <!--                        color="accent"-->
+                      <!--                        @click="offerTime"-->
+                      <!--                      />-->
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -309,7 +309,7 @@
                     class="q-pl-xs q-pr-xs bg-dark"
                     style="position: absolute; top: -1rem; left: 15px"
                   >
-                    Юриcт предложил дату консультации!!!
+                    Юриcт предложил дату консультации!
                   </div>
 
                   <q-item-section class="q-mt-md">
@@ -332,111 +332,101 @@
                       }}
                     </q-item-label>
                   </q-item-section>
-                  <q-item-section class="q-mt-xl flex justify-end items-end">
-                    <div>
+                  <q-item-section
+                    class="q-mt-xl flex justify-end items-end bg-dark"
+                  >
+                    <q-item-label caption class="flex justify-between">
                       <q-btn
                         rounded
-                        label="Подтвердить выбор"
+                        label="Согласиться"
                         color="positive"
+                        class="q-pa-sm"
                         @click.prevent="confirmSuggestedTime"
                       />
-                    </div>
+                      <q-btn
+                        rounded
+                        label="Отклонить"
+                        class="q-ml-md q-pa-sm"
+                        color="negative"
+                        @click="rejectDateMeeting"
+                      />
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
               </div>
-              <div class="col-4" v-if="!!request.date_meeting">
+              <div
+                class="col-3"
+                v-if="
+                  (authStore.isLawyer || authStore.isOperator) &&
+                  !!request.user.phonenumber?.length &&
+                  request.lawyer.phonenumber === 'null'
+                "
+              >
+                <div class="col-4" v-if="authStore.isLawyer">
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>Телефон клиента: </q-item-label>
+                      <q-item-label caption class="text_style">{{
+                        request.user.phonenumber
+                      }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </div>
+              </div>
+              <div
+                class="col-3"
+                v-if="authStore.isUser && showPhoneNumberLawyer"
+              >
                 <q-item>
+                  <q-item-section>
+                    <q-item-label>Телефон юриста: </q-item-label>
+                    <q-item-label caption class="text_style">{{
+                      request.lawyer.phonenumber
+                    }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </div>
+              <div class="col-6" v-if="!!request.date_meeting">
+                <q-item
+                  class="bg-warning text-black q-ma-md"
+                  style="border-radius: 1rem"
+                  ><q-item-section
+                    ><q-item-label
+                      class="text_style text-bold text-center"
+                      v-if="request.lawyer?.contact_email"
+                      >{{
+                        `Почта юриста: ${request.lawyer?.contact_email}`
+                      }}</q-item-label
+                    >
+                    <q-item-label
+                      class="text_style text-center text-h1 q-pa-xl text-bold"
+                    >
+                      За один час до консультации появится номер телефона
+                      юриста!
+                    </q-item-label>
+                  </q-item-section>
                   <q-item-section>
                     <q-item-label
                       >Утвержденная дата консультации:
                     </q-item-label>
-                    <q-item-label caption>
-                      <q-input
-                        v-model="dateMeeting"
-                        mask="##.##.####"
-                        :readonly="authStore.isUser"
-                        color="info"
-                        label-color="dark"
-                        bg-color="white"
-                        label="Выберите дату"
-                        outlined
-                        rounded
-                      >
-                        <!--                        <template v-slot:append>-->
-                        <!--                          <q-icon-->
-                        <!--                            name="event"-->
-                        <!--                            class="cursor-pointer q-ml-md q-mr-sm"-->
-                        <!--                            color="dark"-->
-                        <!--                            disable-->
-                        <!--                          >-->
-                        <!--                            <q-popup-proxy-->
-                        <!--                              cover-->
-                        <!--                              class="bg-info"-->
-                        <!--                              transition-show="scale"-->
-                        <!--                              transition-hide="scale"-->
-                        <!--                            >-->
-                        <!--                              <q-date-->
-                        <!--                                v-model="dateMeeting"-->
-                        <!--                                class="bg-primary"-->
-                        <!--                                :locale="locale"-->
-                        <!--                                color="info"-->
-                        <!--                                text-color="white"-->
-                        <!--                                mask="DD.MM.YYYY"-->
-                        <!--                              >-->
-                        <!--                                <div class="row items-center justify-end">-->
-                        <!--                                  <q-btn-->
-                        <!--                                    v-close-popup-->
-                        <!--                                    label="Закрыть"-->
-                        <!--                                    color="primary"-->
-                        <!--                                    class="bg-info"-->
-                        <!--                                  />-->
-                        <!--                                </div>-->
-                        <!--                              </q-date>-->
-                        <!--                            </q-popup-proxy>-->
-                        <!--                          </q-icon>-->
-                        <!--                        </template>-->
-                      </q-input>
-                      <q-input
-                        v-model="dateMeetingTime"
-                        mask="time"
-                        :readonly="authStore.isUser"
-                        label="Выберите время"
-                        class="q-mt-sm"
-                        outlined
-                        bg-color="white"
-                        color="info"
-                        rounded
-                        label-color="dark"
-                      >
-                        <!--                        <template v-slot:append>-->
-                        <!--                          <q-icon-->
-                        <!--                            name="access_time"-->
-                        <!--                            class="cursor-pointer q-mr-sm q-ml-md"-->
-                        <!--                            color="black"-->
-                        <!--                          >-->
-                        <!--                            <q-popup-proxy-->
-                        <!--                              cover-->
-                        <!--                              transition-show="scale"-->
-                        <!--                              transition-hide="scale"-->
-                        <!--                            >-->
-                        <!--                              <q-time-->
-                        <!--                                v-model="dateMeetingTime"-->
-                        <!--                                color="info"-->
-                        <!--                                format24h-->
-                        <!--                              >-->
-                        <!--                                <div class="row items-center justify-end">-->
-                        <!--                                  <q-btn-->
-                        <!--                                    v-close-popup-->
-                        <!--                                    label="Закрыть"-->
-                        <!--                                    color="info"-->
-                        <!--                                    flat-->
-                        <!--                                  />-->
-                        <!--                                </div>-->
-                        <!--                              </q-time>-->
-                        <!--                            </q-popup-proxy>-->
-                        <!--                          </q-icon>-->
-                        <!--                        </template>-->
-                      </q-input>
+                    <q-item-label caption class="text_style"
+                      >{{ normaliseDate(request.date_meeting) }}
+                    </q-item-label> </q-item-section
+                  ><q-item-section>
+                    <q-item-label
+                      >Утвержденное время консультации:
+                    </q-item-label>
+                    <q-item-label caption class="text_style"
+                      >{{
+                        new Date(request.date_meeting).toLocaleTimeString(
+                          "en-US",
+                          {
+                            hour12: false,
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )
+                      }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -456,11 +446,25 @@
     <main-dialog v-model="infoUser" title="Информация о клиенте" width="1300px">
       <lawyer-info-card :data="request?.user" />
     </main-dialog>
+    <main-dialog
+      v-model="solutionDialog"
+      title="Выложить решение"
+      width="1300px"
+    >
+      фыа
+    </main-dialog>
+    <q-btn
+      v-if="showSolutionButton"
+      label="Выложить решение"
+      class="q-ma-xl absolute-bottom-right"
+      color="accent"
+      @click="openSolutionDialog"
+    />
   </q-page>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useRequestStore } from "stores/request";
 import { locale, requestStatus } from "src/constants";
@@ -491,6 +495,10 @@ const dateMeetingTime = ref("");
 const proposedLawyer = ref({});
 const infolawyer = ref(false);
 const infoUser = ref(false);
+const showPhoneNumber = ref(false);
+const showPhoneNumberLawyer = ref(false);
+const showSolutionButton = ref(false);
+const solutionDialog = ref(false);
 
 const offerTime = async () => {
   if (!suggestedDateMeeting.value || !time.value) {
@@ -514,6 +522,20 @@ const offerTime = async () => {
   }
 };
 
+function isConsultationDue(consultationDate) {
+  if (consultationDate === null) {
+    throw new Error("Дата консультации не может быть null");
+  }
+  const consultation = new Date(consultationDate);
+  const current = new Date();
+  const diff = consultation.getTime() - current.getTime();
+  if (diff < 3600000) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 const confirmSuggestedTime = async () => {
   await requestStore.confirmSuggestedTime(request.value.id);
   const reqId = +route.params.id;
@@ -524,6 +546,29 @@ const confirmSuggestedTime = async () => {
     request.value = requestStore.getRequestInfo;
   }
 };
+const openSolutionDialog = () => {
+  solutionDialog.value = true;
+};
+const rejectDateMeeting = async () => {
+  await requestStore.rejectDateMeeting(request.value.id);
+  const reqId = +route.params.id;
+  await requestStore.getInfoByReqId(reqId);
+  if (!!res?.request) {
+    request.value = requestStore.getRequestInfo.request;
+  } else {
+    request.value = requestStore.getRequestInfo;
+  }
+};
+
+const unsubscribe = requestStore.$subscribe(async (mutation, state) => {
+  if (mutation.type === "requestInfo") {
+    const reqId = +route.params.id;
+    console.log(1);
+    const newRes = await requestStore.getInfoByReqId(reqId);
+  }
+});
+
+const requestValueComputed = computed(() => requestStore.getRequestInfo);
 
 onMounted(async () => {
   const reqId = +route.params.id;
@@ -553,7 +598,42 @@ onMounted(async () => {
       icon.value = mdiCheckAll;
       break;
   }
+  const currentTime = new Date();
+
+  if (!!request.value.date_meeting) {
+    const currentTime = new Date();
+    const currentTimeUTC = Date.UTC(
+      currentTime.getUTCFullYear(),
+      currentTime.getUTCMonth(),
+      currentTime.getUTCDate(),
+      currentTime.getUTCHours(),
+      currentTime.getUTCMinutes(),
+      currentTime.getUTCSeconds()
+    );
+    const consultationTime = new Date(request.value.date_meeting);
+    const consultationTimeUTC = Date.UTC(
+      consultationTime.getUTCFullYear(),
+      consultationTime.getUTCMonth(),
+      consultationTime.getUTCDate(),
+      consultationTime.getUTCHours(),
+      consultationTime.getUTCMinutes(),
+      consultationTime.getUTCSeconds()
+    );
+    const timeDifference = consultationTimeUTC - currentTimeUTC;
+    if (timeDifference >= 0 && timeDifference <= 60 * 60 * 1000) {
+      showPhoneNumber.value = true;
+    }
+
+    if (consultationTimeUTC <= currentTimeUTC) {
+      console.log(consultationTimeUTC, currentTimeUTC);
+      showSolutionButton.value = true;
+    }
+  } else {
+    showSolutionButton.value = false;
+  }
+  showPhoneNumberLawyer.value = isConsultationDue(request.value.date_meeting);
 });
+onUnmounted(() => unsubscribe());
 </script>
 
 <style scoped lang="scss">

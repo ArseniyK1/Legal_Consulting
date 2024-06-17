@@ -137,4 +137,10 @@ export class RequestController {
   remove(@Param('id') id: string) {
     return this.requestService.remove(+id);
   }
+
+  @Patch('/rejectDateMeeting')
+  @ApiOperation({ summary: 'Отменить заявку' })
+  async rejectDateMeeting(@Query('requestId') requestId: string) {
+    return await this.requestService.rejectDateMeeting(requestId);
+  }
 }

@@ -62,7 +62,14 @@
               }}</q-item-label>
             </q-item-section>
           </q-item>
-          <q-item v-if="data.phonenumber" class="col-4">
+          <q-item
+            v-if="
+              data.phonenumber &&
+              (authStore.isOperator ||
+                +JSON.parse(authStore.getId)?.id === data.id)
+            "
+            class="col-4"
+          >
             <q-item-section>
               <q-item-label>Телефон:</q-item-label>
               <q-item-label class="text_style">{{
@@ -146,7 +153,9 @@ import { computed, onMounted, ref } from "vue";
 import { useCaseStore } from "stores/case";
 import { mdiFolderPlusOutline, mdiBriefcase, mdiDelete } from "@mdi/js";
 import ScrollArea from "components/common/ScrollArea.vue";
+import { useAuthStore } from "stores/auth";
 const caseStore = useCaseStore();
+const authStore = useAuthStore();
 const props = defineProps({
   data: {
     type: Object,
