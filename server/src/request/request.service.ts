@@ -254,10 +254,26 @@ export class RequestService {
   }
 
   async rejectDateMeeting(requestId: string) {
-    const request = await this.requestRepository.update(
+    const request = await this.requestRepository.findOne({
+      where: { id: +requestId },
+    });
+    if (
+      request.status === requestStatusEnum.ACCEPTED ||
+      request.status === requestStatusEnum.DONE ||
+      request.status === requestStatusEnum.CANCELED
+    )
+      throw new HttpException(
+        'Заявка не может быть отменена',
+        HttpStatus.BAD_REQUEST,
+      );
+    return await this.requestRepository.update(
       { id: +requestId },
-      { status: requestStatusEnum.CANCELED },
+      {
+        status: requestStatusEnum.CANCELED,
+        active: false,
+        proposedLawyerId: 0,
+        lawyerId: 0,
+      },
     );
-    return request;
   }
 }

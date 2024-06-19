@@ -6,6 +6,7 @@ import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -85,6 +86,10 @@ export class CreateUserDto {
   @IsEmail()
   @ApiProperty({ example: 'mail@mail.ru', description: 'Почта пользователя' })
   contact_email?: string;
+
+  @IsNumber()
+  @IsOptional()
+  organization_id?: number;
 
   @IsBoolean()
   @IsOptional()

@@ -62,13 +62,15 @@
               v-model="profile.role"
               readonly
             ></q-input>
-            <q-input
+            <q-select
               class="q-ml-xs"
               color="info"
+              :option-label="(el) => el.short_name"
+              :options="orgOptions"
               label="Организация *"
-              v-model="profile.group"
+              v-model="profile.org"
               v-if="authStore.isLawyer"
-            ></q-input>
+            ></q-select>
             <q-file v-model="photo" label="Новое фото профиля" color="info">
               <template v-slot:prepend>
                 <q-icon name="attach_file" />
@@ -111,8 +113,10 @@ import avatarImage from "../assets/avatar.png";
 import { mdiContentSaveAllOutline } from "@mdi/js";
 import { useUserStore } from "stores/user";
 import { Notify } from "quasar";
+import { useOrganizationsStore } from "stores/organization";
 
 const authStore = useAuthStore();
+const organizationStore = useOrganizationsStore();
 const router = useRouter();
 const userStore = useUserStore();
 
@@ -125,9 +129,10 @@ const profile = ref({
   org: "",
   phonenumber: "",
   contact_email: "",
-  photo: "", // Используйте это поле для хранения URL-адреса фото
+  photo: "",
 });
 const photo = ref(null);
+const orgOptions = ref([]);
 
 const changeUserData = async () => {
   const formData = new FormData();
@@ -137,7 +142,13 @@ const changeUserData = async () => {
   formData.append("login", profile.value.login);
   formData.append("phonenumber", profile.value.phonenumber);
   formData.append("contact_email", profile.value.contact_email);
-  formData.append("photo", photo.value);
+  if (photo.value) {
+    formData.append("photo", photo.value);
+  }
+
+  if (authStore.isLawyer) {
+    formData.append("organization_id", +profile.value.org?.id);
+  }
 
   try {
     const changeData = await userStore.updateInfoUser(formData);
@@ -162,5 +173,10 @@ onMounted(async () => {
   profile.value.phonenumber = res.phonenumber;
   profile.value.contact_email = res.contact_email;
   profile.value.photo = `http://localhost:7000/uploads/${res.photo}`; // Загрузите URL-адрес фото при загрузке профиля
+
+  if (authStore.isLawyer) {
+    await organizationStore.getALlOrganizations();
+    orgOptions.value = organizationStore.getOrganizations;
+  }
 });
 </script>

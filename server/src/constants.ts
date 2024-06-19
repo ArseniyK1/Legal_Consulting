@@ -4,6 +4,7 @@ import { Roles } from './roles/entities/roles.entity';
 import { Case } from './case/entities/case.entity';
 import { Request } from './request/entities/request.entity';
 import { TypeRight } from './type_right/entities/type_right.entity';
+import { Organization } from './organization/entities/organization.entity';
 
 export const providers = [
   {
@@ -29,6 +30,12 @@ export const providers = [
   {
     provide: 'TYPE_RIGHT_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(TypeRight),
+    inject: ['DATA_SOURCE'],
+  },
+  {
+    provide: 'ORGANIZATION_REPOSITORY',
+    useFactory: (dataSource: DataSource) =>
+      dataSource.getRepository(Organization),
     inject: ['DATA_SOURCE'],
   },
 ];

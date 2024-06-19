@@ -82,11 +82,15 @@ export class UserService {
     dto: UpdateUserDto,
     photo?: Express.Multer.File,
   ) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: { organization: true },
+    });
     if (photo) {
       dto.photo = photo.filename; // сохраняем имя файла в БД
     }
     return this.userRepository.save({
+      organization: user.organization_id,
       ...user,
       ...dto,
     });

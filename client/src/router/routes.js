@@ -41,6 +41,12 @@ const routes = [
         props: true,
         component: () => import("pages/RequestInfoPage.vue"),
       },
+      {
+        path: "/organizations",
+        name: "OrganizationsPage",
+        props: true,
+        component: () => import("pages/OrganizationsPage.vue"),
+      },
     ],
   },
   {

@@ -45,7 +45,12 @@
 <script setup>
 import { computed } from "vue";
 import { useAuthStore } from "stores/auth";
-import { mdiHome, mdiFileSign, mdiAccountGroupOutline } from "@mdi/js";
+import {
+  mdiHome,
+  mdiFileSign,
+  mdiAccountGroupOutline,
+  mdiHomeCity,
+} from "@mdi/js";
 
 const authStore = useAuthStore();
 
@@ -80,10 +85,10 @@ const menu = [
     route: "/requests/",
   },
   {
-    title: "Предметы",
-    caption: "Страница с предметами",
-    icon: "library_books",
-    route: "/objects/",
+    title: "Организации",
+    caption: "Страница с организациями",
+    icon: mdiHomeCity,
+    route: "/organizations/",
   },
 ];
 
