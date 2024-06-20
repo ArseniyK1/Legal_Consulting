@@ -28,6 +28,9 @@
             <q-tooltip v-if="requestStatus.canceled === request?.status"
               >Отменена</q-tooltip
             >
+            <q-tooltip v-if="requestStatus.done === request?.status"
+              >Завершена</q-tooltip
+            >
           </q-btn>
         </div>
       </div>

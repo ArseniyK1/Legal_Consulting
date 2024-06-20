@@ -34,6 +34,24 @@ export const useRequestStore = defineStore({
       }
       // this.openRequests = data;
     },
+    async doneRequest(lawyerId, requestId, issue, article) {
+      try {
+        const { data } = await api({
+          url: "api/request/doneRequest",
+          method: "patch",
+          data: {
+            lawyerId,
+            requestId,
+            issue,
+            article,
+          },
+        });
+        return data;
+      } catch (e) {
+        Notify.create({ message: e });
+      }
+      // this.openRequests = data;
+    },
     async getAllRequests(
       status = null,
       lawyer = null,

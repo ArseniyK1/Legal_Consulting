@@ -44,7 +44,12 @@
                     v-else-if="requestStatus.canceled === request?.status"
                     class="text_style"
                   >
-                    Отменена
+                  </span>
+                  <span
+                    v-else-if="requestStatus.done === request?.status"
+                    class="text_style"
+                  >
+                    Завершена
                   </span>
                 </q-item-label>
               </q-item-section>
@@ -449,12 +454,34 @@
     <main-dialog
       v-model="solutionDialog"
       title="Выложить решение"
-      width="1300px"
+      width="900px"
     >
-      фыа
+      <q-card>
+        <q-card-section>
+          <q-form @submit="submitForm">
+            <q-input
+              v-model="issue"
+              label="Решение"
+              color="info"
+              type="textarea"
+            />
+            <q-input v-model="article" label="Статья" color="info" />
+
+            <q-card-actions align="right">
+              <q-btn label="Cancel" color="negative" v-close-popup />
+              <q-btn
+                label="Submit"
+                type="submit"
+                color="primary"
+                v-close-popup
+              />
+            </q-card-actions>
+          </q-form>
+        </q-card-section>
+      </q-card>
     </main-dialog>
     <q-btn
-      v-if="showSolutionButton"
+      v-if="showSolutionButton && authStore.isLawyer && request.active"
       label="Выложить решение"
       class="q-ma-xl absolute-bottom-right"
       color="accent"
@@ -499,6 +526,8 @@ const showPhoneNumber = ref(false);
 const showPhoneNumberLawyer = ref(false);
 const showSolutionButton = ref(false);
 const solutionDialog = ref(false);
+const issue = ref("");
+const article = ref("");
 
 const offerTime = async () => {
   if (!suggestedDateMeeting.value || !time.value) {
@@ -521,7 +550,16 @@ const offerTime = async () => {
     request.value = requestStore.getRequestInfo;
   }
 };
-
+async function submitForm() {
+  await requestStore.doneRequest(
+    request.value.lawyerId,
+    request.value.id,
+    issue.value,
+    article.value
+  );
+  await this.$router.push({ name: "requests" });
+  Notify.create({ message: "Заявка успешно завершена" });
+}
 function isConsultationDue(consultationDate) {
   if (consultationDate === null) {
     throw new Error("Дата консультации не может быть null");

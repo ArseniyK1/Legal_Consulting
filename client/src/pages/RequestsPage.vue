@@ -7,6 +7,7 @@
           label="Показать фильтры"
           class="q-pa-md"
           color="accent"
+          v-if="authStore.isOperator"
         >
           <div
             class="q-gutter-md full-height flex column justify-start q-pa-lg"

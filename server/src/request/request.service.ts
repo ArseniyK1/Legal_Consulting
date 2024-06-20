@@ -2,13 +2,14 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
 import { IsNull, Like, Raw, Repository } from 'typeorm';
-import { Request } from './entities/request.entity';
 import { requestStatusEnum } from '../constants';
 import { ChangeStatusDto } from './dto/change-status.dto';
-import { tr } from '@faker-js/faker';
 import { User } from '../user/entities/user.entity';
 import { GetAllRequestDto } from './dto/getAllRequest.dto';
 import { ProposedRequestDto } from './dto/ProposedRequest.dto';
+import { DoneRequestDto } from './dto/DoneRequest.dto';
+import { Case } from '../case/entities/case.entity';
+import { CreateCaseDto } from '../case/dto/create-case.dto';
 
 @Injectable()
 export class RequestService {
@@ -17,6 +18,8 @@ export class RequestService {
     private requestRepository: Repository<any>,
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
+    @Inject('CASE_REPOSITORY')
+    private caseRepository: Repository<Case>,
   ) {}
 
   async createRequest(req: any, dto: CreateRequestDto) {
@@ -45,6 +48,32 @@ export class RequestService {
     return await this.requestRepository.find({
       relations: { type_right: true },
     });
+  }
+
+  async doneRequest(req: any, dto: DoneRequestDto) {
+    const request = await this.requestRepository.update(
+      { id: dto.requestId },
+      { status: requestStatusEnum.DONE, active: false },
+    );
+    const oneReq = await this.requestRepository.findOne({
+      where: { id: +dto.requestId },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/ban-ts-comment
+    // @ts-ignore
+
+    const newCase = await this.caseRepository.save({
+      issue: dto.issue,
+      number: oneReq.id,
+      description: oneReq.description,
+      article: dto.article,
+      user: req.user.userId,
+    });
+
+    return { ...request, ...newCase };
+    // const request = await this.requestRepository.findOne({
+    //   where: { id: +dto.requestId },
+    // });
+    // console.log(request.raw);
   }
 
   async findAllRequests(query: GetAllRequestDto) {

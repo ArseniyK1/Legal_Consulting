@@ -21,6 +21,7 @@ import { Role, Roles } from '../roles/decorators/roles.decorator';
 import { GetAllRequestDto } from './dto/getAllRequest.dto';
 import { OfferTimeConsultationDto } from './dto/offerTimeConsultation.dto';
 import { ProposedRequestDto } from './dto/ProposedRequest.dto';
+import { DoneRequestDto } from './dto/DoneRequest.dto';
 
 @ApiTags('Request')
 @Controller('request')
@@ -55,6 +56,12 @@ export class RequestController {
   @ApiOperation({ summary: 'Откликнуться на предложенную заявку' })
   proposedRequest(@Request() req: any, @Query() query: ProposedRequestDto) {
     return this.requestService.proposedRequest(query);
+  }
+
+  @Patch('/doneRequest')
+  @ApiOperation({ summary: 'Откликнуться на предложенную заявку' })
+  doneRequest(@Request() req: any, @Body() query: DoneRequestDto) {
+    return this.requestService.doneRequest(req, query);
   }
 
   @Roles(Role.lawyer)

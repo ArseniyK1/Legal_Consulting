@@ -146,7 +146,7 @@ const changeUserData = async () => {
     formData.append("photo", photo.value);
   }
 
-  if (authStore.isLawyer) {
+  if (authStore.isLawyer && profile.value.org?.id) {
     formData.append("organization_id", +profile.value.org?.id);
   }
 
