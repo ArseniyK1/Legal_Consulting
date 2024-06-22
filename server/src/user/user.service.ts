@@ -89,11 +89,23 @@ export class UserService {
     if (photo) {
       dto.photo = photo.filename; // сохраняем имя файла в БД
     }
-    return this.userRepository.save({
-      organization: user.organization_id,
-      ...user,
-      ...dto,
-    });
+    console.log(dto);
+    // return this.userRepository.save({
+    //   organizationId: +dto.organization_id,
+    //   ...user,
+    //   ...dto,
+    // });
+    const newUser = await this.userRepository.update(
+      {
+        id: userId,
+      },
+      {
+        ...user,
+        ...dto,
+        organization: +dto.organization,
+      },
+    );
+    return newUser;
   }
 
   async findAll(roleId: number = 1) {
@@ -111,8 +123,10 @@ export class UserService {
 
   async getAllLawyer(query: QueryLawyerDto) {
     console.log(query);
-    const typeLaw = !!query?.type_law ? query?.type_law : null;
-    const userName = !!query?.lawyerName ? query?.lawyerName : null;
+    const typeLaw = !!query?.type_law ? query?.type_law : '';
+    const userName = !!query?.lawyerName ? query?.lawyerName : '';
+    const organization = !!query?.organization ? query?.organization : '';
+    console.log('ASDADASD', organization);
     let whereCondition = {};
 
     if (typeLaw) {
@@ -125,19 +139,26 @@ export class UserService {
       .where('user.roleId = :roleId', { roleId: 3 })
       .andWhere(whereCondition)
       .orderBy('user.id', 'DESC');
-
-    if (userName) {
+    if (userName || organization) {
       queryBuilder.andWhere(
         new Brackets((qb) => {
-          qb.where('LOWER(user.last_name) LIKE LOWER(:name)', {
-            name: `%${userName}%`,
-          })
-            .orWhere('LOWER(user.first_name) LIKE LOWER(:name)', {
+          if (userName) {
+            qb.where('LOWER(user.last_name) LIKE LOWER(:name)', {
               name: `%${userName}%`,
             })
-            .orWhere('LOWER(user.middle_name) LIKE LOWER(:name)', {
-              name: `%${userName}%`,
+              .orWhere('LOWER(user.first_name) LIKE LOWER(:name)', {
+                name: `%${userName}%`,
+              })
+              .orWhere('LOWER(user.middle_name) LIKE LOWER(:name)', {
+                name: `%${userName}%`,
+              });
+          }
+
+          if (organization) {
+            qb.orWhere('user.organizationId = :organization', {
+              organization: organization,
             });
+          }
         }),
       );
     }

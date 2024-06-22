@@ -12,12 +12,12 @@ export const useLawyerStore = defineStore({
     getAllLawyers: (state) => state.lawyers,
   },
   actions: {
-    async getAllLawyersFunc(type_law, lawyerName) {
+    async getAllLawyersFunc(type_law, lawyerName, organization) {
       try {
         const { data } = await api({
           url: "api/user/allLawyer",
           method: "get",
-          params: { type_law, lawyerName },
+          params: { type_law, lawyerName, organization },
         });
         return data;
       } catch (e) {

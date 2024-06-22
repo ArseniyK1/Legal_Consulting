@@ -142,34 +142,38 @@ const changeUserData = async () => {
   formData.append("login", profile.value.login);
   formData.append("phonenumber", profile.value.phonenumber);
   formData.append("contact_email", profile.value.contact_email);
+
   if (photo.value) {
     formData.append("photo", photo.value);
+    console.log(URL.createObjectURL(photo.value));
+    profile.value.photo = URL.createObjectURL(photo.value);
   }
 
   if (authStore.isLawyer && profile.value.org?.id) {
-    formData.append("organization_id", +profile.value.org?.id);
+    formData.append("organization", String(+profile.value.org?.id));
   }
 
   try {
     const changeData = await userStore.updateInfoUser(formData);
     if (changeData) {
-      profile.value.photo = changeData.photo; // Обновите URL-адрес фото
+      profile.value.photo = changeData.photo;
 
       Notify.create("Чтобы изменения вступили в силу обновите страницу!");
     }
   } catch (error) {
-    Notify.create("Failed to update profile.");
+    Notify.create("Произошла ошибка при обновлении профиля!");
   }
 };
 
 onMounted(async () => {
   const res = await authStore.loadProfile();
+  profile.value = res;
   profile.value.role = res.roleId.description;
   profile.value.login = res.login;
   profile.value.first_name = res.first_name;
   profile.value.middle_name = res.middle_name;
   profile.value.last_name = res.last_name;
-  profile.value.org = res.org;
+  profile.value.org = res.organization;
   profile.value.phonenumber = res.phonenumber;
   profile.value.contact_email = res.contact_email;
   profile.value.photo = `http://localhost:7000/uploads/${res.photo}`; // Загрузите URL-адрес фото при загрузке профиля
@@ -177,6 +181,11 @@ onMounted(async () => {
   if (authStore.isLawyer) {
     await organizationStore.getALlOrganizations();
     orgOptions.value = organizationStore.getOrganizations;
+    if (profile.value.org?.id) {
+      profile.value.org = orgOptions.value.find(
+        (org) => org.id === +profile.value.org?.id
+      );
+    }
   }
 });
 </script>

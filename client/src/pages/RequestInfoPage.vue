@@ -187,10 +187,11 @@
               <div
                 class="col-4"
                 v-if="
-                  (authStore.isOperator || authStore.isLawyer) &&
+                  authStore.isLawyer &&
                   !!!request.date_meeting &&
-                  (request.lawyerId === JSON.parse(authStore.getId)?.id ||
-                    request.lawyer?.id === JSON.parse(authStore.getId)?.id)
+                  !!!request.suggested_date_meeting &&
+                  (request.lawyerId === authStore.getIdUser ||
+                    request.lawyer?.id === authStore.getIdUser)
                 "
               >
                 <q-item>
@@ -302,8 +303,7 @@
                 v-if="
                   !!!request.date_meeting &&
                   !!request.suggested_date_meeting &&
-                  authStore.isUser &&
-                  JSON.parse(authStore.getId).id === request.user?.id
+                  authStore.isUser
                 "
               >
                 <q-item
@@ -363,8 +363,8 @@
                 class="col-3"
                 v-if="
                   (authStore.isLawyer || authStore.isOperator) &&
-                  !!request.user.phonenumber?.length &&
-                  request.lawyer.phonenumber === 'null'
+                  !!request.user?.phonenumber?.length &&
+                  request.lawyer?.phonenumber === 'null'
                 "
               >
                 <div class="col-4" v-if="authStore.isLawyer">
@@ -386,7 +386,7 @@
                   <q-item-section>
                     <q-item-label>Телефон юриста: </q-item-label>
                     <q-item-label caption class="text_style">{{
-                      request.lawyer.phonenumber
+                      request.lawyer?.phonenumber
                     }}</q-item-label>
                   </q-item-section>
                 </q-item>
@@ -549,6 +549,7 @@ const offerTime = async () => {
   } else {
     request.value = requestStore.getRequestInfo;
   }
+  Notify.create("Вы успешно предложили время");
 };
 async function submitForm() {
   await requestStore.doneRequest(
@@ -561,21 +562,25 @@ async function submitForm() {
   Notify.create({ message: "Заявка успешно завершена" });
 }
 function isConsultationDue(consultationDate) {
+  console.log(request.value);
   if (consultationDate === null) {
     throw new Error("Дата консультации не может быть null");
   }
   const consultation = new Date(consultationDate);
   const current = new Date();
   const diff = consultation.getTime() - current.getTime();
+  console.log(diff < 3600000);
   if (diff < 3600000) {
+    console.log("123321313");
     return true;
   } else {
+    console.log(1);
     return false;
   }
 }
 
 const confirmSuggestedTime = async () => {
-  await requestStore.confirmSuggestedTime(request.value.id);
+  const res = await requestStore.confirmSuggestedTime(request.value.id);
   const reqId = +route.params.id;
   await requestStore.getInfoByReqId(reqId);
   if (!!res?.request) {
@@ -607,6 +612,18 @@ const unsubscribe = requestStore.$subscribe(async (mutation, state) => {
 });
 
 const requestValueComputed = computed(() => requestStore.getRequestInfo);
+watch(
+  () => request.value?.suggested_date_meeting,
+  (newValue) => {
+    if (newValue) {
+      // Update the suggestedDateMeeting value
+      suggestedDateMeeting.value = formatDate(newValue);
+
+      // Update the showPhoneNumberLawyer value
+      showPhoneNumberLawyer.value = isConsultationDue(newValue);
+    }
+  }
+);
 
 onMounted(async () => {
   const reqId = +route.params.id;
@@ -620,8 +637,7 @@ onMounted(async () => {
   suggestedDateMeeting.value = formatDate(
     request.value?.suggested_date_meeting
   );
-  dateMeeting.value =
-    request.value?.date_meeting && formatDate(request.value?.date_meeting);
+  dateMeeting.value = formatDate(request.value?.date_meeting);
   switch (request.value.status) {
     case requestStatus.pending:
       icon.value = mdiTimerSand;
@@ -669,7 +685,9 @@ onMounted(async () => {
   } else {
     showSolutionButton.value = false;
   }
-  showPhoneNumberLawyer.value = isConsultationDue(request.value.date_meeting);
+  showPhoneNumberLawyer.value = isConsultationDue(
+    request.value.suggested_date_meeting
+  );
 });
 onUnmounted(() => unsubscribe());
 </script>

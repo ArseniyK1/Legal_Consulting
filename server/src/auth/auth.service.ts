@@ -51,7 +51,7 @@ export class AuthService {
   async getProfile(req: any) {
     const user = await this.userRepository.findOne({
       where: { id: req.user.userId },
-      relations: { roleId: true },
+      relations: { roleId: true, organization: true },
     });
     return user;
   }

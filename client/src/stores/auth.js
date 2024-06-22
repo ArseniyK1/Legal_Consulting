@@ -25,6 +25,7 @@ export const useAuthStore = defineStore({
     isUser: (state) => state.roles === rolesValue.user,
     isAdmin: (state) => state.type === rolesValue.admin,
     getId: (state) => state.profile,
+    getIdUser: (state) => +JSON.parse(state.profile)?.id,
   },
   actions: {
     async login(login, password) {

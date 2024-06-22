@@ -87,9 +87,9 @@ export class CreateUserDto {
   @ApiProperty({ example: 'mail@mail.ru', description: 'Почта пользователя' })
   contact_email?: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  organization_id?: number;
+  organization?: string;
 
   @IsBoolean()
   @IsOptional()
