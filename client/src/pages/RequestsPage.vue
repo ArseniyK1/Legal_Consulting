@@ -7,7 +7,6 @@
           label="Показать фильтры"
           class="q-pa-md"
           color="accent"
-          v-if="authStore.isOperator"
         >
           <div
             class="q-gutter-md full-height flex column justify-start q-pa-lg"
@@ -82,7 +81,11 @@
             </q-tabs>
             <q-tab-panels v-model="tab" animated>
               <q-tab-panel name="all" class="bg-secondary">
+                <div v-if="requests.length === 0" class="text-center text-h4">
+                  Отсутствуют заявки
+                </div>
                 <div
+                  v-else
                   v-for="item in requests"
                   :key="item.id"
                   style="width: calc(100% - 32px); margin: 1rem auto"
@@ -92,7 +95,11 @@
               </q-tab-panel>
 
               <q-tab-panel name="myRequest" class="bg-secondary">
+                <div v-if="myRequest.length === 0" class="text-center text-h4">
+                  Отсутствуют заявки
+                </div>
                 <div
+                  v-else
                   v-for="item in myRequest"
                   :key="item.id"
                   style="width: calc(100% - 32px); margin: 1rem auto"
@@ -100,14 +107,26 @@
                   <request-card :request="item" lawyer-visible> </request-card>
                 </div>
               </q-tab-panel>
-              <q-tab-panel name="pendingConfirm" class="bg-secondary"
-                ><div
+
+              <q-tab-panel
+                name="pendingConfirm"
+                class="bg-secondary full-height"
+              >
+                <div
+                  v-if="proposedRequest.length === 0"
+                  class="text-center text-h4"
+                >
+                  Отсутствуют заявки
+                </div>
+                <div
+                  v-else
                   v-for="item in proposedRequest"
                   :key="item.id"
                   style="width: calc(100% - 32px); margin: 1rem auto"
                 >
-                  <request-card :request="item"> </request-card></div
-              ></q-tab-panel>
+                  <request-card :request="item"> </request-card>
+                </div>
+              </q-tab-panel>
             </q-tab-panels>
           </q-card>
           <div
@@ -214,7 +233,11 @@ onMounted(async () => {
   myRequest.value = await requestStore.fetchMyRequestsByLawyerId();
 });
 onBeforeMount(() => {
-  authStore.isLawyer ? (tab.value = "myRequest") : (tab.value = "all");
+  authStore.isLawyer
+    ? (tab.value = "myRequest")
+    : authStore.isUser
+    ? (tab.value = "")
+    : (tab.value = "all");
 });
 onUnmounted(() => {
   requests.value = [];

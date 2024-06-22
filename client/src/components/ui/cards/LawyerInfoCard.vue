@@ -93,6 +93,14 @@
               }}</q-item-label>
             </q-item-section>
           </q-item>
+          <q-item v-if="data?.organization?.id" class="col-4">
+            <q-item-section>
+              <q-item-label>Организация:</q-item-label>
+              <q-item-label class="text_style">{{
+                data.organization.name
+              }}</q-item-label>
+            </q-item-section>
+          </q-item>
           <q-item v-if="data.type_law" class="col-6">
             <q-item-section>
               <q-item-label>Типы права:</q-item-label>

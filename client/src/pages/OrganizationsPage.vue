@@ -47,7 +47,7 @@
               />
 
               <q-card-actions align="right">
-                <q-btn label="Cancel" color="negative" v-close-popup />
+                <q-btn label="Отмена" color="negative" v-close-popup />
                 <q-btn
                   label="Добавить"
                   type="submit"

@@ -82,7 +82,8 @@
         v-if="
           !request.active &&
           (authStore.isUser || authStore.isOperator) &&
-          !request.proposedLawyerId
+          !request.proposedLawyerId &&
+          request.status !== requestStatus.done
         "
         >Удалить</q-btn
       >
@@ -110,12 +111,24 @@
         >Привязать юриста</q-btn
       >
 
+      <q-btn flat class="bg-accent cursor-inherit" v-if="request.date_meeting">
+        <q-tooltip>Дата консультации утверждена</q-tooltip>
+        <q-icon name="check" />
+      </q-btn>
+
       <q-btn
         flat
-        class="bg-accent"
-        v-if="authStore.isUser && request?.status === requestStatus.done"
-        >Оставить отзыв</q-btn
+        class="bg-accent cursor-inherit"
+        v-else-if="request.suggested_date_meeting"
       >
+        <q-tooltip>Клиент пока не утвердил дату</q-tooltip>
+        <q-icon name="pending" />
+      </q-btn>
+
+      <q-btn flat class="bg-accent cursor-inherit" v-else>
+        <q-tooltip>Можно предложить дату консультации</q-tooltip>
+        <q-icon name="calendar_today" />
+      </q-btn>
     </q-card-actions>
   </q-card>
   <main-dialog v-model="visibleProposed" title="Выберите юриста" width="80%">

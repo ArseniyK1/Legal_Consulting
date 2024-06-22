@@ -102,7 +102,7 @@ export class UserService {
       {
         ...user,
         ...dto,
-        organization: +dto.organization,
+        organization: +dto.organization ? +dto.organization : null,
       },
     );
     return newUser;
@@ -136,6 +136,7 @@ export class UserService {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roleId', 'role')
+      .leftJoinAndSelect('user.organization', 'organization')
       .where('user.roleId = :roleId', { roleId: 3 })
       .andWhere(whereCondition)
       .orderBy('user.id', 'DESC');

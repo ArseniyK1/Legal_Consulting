@@ -140,7 +140,9 @@ const changeUserData = async () => {
   formData.append("last_name", profile.value.last_name);
   formData.append("middle_name", profile.value.middle_name);
   formData.append("login", profile.value.login);
-  formData.append("phonenumber", profile.value.phonenumber);
+  if (profile.value.phonenumber) {
+    formData.append("phonenumber", profile.value.phonenumber);
+  }
   formData.append("contact_email", profile.value.contact_email);
 
   if (photo.value) {

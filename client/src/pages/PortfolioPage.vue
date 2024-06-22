@@ -49,8 +49,13 @@
         style="height: 90vh !important"
       >
         <div class="flex column justify-center items-center full-height">
-          <q-icon :name="mdiBriefcase" class="" size="md" color="accent" />
-          <div class="text-h6 text-black">Нет дел</div>
+          <div
+            style="border-radius: 1rem; border: 0.15rem solid white"
+            class="q-pa-sm"
+          >
+            <q-icon :name="mdiBriefcase" size="md" color="accent" />
+            <div class="text-h6 text-white">Нет дел</div>
+          </div>
         </div>
       </div>
       <main-dialog v-model="dialogOpen" width="50%" title="Добавление дела">

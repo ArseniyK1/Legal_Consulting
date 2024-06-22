@@ -1,8 +1,13 @@
 <template>
-  <q-card class="my-card q-ma-md" flat bordered>
-    <img :src="organization.photo" />
+  <q-card
+    class="my-card q-ma-md bg-dark text-white"
+    flat
+    bordered
+    style="height: 100%; width: 100%"
+  >
+    <img :src="organization.photo" style="height: 150px; object-fit: cover" />
 
-    <q-list>
+    <q-list class="flex column justify-center" style="height: 55%">
       <q-item clickable>
         <q-item-section avatar>
           <q-icon color="primary" name="business" />
@@ -10,7 +15,9 @@
 
         <q-item-section>
           <q-item-label>{{ organization.name }}</q-item-label>
-          <q-item-label caption>{{ organization.short_name }}</q-item-label>
+          <q-item-label class="text-white" caption>{{
+            organization.short_name
+          }}</q-item-label>
         </q-item-section>
       </q-item>
 
@@ -21,7 +28,9 @@
 
         <q-item-section>
           <q-item-label>Адрес</q-item-label>
-          <q-item-label caption>{{ organization.address }}</q-item-label>
+          <q-item-label class="text-white" caption>{{
+            organization.address
+          }}</q-item-label>
         </q-item-section>
       </q-item>
 
@@ -32,7 +41,9 @@
 
         <q-item-section>
           <q-item-label>Контакты</q-item-label>
-          <q-item-label caption>{{ organization.contacts }}</q-item-label>
+          <q-item-label class="text-white" caption>{{
+            organization.contacts
+          }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
