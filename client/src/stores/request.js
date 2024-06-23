@@ -192,11 +192,12 @@ export const useRequestStore = defineStore({
         console.log(e);
       }
     },
-    async fetchMyRequestsByLawyerId() {
+    async fetchMyRequestsByLawyerId(status, userName, trouble_type) {
       try {
         const { data } = await api({
           url: `api/request/fetchMyRequests`,
           method: "get",
+          params: { status, userName, trouble_type },
         });
         return data;
       } catch (e) {

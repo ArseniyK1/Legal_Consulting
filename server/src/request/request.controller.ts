@@ -22,6 +22,7 @@ import { GetAllRequestDto } from './dto/getAllRequest.dto';
 import { OfferTimeConsultationDto } from './dto/offerTimeConsultation.dto';
 import { ProposedRequestDto } from './dto/ProposedRequest.dto';
 import { DoneRequestDto } from './dto/DoneRequest.dto';
+import { QueryLawyerDto } from '../user/dto/QueryLawyer.dto';
 
 @ApiTags('Request')
 @Controller('request')
@@ -88,8 +89,8 @@ export class RequestController {
   @Get('fetchMyRequests')
   @Roles(Role.lawyer)
   @ApiOperation({ summary: 'Получение всех активных заявок для юриста' })
-  fetchMyRequests(@Request() req: any) {
-    return this.requestService.fetchMyRequests(+req.user.userId);
+  fetchMyRequests(@Request() req: any, @Query() query: GetAllRequestDto) {
+    return this.requestService.fetchMyRequests(+req.user.userId, query);
   }
   @Patch('/changeStatus')
   @ApiOperation({

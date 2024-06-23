@@ -196,7 +196,11 @@ const updateAllRequests = debounce(async () => {
 }, 500);
 
 const updateMyRequests = debounce(async () => {
-  myRequest.value = await requestStore.fetchMyRequestsByLawyerId();
+  myRequest.value = await requestStore.fetchMyRequestsByLawyerId(
+    statusInput.value?.dbName,
+    userInput.value,
+    troubleTypeInput.value
+  );
 }, 500);
 
 const updateList = () => {

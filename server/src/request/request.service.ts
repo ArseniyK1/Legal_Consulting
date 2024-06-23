@@ -170,11 +170,33 @@ export class RequestService {
       },
     );
   }
-  async fetchMyRequests(lawyerId: number) {
-    return await this.requestRepository.find({
-      where: { lawyerId: lawyerId },
-      relations: { type_right: true, user: true },
-    });
+  async fetchMyRequests(lawyerId: number, query: GetAllRequestDto) {
+    const queryBuilder = this.requestRepository
+      .createQueryBuilder('request')
+      .leftJoinAndSelect('request.type_right', 'type_right')
+      .leftJoinAndSelect('request.user', 'user')
+      .where('request.lawyerId = :lawyerId', { lawyerId });
+
+    if (query.status) {
+      queryBuilder.andWhere('request.status ~* :status', {
+        status: query.status,
+      });
+    }
+
+    if (query.userName) {
+      queryBuilder.andWhere(
+        '(user.last_name ILIKE :userName OR user.first_name ILIKE :userName OR user.middle_name ILIKE :userName)',
+        { userName: `%${query.userName}%` },
+      );
+    }
+
+    if (query.trouble_type) {
+      queryBuilder.andWhere('request.trouble_type ILIKE :trouble_type', {
+        trouble_type: `%${query.trouble_type}%`,
+      });
+    }
+
+    return await queryBuilder.getMany();
   }
 
   async getProposedRequest(lawyerId: number) {

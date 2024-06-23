@@ -468,11 +468,11 @@
             <q-input v-model="article" label="Статья" color="info" />
 
             <q-card-actions align="right">
-              <q-btn label="Cancel" color="negative" v-close-popup />
+              <q-btn label="Отмена" color="negative" v-close-popup />
               <q-btn
-                label="Submit"
+                label="Выложить"
                 type="submit"
-                color="primary"
+                color="positive"
                 v-close-popup
               />
             </q-card-actions>

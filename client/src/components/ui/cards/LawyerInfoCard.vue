@@ -101,7 +101,7 @@
               }}</q-item-label>
             </q-item-section>
           </q-item>
-          <q-item v-if="data.type_law" class="col-6">
+          <q-item v-if="data.type_law?.length" class="col-6">
             <q-item-section>
               <q-item-label>Типы права:</q-item-label>
               <q-item-label class="text_style">
@@ -119,7 +119,7 @@
       <q-separator />
       <q-card-section
         style="max-height: 400px"
-        class="overflow-auto"
+        class="overflow-auto full-width"
         v-if="cases?.length"
       >
         Портфолио

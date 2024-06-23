@@ -33,7 +33,7 @@
           <div class="col-4">
             <q-input
               v-model="typeLaw"
-              label="Спецификация юриста"
+              label="Специализация юриста"
               rounded
               outlined
               bg-color="primary"

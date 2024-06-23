@@ -37,7 +37,7 @@
     </q-card-section>
 
     <q-card-section>
-      <div style="max-height: 65px; overflow: hidden">
+      <div style="max-height: 65px; overflow: hidden; font-size: 1.6rem">
         {{ `Краткое описание заявки: ${request?.description}` }}
       </div>
       <a
@@ -125,7 +125,11 @@
         <q-icon name="pending" />
       </q-btn>
 
-      <q-btn flat class="bg-accent cursor-inherit" v-else>
+      <q-btn
+        flat
+        class="bg-accent cursor-inherit"
+        v-else-if="authStore.isLawyer"
+      >
         <q-tooltip>Можно предложить дату консультации</q-tooltip>
         <q-icon name="calendar_today" />
       </q-btn>

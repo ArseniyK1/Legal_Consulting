@@ -20,7 +20,10 @@
                   size="md"
                   color="accent"
                 />
-                <div class="text-h6">
+                <div
+                  class="text-h6"
+                  style="text-shadow: 1px 1px 1px #696984 !important"
+                >
                   {{
                     `Дело №${caseItem.number ? caseItem.number : caseItem.id}`
                   }}
@@ -29,13 +32,19 @@
 
               <q-card-section>
                 <div class="text-bold">Суть дела:</div>
-                <div class="text_style">
+                <div
+                  class="text_style"
+                  style="font-size: 1.5rem !important; line-height: 25px"
+                >
                   {{ caseItem.description }}
                 </div>
               </q-card-section>
               <q-card-section>
                 <div class="text-bold">Результат:</div>
-                <div class="text_style">
+                <div
+                  class="text_style"
+                  style="font-size: 1.5rem !important; line-height: 25px"
+                >
                   {{ caseItem.issue }}
                 </div>
               </q-card-section>
@@ -49,10 +58,7 @@
         style="height: 90vh !important"
       >
         <div class="flex column justify-center items-center full-height">
-          <div
-            style="border-radius: 1rem; border: 0.15rem solid white"
-            class="q-pa-sm"
-          >
+          <div style="border-radius: 1rem" class="q-pa-sm">
             <q-icon :name="mdiBriefcase" size="md" color="accent" />
             <div class="text-h6 text-white">Нет дел</div>
           </div>
